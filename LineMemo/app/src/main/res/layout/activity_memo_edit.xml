@@ -59,7 +59,7 @@
 
             android:gravity="top"
             android:inputType="textMultiLine"
-            android:hint="@string/memo_edit_title"/>
+            android:hint="@string/memo_edit_content"/>
     </RelativeLayout>
 
     <RelativeLayout

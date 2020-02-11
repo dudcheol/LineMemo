@@ -1,6 +1,5 @@
 package com.example.linememo;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MemoEditActivity extends AppCompatActivity {
     private MemoViewModel viewModel;
@@ -34,10 +36,14 @@ public class MemoEditActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case R.id.save:
-                viewModel.insert(new Memo(titleEdit.getText().toString(), contentEdit.getText().toString(), ""));
+                viewModel
+                        .insert(new Memo(
+                                titleEdit.getText().toString(),
+                                contentEdit.getText().toString(),
+                                "",
+                                System.currentTimeMillis()));
                 finish();
                 return true;
             default:
@@ -58,4 +64,10 @@ public class MemoEditActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
     }
+
+//    int dateParser(long now){
+//        Date date = new Date(now);
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+//        return Integer.parseInt(simpleDateFormat.format(date));
+//    }
 }

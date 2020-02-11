@@ -2,6 +2,7 @@ package com.example.linememo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder> {
     private Context mContext;
     private List<Memo> mDataset;
 
-    public MemoAdapter(Context context, List<Memo> memos) {
+    public MemoAdapter(Context context) {
         mContext = context;
-        mDataset = memos;
+        mDataset = new ArrayList<>();
     }
 
     @NonNull
@@ -32,7 +36,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, final int position) {
         holder.title.setText(mDataset.get(position).getTitle());
         holder.content.setText(mDataset.get(position).getContent());
         holder.card.setOnClickListener(new View.OnClickListener() {
@@ -40,6 +44,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailViewActivity.class);
                 mContext.startActivity(intent);
+                Log.e("MemoAdapter", mDataset.get(position).getDate() + "");
             }
         });
     }
@@ -63,5 +68,16 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
             thumbnail = itemView.findViewById(R.id.itemThumbnail);
             card = itemView.findViewById(R.id.card);
         }
+    }
+
+    public void setData(List<Memo> newData) {
+        Collections.sort(newData, new Comparator<Memo>() {
+            @Override
+            public int compare(Memo memo, Memo t1) {
+                return -Long.compare(memo.getDate(), t1.getDate());
+            }
+        });
+        this.mDataset = newData;
+        notifyDataSetChanged();
     }
 }
