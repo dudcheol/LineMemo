@@ -11,10 +11,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
+import static com.example.linememo.MemoEditActivity.MODIFY_MODE;
 
 public class DetailViewActivity extends AppCompatActivity {
+    private MemoViewModel viewModel;
     private TextView title;
     private TextView content;
+    private int memoId;
+    private Memo memoData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,25 +44,25 @@ public class DetailViewActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit:
                 intent = new Intent(this, MemoEditActivity.class);
+                intent.putExtra("mode", MODIFY_MODE);
+                intent.putExtra("memoData", memoData);
                 startActivity(intent);
                 return true;
             case R.id.delete:
                 // Todo 정말 삭제하겠냐는 alert 메시지 띄움
-                Toast.makeText(this, "삭제", Toast.LENGTH_SHORT).show();
+                viewModel.delete(memoData);
+                Toast.makeText(this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    void showMemo(){
-        Intent intent = getIntent();
-        Memo memo = (Memo) intent.getExtras().get("memoData");
-        title.setText(memo.getTitle());
-        content.setText(memo.getContent());
-    }
-
     void initSetting() {
+        Intent intent = getIntent();
+        memoId = intent.getIntExtra("memoId", -1);
+
         Toolbar myToolbar = findViewById(R.id.toolbar);
         myToolbar.setTitle("메모 상세 보기");
         myToolbar.setTitleTextColor(Color.WHITE);
@@ -63,5 +70,20 @@ public class DetailViewActivity extends AppCompatActivity {
 
         title = findViewById(R.id.title);
         content = findViewById(R.id.content);
+
+        viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
+    }
+
+    void showMemo() {
+        viewModel.find(memoId).observe(this, new Observer<Memo>() {
+            @Override
+            public void onChanged(Memo memo) {
+                if (memo != null) {
+                    title.setText(memo.getTitle());
+                    content.setText(memo.getContent());
+                    memoData = memo;
+                }
+            }
+        });
     }
 }

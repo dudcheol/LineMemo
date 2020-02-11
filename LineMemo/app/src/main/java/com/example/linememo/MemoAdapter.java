@@ -43,7 +43,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailViewActivity.class);
-                intent.putExtra("memoData",mDataset.get(position));
+                intent.putExtra("memoId",mDataset.get(position).getId());
                 mContext.startActivity(intent);
             }
         });

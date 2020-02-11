@@ -14,6 +14,9 @@ public interface MemoDao {
     @Query("SELECT * FROM Memo")
     LiveData<List<Memo>> getAll();
 
+    @Query("SELECT * FROM Memo WHERE id = :id")
+    LiveData<Memo> find(int id);
+
     @Insert
     void insert(Memo memo);
 
