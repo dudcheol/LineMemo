@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,13 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class DetailViewActivity extends AppCompatActivity {
+    private TextView title;
+    private TextView content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_view);
 
-        initDisplay();
+        initSetting();
+        showMemo();
     }
 
     @Override
@@ -44,10 +48,20 @@ public class DetailViewActivity extends AppCompatActivity {
         }
     }
 
-    void initDisplay() {
+    void showMemo(){
+        Intent intent = getIntent();
+        Memo memo = (Memo) intent.getExtras().get("memoData");
+        title.setText(memo.getTitle());
+        content.setText(memo.getContent());
+    }
+
+    void initSetting() {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         myToolbar.setTitle("메모 상세 보기");
         myToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(myToolbar);
+
+        title = findViewById(R.id.title);
+        content = findViewById(R.id.content);
     }
 }

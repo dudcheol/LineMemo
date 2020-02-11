@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity
-public class Memo {
+public class Memo implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;

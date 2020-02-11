@@ -19,20 +19,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar">
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="제목"/>
 
         <TextView
-            android:id="@+id/content"
+            android:id="@+id/title_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/memo_hint_title"
+
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title_hint"
+
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/content_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
-            android:text="내용"/>
+            android:text="@string/memo_hint_content"
+
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/imageArea"
+            android:layout_below="@+id/content_hint"
+
+            android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/imageArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
