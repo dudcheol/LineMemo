@@ -16,11 +16,11 @@ import java.util.List;
 
 public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder> {
     private Context mContext;
-    private List<MemoVO> mDataset;
+    private List<Memo> mDataset;
 
-    public MemoAdapter(Context context, List<MemoVO> memoVOs) {
+    public MemoAdapter(Context context, List<Memo> memos) {
         mContext = context;
-        mDataset = memoVOs;
+        mDataset = memos;
     }
 
     @NonNull

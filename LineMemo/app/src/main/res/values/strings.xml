@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">LineMemo</string>
+
+    <!-- 메모 편집 -->
+    <string name="memo_edit_save">완료</string>
+    <string name="memo_edit_title">제목을 입력하세요</string>
+    <string name="memo_edit_content">내용을 입력하세요</string>
 </resources>
