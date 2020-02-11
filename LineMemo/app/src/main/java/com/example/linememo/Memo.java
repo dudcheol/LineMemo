@@ -11,11 +11,13 @@ public class Memo {
     private String title;
     private String content;
     private String imageURI;
+    private long date;
 
-    public Memo(String title, String content, String imageURI) {
+    public Memo(String title, String content, String imageURI, long date) {
         this.title = title;
         this.content = content;
         this.imageURI = imageURI;
+        this.date = date;
     }
 
     public int getId() {
@@ -34,6 +36,10 @@ public class Memo {
         return imageURI;
     }
 
+    public long getDate() {
+        return date;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -48,6 +54,10 @@ public class Memo {
 
     public void setImageURI(String imageURI) {
         this.imageURI = imageURI;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
     }
 
     @NonNull
