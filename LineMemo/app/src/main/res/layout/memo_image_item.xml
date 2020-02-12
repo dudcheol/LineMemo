@@ -11,4 +11,16 @@
         android:backgroundTint="@color/colorPrimary"
         android:background="@drawable/border_radius_shape" />
 
+    <ImageView
+        android:id="@+id/itemDeleteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/itemImage"
+
+        android:layout_margin="5dp"
+        android:backgroundTint="#EF5350"
+        android:background="@drawable/ic_cancel_black_24dp"
+
+        android:visibility="invisible"/>
+
 </RelativeLayout>

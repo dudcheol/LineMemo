@@ -41,7 +41,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, final int position) {
         // 마지막 아이템은 항상 이미지 추가 버튼
         if (position == getItemCount() - 1) {
             Glide.with(mContext)
@@ -50,14 +50,23 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    createDialog().show();
+                    createUploadDialog().show();
                 }
             });
+            holder.itemDeleteBtn.setVisibility(View.INVISIBLE);
         } else {
             Glide.with(mContext)
                     .load(mImageUris.get(position))
                     .into(holder.imageView);
             holder.imageView.setOnClickListener(null);
+            holder.itemDeleteBtn.setVisibility(View.VISIBLE);
+            holder.itemDeleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mImageUris.remove(position);
+                    notifyDataSetChanged();
+                }
+            });
         }
         Log.e("ImageAdapter", mImageUris.get(position));
     }
@@ -69,15 +78,39 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
+        private ImageView itemDeleteBtn;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.itemImage);
+            itemDeleteBtn = itemView.findViewById(R.id.itemDeleteBtn);
         }
     }
 
-    private Dialog createDialog() {
+    private Dialog createUploadDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(R.string.add_image_title)
+                .setItems(R.array.add_image_methods_array, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case 0: // 사진첩
+                                goToGallery();
+                                break;
+                            case 1: // 카메라 촬영
+                                Toast.makeText(mContext, "카메라 촬영", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 2: // 외부 이미지 주소
+                                Toast.makeText(mContext, "외부 이미지 주소", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
+                });
+        return builder.create();
+    }
+
+    private Dialog createImageSettingDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.add_image_title)
                 .setItems(R.array.add_image_methods_array, new DialogInterface.OnClickListener() {
@@ -109,7 +142,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("image/*");
         // 이미지 파일에 접근할 수 있는 chooser가 많다면, 사용자가 선택할 수 있게 한다
-        ((Activity) mContext).startActivityForResult(Intent.createChooser(intent,"사진첩을 선택하세요"), GALLERY_REQUEST_CODE);
+        ((Activity) mContext).startActivityForResult(Intent.createChooser(intent, "사진첩을 선택하세요"), GALLERY_REQUEST_CODE);
     }
 
     public void addImage(String imageUri) {
