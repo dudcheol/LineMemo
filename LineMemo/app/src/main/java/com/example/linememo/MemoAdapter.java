@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,10 +45,14 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailViewActivity.class);
-                intent.putExtra("memoId",mDataset.get(position).getId());
+                intent.putExtra("memoId", mDataset.get(position).getId());
                 mContext.startActivity(intent);
+                Log.e("Memo_Item_Selected", mDataset.get(position).toString());
             }
         });
+        Glide.with(mContext)
+                .load(mDataset.get(position).getImageUri().get(0))
+                .into(holder.thumbnail);
     }
 
     @Override

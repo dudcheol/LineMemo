@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class Memo implements Serializable {
@@ -12,13 +13,13 @@ public class Memo implements Serializable {
     private int id;
     private String title;
     private String content;
-    private String imageURI;
+    private List<String> imageUri;
     private long date;
 
-    public Memo(String title, String content, String imageURI, long date) {
+    public Memo(String title, String content, List<String> imageUri, long date) {
         this.title = title;
         this.content = content;
-        this.imageURI = imageURI;
+        this.imageUri = imageUri;
         this.date = date;
     }
 
@@ -34,8 +35,8 @@ public class Memo implements Serializable {
         return content;
     }
 
-    public String getImageURI() {
-        return imageURI;
+    public List<String> getImageUri() {
+        return imageUri;
     }
 
     public long getDate() {
@@ -54,8 +55,8 @@ public class Memo implements Serializable {
         this.content = content;
     }
 
-    public void setImageURI(String imageURI) {
-        this.imageURI = imageURI;
+    public void setImageUri(List<String> imageUri) {
+        this.imageUri = imageUri;
     }
 
     public void setDate(long date) {
@@ -65,11 +66,11 @@ public class Memo implements Serializable {
     @NonNull
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Memo{ ");
-        sb.append("title=").append(title);
-        sb.append(", content=").append(content);
-        sb.append(", image=").append(imageURI);
-        sb.append("}");
+        StringBuffer sb = new StringBuffer();
+        sb.append("title=" + title + ", ");
+        sb.append("content=" + content + ", ");
+        sb.append("imageUri=" + imageUri + ", ");
+        sb.append("date=" + date);
         return sb.toString();
     }
 }

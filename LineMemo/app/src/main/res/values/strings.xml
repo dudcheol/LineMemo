@@ -5,8 +5,18 @@
     <string name="memo_edit_save">완료</string>
     <string name="memo_edit_title">제목을 입력하세요</string>
     <string name="memo_edit_content">내용을 입력하세요</string>
+    <string name="memo_edit_upload_img">이미지 첨부</string>
+    <string name="memo_edit_uploaded_img">첨부된 이미지</string>
 
     <!--  메모 상세 보기  -->
     <string name="memo_hint_title">제목</string>
     <string name="memo_hint_content">내용</string>
+
+    <!-- 다이얼로그 -->
+    <string name="add_image_title">첨부 방법을 선택하세요</string>
+    <string-array name="add_image_methods_array">
+        <item>사진첩</item>
+        <item>카메라 촬영</item>
+        <item>외부 이미지 주소(URL)</item>
+    </string-array>
 </resources>

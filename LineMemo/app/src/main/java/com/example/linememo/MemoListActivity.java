@@ -22,15 +22,12 @@ public class MemoListActivity extends AppCompatActivity {
     private MemoViewModel memoViewModel;
     private RecyclerView recyclerView;
     private MemoAdapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_list);
 
-
-        findView();
         initSetting();
         initRecyclerView();
     }
@@ -55,11 +52,9 @@ public class MemoListActivity extends AppCompatActivity {
         }
     }
 
-    void findView() {
-        recyclerView = findViewById(R.id.recycler);
-    }
-
     void initSetting() {
+        recyclerView = findViewById(R.id.recycler);
+
         Toolbar myToolbar = findViewById(R.id.toolbar);
         myToolbar.setTitle("메모장");
         myToolbar.setTitleTextColor(Color.WHITE);
@@ -73,7 +68,7 @@ public class MemoListActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
         // 사용하는 레이아웃 = LinearLayout
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         // 임시데이터
@@ -85,7 +80,6 @@ public class MemoListActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Memo> memos) {
                 mAdapter.setData(memos);
-                mAdapter.notifyDataSetChanged();
             }
         });
     }

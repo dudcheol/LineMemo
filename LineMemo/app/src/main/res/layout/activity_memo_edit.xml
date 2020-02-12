@@ -19,60 +19,76 @@
         android:id="@+id/titleArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@id/toolbar">
 
         <TextView
-            android:id="@+id/titleText"
+            android:id="@+id/title_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="제목" />
+            android:text="@string/memo_hint_title"
+
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/titleEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/titleText"
+            android:layout_below="@+id/title_hint"
 
+            android:hint="@string/memo_edit_title"
             android:inputType="text"
             android:maxLines="1"
-            android:hint="@string/memo_edit_title"/>
+
+            android:textSize="20sp"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/contentArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/photoArea"
-        android:layout_below="@+id/titleArea">
+        android:layout_above="@id/imageArea"
+        android:layout_below="@id/titleArea">
 
         <TextView
-            android:id="@+id/contentText"
+            android:id="@+id/content_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="내용" />
+            android:text="@string/memo_hint_content"
+
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/contentEdit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/contentText"
+            android:layout_below="@id/content_hint"
 
             android:gravity="top"
+            android:hint="@string/memo_edit_content"
             android:inputType="textMultiLine"
-            android:hint="@string/memo_edit_content"/>
+
+            android:textSize="20sp"/>
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/photoArea"
+        android:id="@+id/imageArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:layout_alignParentBottom="true">
 
+        <TextView
+            android:id="@+id/image_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="@string/memo_edit_upload_img" />
+
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/imageRecycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <!--    리사이클러뷰 높이는 디바이스 크기를 받아와서 설정한다
-                수평 스크롤이 가능한 리사이클러뷰를 만들 예정           -->
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_hint" />
     </RelativeLayout>
 
 </RelativeLayout>
