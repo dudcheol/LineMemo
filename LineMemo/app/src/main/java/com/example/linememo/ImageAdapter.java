@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                     .into(holder.imageView);
             holder.imageView.setOnClickListener(null);
         }
+        Log.e("ImageAdapter", mImageUris.get(position));
     }
 
     @Override
@@ -98,9 +100,16 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
     }
 
     private void goToGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        /** 주의 -- Intent intent = new Intent(Intent.ACTION_PICK) 사용에 대한 문제점
+         * ACTION_PICK 사용 시, 파일 uri를 받아올 때 '일시적인 권한'으로 접근할 수 있게 한다.(보안상의 이유로 안드로이드에서 의도적으로 한 것)
+         * 이렇게 해서 얻은 uri를 통해 다른 컨텍스트에서 접근하려고 한다면, 액세스 불가능하다는 보안 에러가 뜬다.
+         * 따라서, onActivityResult에서 전달받은 uri를 가지고 이미지 데이터를 가져와야 하는데,
+         * 우리 앱은 로컬에 저장된 이미지를 보여주는 기능을 하는 것이기 때문에 채택하지 않았다.
+         */
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("image/*");
-        ((Activity) mContext).startActivityForResult(intent, GALLERY_REQUEST_CODE);
+        // 이미지 파일에 접근할 수 있는 chooser가 많다면, 사용자가 선택할 수 있게 한다
+        ((Activity) mContext).startActivityForResult(Intent.createChooser(intent,"사진첩을 선택하세요"), GALLERY_REQUEST_CODE);
     }
 
     public void addImage(String imageUri) {

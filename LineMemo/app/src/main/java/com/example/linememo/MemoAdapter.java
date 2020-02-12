@@ -2,6 +2,8 @@ package com.example.linememo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.MediaStoreSignature;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +56,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
         });
         Glide.with(mContext)
                 .load(mDataset.get(position).getImageUri().get(0))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.thumbnail);
+        Log.e("MemoAdapter","first url = "+mDataset.get(position).getImageUri().get(0));
     }
 
     @Override
