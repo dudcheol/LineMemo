@@ -13,13 +13,13 @@ public class Memo implements Serializable {
     private int id;
     private String title;
     private String content;
-    private List<String> imageUri;
+    private List<String> imageUris;
     private long date;
 
-    public Memo(String title, String content, List<String> imageUri, long date) {
+    public Memo(String title, String content, List<String> imageUris, long date) {
         this.title = title;
         this.content = content;
-        this.imageUri = imageUri;
+        this.imageUris = imageUris;
         this.date = date;
     }
 
@@ -35,8 +35,8 @@ public class Memo implements Serializable {
         return content;
     }
 
-    public List<String> getImageUri() {
-        return imageUri;
+    public List<String> getImageUris() {
+        return imageUris;
     }
 
     public long getDate() {
@@ -55,8 +55,8 @@ public class Memo implements Serializable {
         this.content = content;
     }
 
-    public void setImageUri(List<String> imageUri) {
-        this.imageUri = imageUri;
+    public void setImageUri(List<String> imageUris) {
+        this.imageUris = imageUris;
     }
 
     public void setDate(long date) {
@@ -69,7 +69,7 @@ public class Memo implements Serializable {
         StringBuffer sb = new StringBuffer();
         sb.append("title=" + title + ", ");
         sb.append("content=" + content + ", ");
-        sb.append("imageUri=" + imageUri + ", ");
+        sb.append("imageUri=" + imageUris + ", ");
         sb.append("date=" + date);
         return sb.toString();
     }

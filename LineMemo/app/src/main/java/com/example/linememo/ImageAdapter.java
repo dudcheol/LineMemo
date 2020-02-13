@@ -35,19 +35,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.linememo.MemoEditActivity.CAMERA_REQUEST_CODE;
-import static com.example.linememo.MemoEditActivity.GALLERY_REQUEST_CODE;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHolder> {
-    Context mContext;
-    List<String> mImageUris;
-    //    String tempUri;
-    String mCurrentPhotoPath;
+    public static final int IMAGE_ADAPTER_VIEW_MODE = 3001;
+    public static final int IMAGE_ADAPTER_EDIT_MODE = 3002;
 
-    public ImageAdapter(Context context, List<String> imageUri) {
-        if (!imageUri.contains("AddPhotoBtn")) imageUri.add("AddPhotoBtn");
+    private int currentMode;
+    private Context mContext;
+    private List<String> mImageUris;
+    private String mCurrentPhotoPath;
+
+    public ImageAdapter(Context context, List<String> imageUri, int mode) {
         this.mContext = context;
         this.mImageUris = imageUri;
+        this.currentMode = mode;
+        if (currentMode == IMAGE_ADAPTER_EDIT_MODE && !mImageUris.contains("AddPhotoBtn"))
+            mImageUris.add("AddPhotoBtn");
     }
 
     @NonNull
@@ -61,7 +64,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, final int position) {
         // 마지막 아이템은 항상 이미지 추가 버튼
-        if (position == getItemCount() - 1) {
+        if (currentMode == IMAGE_ADAPTER_EDIT_MODE && position == getItemCount() - 1) {
             Glide.with(mContext)
                     .load(R.drawable.ic_add_a_photo_black_24dp)
                     .into(holder.imageView);
@@ -79,6 +82,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                             // Todo : 이미지 로드를 실패했다고 해서 position의 url을 제거하는 것은 위험하다
+                            Log.e("ImageAdapter", "glide load fail reason = " + e);
                             removeImage(position);
                             Toast.makeText(mContext, "이미지를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show();
                             return false;
@@ -90,14 +94,19 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                         }
                     })
                     .into(holder.imageView);
-            holder.imageView.setOnClickListener(null);
-            holder.itemDeleteBtn.setVisibility(View.VISIBLE);
-            holder.itemDeleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    removeImage(position);
-                }
-            });
+            holder.imageView.setOnClickListener(null); // Todo : 크게보기
+
+            if (currentMode == IMAGE_ADAPTER_VIEW_MODE) {
+                holder.itemDeleteBtn.setVisibility(View.GONE);
+            } else {
+                holder.itemDeleteBtn.setVisibility(View.VISIBLE);
+                holder.itemDeleteBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        removeImage(position);
+                    }
+                });
+            }
         }
         Log.e("ImageAdapter", mImageUris.get(position));
     }
@@ -105,6 +114,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
     @Override
     public int getItemCount() {
         return mImageUris.size();
+    }
+
+    public void setImageUris(List<String> imageUris) {
+        mImageUris = imageUris;
+        notifyDataSetChanged();
     }
 
     public void addImage(String imageUri) {
@@ -161,8 +175,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         addImage(getUrlStringFromView(v));
-//                        tempUri =  getUrlStringFromView(v);
-                        notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton(R.string.negativeBtn, new DialogInterface.OnClickListener() {
@@ -190,7 +202,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                 Log.e("ImageAdapter", "photoURI = " + photoURI.toString());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 //                takePictureIntent.putExtra("imgUri", photoURI);
-                ((Activity) mContext).startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+                ((Activity) mContext).startActivityForResult(takePictureIntent, MemoEditActivity.CAMERA_REQUEST_CODE);
             }
         }
     }
@@ -205,7 +217,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("image/*");
         // 이미지 파일에 접근할 수 있는 chooser가 많다면, 사용자가 선택할 수 있게 한다
-        ((Activity) mContext).startActivityForResult(Intent.createChooser(intent, "사진첩을 선택하세요"), GALLERY_REQUEST_CODE);
+        ((Activity) mContext).startActivityForResult(Intent.createChooser(intent, "사진첩을 선택하세요"), MemoEditActivity.GALLERY_REQUEST_CODE);
     }
 
     private String getUrlStringFromView(View v) {

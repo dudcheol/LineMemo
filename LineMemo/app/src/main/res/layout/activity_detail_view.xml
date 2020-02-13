@@ -15,72 +15,82 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <RelativeLayout
-        android:id="@+id/titleArea"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/toolbar">
 
-        <TextView
-            android:id="@+id/title_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/memo_hint_title"
-
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title_hint"
+            android:layout_height="wrap_content">
 
-            android:textSize="20sp" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/titleArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/contentArea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/titleArea"
-        android:layout_above="@id/imageArea">
+                <TextView
+                    android:id="@+id/title_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/memo_hint_title"
 
-        <TextView
-            android:id="@+id/content_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/memo_hint_content"
+                    android:textSize="15sp" />
 
-            android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_hint"
 
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/content_hint"
+                    android:textSize="20sp" />
+            </RelativeLayout>
 
-            android:textSize="20sp" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/contentArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleArea">
 
-    <RelativeLayout
-        android:id="@+id/imageArea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/content_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/memo_hint_content"
 
-        android:layout_alignParentBottom="true">
+                    android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/image_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="400dp"
+                    android:layout_below="@+id/content_hint"
 
-            android:text="@string/memo_edit_upload_img"/>
+                    android:textSize="20sp" />
+            </RelativeLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/imageRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/image_hint">
-        </androidx.recyclerview.widget.RecyclerView>
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/imageArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@+id/contentArea">
+
+                <TextView
+                    android:id="@+id/image_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/memo_edit_upload_img" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/imageRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/image_hint">
+                </androidx.recyclerview.widget.RecyclerView>
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

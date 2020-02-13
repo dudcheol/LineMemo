@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import static com.example.linememo.MemoEditActivity.CREATE_MODE;
-
 public class MemoListActivity extends AppCompatActivity {
     private MemoViewModel memoViewModel;
     private RecyclerView recyclerView;
@@ -44,7 +42,7 @@ public class MemoListActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.write:
                 intent = new Intent(this, MemoEditActivity.class);
-                intent.putExtra("mode", CREATE_MODE);
+                intent.putExtra("mode", MemoEditActivity.CREATE_MODE);
                 startActivity(intent);
                 return true;
             default:

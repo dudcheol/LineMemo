@@ -13,15 +13,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import static com.example.linememo.MemoEditActivity.MODIFY_MODE;
+import java.util.ArrayList;
 
 public class DetailViewActivity extends AppCompatActivity {
-    private MemoViewModel viewModel;
+    private RecyclerView imageRecyclerView;
+    private ImageAdapter mAdapter;
     private TextView title;
     private TextView content;
+
+    private MemoViewModel viewModel;
     private int memoId;
     private Memo memoData;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,7 @@ public class DetailViewActivity extends AppCompatActivity {
 
         initSetting();
         showMemo();
+        initImageRecyclerView();
     }
 
     @Override
@@ -44,7 +51,7 @@ public class DetailViewActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit:
                 intent = new Intent(this, MemoEditActivity.class);
-                intent.putExtra("mode", MODIFY_MODE);
+                intent.putExtra("mode", MemoEditActivity.MODIFY_MODE);
                 intent.putExtra("memoData", memoData);
                 startActivity(intent);
                 return true;
@@ -59,7 +66,7 @@ public class DetailViewActivity extends AppCompatActivity {
         }
     }
 
-    void initSetting() {
+    private void initSetting() {
         Intent intent = getIntent();
         memoId = intent.getIntExtra("memoId", -1);
 
@@ -70,20 +77,32 @@ public class DetailViewActivity extends AppCompatActivity {
 
         title = findViewById(R.id.title);
         content = findViewById(R.id.content);
+        imageRecyclerView = findViewById(R.id.imageRecycler);
 
         viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
     }
 
-    void showMemo() {
+    private void showMemo() {
         viewModel.find(memoId).observe(this, new Observer<Memo>() {
             @Override
             public void onChanged(Memo memo) {
                 if (memo != null) {
                     title.setText(memo.getTitle());
                     content.setText(memo.getContent());
+                    mAdapter.setImageUris(memo.getImageUris());
                     memoData = memo;
                 }
             }
         });
+    }
+
+    private void initImageRecyclerView() {
+        imageRecyclerView.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        imageRecyclerView.setLayoutManager(layoutManager);
+
+        mAdapter = new ImageAdapter(this, new ArrayList<String>(), ImageAdapter.IMAGE_ADAPTER_VIEW_MODE);
+        imageRecyclerView.setAdapter(mAdapter);
     }
 }

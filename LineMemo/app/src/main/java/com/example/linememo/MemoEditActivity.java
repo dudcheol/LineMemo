@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MemoEditActivity extends AppCompatActivity {
-    public static final int CREATE_MODE = 1000;
-    public static final int MODIFY_MODE = 2000;
-    public static final int CAMERA_REQUEST_CODE = 100;
-    public static final int GALLERY_REQUEST_CODE = 200;
+    public static final int CREATE_MODE = 1001;
+    public static final int MODIFY_MODE = 1002;
+    public static final int CAMERA_REQUEST_CODE = 2001;
+    public static final int GALLERY_REQUEST_CODE = 2002;
 
     private MemoViewModel viewModel;
     private EditText titleEdit;
@@ -94,7 +94,7 @@ public class MemoEditActivity extends AppCompatActivity {
             myToolbar.setTitle("메모 수정");
             titleEdit.setText(mMemoData.getTitle());
             contentEdit.setText(mMemoData.getContent());
-            mImageUris = mMemoData.getImageUri();
+            mImageUris = mMemoData.getImageUris();
         } else {
             // Todo 에러처리
         }
@@ -109,7 +109,7 @@ public class MemoEditActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         imageRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new ImageAdapter(this, mImageUris);
+        mAdapter = new ImageAdapter(this, mImageUris, ImageAdapter.IMAGE_ADAPTER_EDIT_MODE);
         imageRecyclerView.setAdapter(mAdapter);
     }
 

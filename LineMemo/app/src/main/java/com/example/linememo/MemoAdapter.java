@@ -55,10 +55,10 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
             }
         });
         Glide.with(mContext)
-                .load(mDataset.get(position).getImageUri().get(0))
+                .load(mDataset.get(position).getImageUris().get(0))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.thumbnail);
-        Log.e("MemoAdapter","first url = "+mDataset.get(position).getImageUri().get(0));
+        Log.e("MemoAdapter","first url = "+mDataset.get(position).getImageUris().get(0));
     }
 
     @Override
