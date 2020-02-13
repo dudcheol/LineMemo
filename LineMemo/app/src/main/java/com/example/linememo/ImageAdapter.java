@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -25,14 +29,20 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import static com.example.linememo.MemoEditActivity.CAMERA_REQUEST_CODE;
 import static com.example.linememo.MemoEditActivity.GALLERY_REQUEST_CODE;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHolder> {
     Context mContext;
     List<String> mImageUris;
-    String tempUri;
+    //    String tempUri;
+    String mCurrentPhotoPath;
 
     public ImageAdapter(Context context, List<String> imageUri) {
         if (!imageUri.contains("AddPhotoBtn")) imageUri.add("AddPhotoBtn");
@@ -130,7 +140,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                                 goToGallery();
                                 break;
                             case 1: // 카메라 촬영
-                                Toast.makeText(mContext, "카메라 촬영", Toast.LENGTH_SHORT).show();
+                                goToCamera();
                                 break;
                             case 2: // 외부 이미지 주소
                                 createUriInputDialog().show();
@@ -150,8 +160,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                 .setPositiveButton(R.string.positiveBtn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-//                        addImage(getUrlStringFromView(v));
-                        tempUri =  getUrlStringFromView(v);
+                        addImage(getUrlStringFromView(v));
+//                        tempUri =  getUrlStringFromView(v);
                         notifyDataSetChanged();
                     }
                 })
@@ -162,6 +172,27 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                     }
                 });
         return builder.create();
+    }
+
+    private void goToCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(mContext,
+                        "com.example.linememo.fileprovider",
+                        photoFile);
+                Log.e("ImageAdapter", "photoURI = " + photoURI.toString());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//                takePictureIntent.putExtra("imgUri", photoURI);
+                ((Activity) mContext).startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+            }
+        }
     }
 
     private void goToGallery() {
@@ -180,5 +211,25 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
     private String getUrlStringFromView(View v) {
         EditText urlEdit = v.findViewById(R.id.uriEdit);
         return urlEdit.getText().toString().trim();
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "LINEMEMO_" + timeStamp + "_";
+        // getExternalFilesDir : LineMemo 앱 이외에는 비공개, 디렉터리에 저장한 파일은 사용자가 앱을 제거할 때 삭제됨
+        File storageDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        mCurrentPhotoPath = image.getAbsolutePath();
+        Log.e("ImageAdapter", "Image URI = " + mCurrentPhotoPath);
+        return image;
+    }
+
+    public String getTakenPictureUri() {
+        return mCurrentPhotoPath;
     }
 }

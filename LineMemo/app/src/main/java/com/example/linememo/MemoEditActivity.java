@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -23,7 +24,8 @@ import java.util.List;
 public class MemoEditActivity extends AppCompatActivity {
     public static final int CREATE_MODE = 1000;
     public static final int MODIFY_MODE = 2000;
-    public static final int GALLERY_REQUEST_CODE = 100;
+    public static final int CAMERA_REQUEST_CODE = 100;
+    public static final int GALLERY_REQUEST_CODE = 200;
 
     private MemoViewModel viewModel;
     private EditText titleEdit;
@@ -32,8 +34,8 @@ public class MemoEditActivity extends AppCompatActivity {
     private ImageAdapter mAdapter;
 
     private int myViewMode;
-    private Memo memoData;
-    private List<String> imageUri;
+    private Memo mMemoData;
+    private List<String> mImageUris;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +60,14 @@ public class MemoEditActivity extends AppCompatActivity {
                     viewModel.insert(new Memo(
                             titleEdit.getText().toString(),
                             contentEdit.getText().toString(),
-                            imageUri,
+                            mImageUris,
                             System.currentTimeMillis()));
                 } else if (myViewMode == MODIFY_MODE) {
-                    memoData.setTitle(titleEdit.getText().toString());
-                    memoData.setContent(contentEdit.getText().toString());
-                    memoData.setImageUri(imageUri);
-                    memoData.setDate(System.currentTimeMillis());
-                    viewModel.update(memoData);
+                    mMemoData.setTitle(titleEdit.getText().toString());
+                    mMemoData.setContent(contentEdit.getText().toString());
+                    mMemoData.setImageUri(mImageUris);
+                    mMemoData.setDate(System.currentTimeMillis());
+                    viewModel.update(mMemoData);
                 }
                 finish();
                 return true;
@@ -77,7 +79,7 @@ public class MemoEditActivity extends AppCompatActivity {
     void initSetting() {
         Intent intent = getIntent();
         myViewMode = intent.getIntExtra("mode", -1);
-        memoData = (Memo) intent.getExtras().get("memoData");
+        mMemoData = (Memo) intent.getExtras().get("memoData");
 
         titleEdit = findViewById(R.id.titleEdit);
         contentEdit = findViewById(R.id.contentEdit);
@@ -87,12 +89,12 @@ public class MemoEditActivity extends AppCompatActivity {
         myToolbar.setTitleTextColor(Color.WHITE);
         if (myViewMode == CREATE_MODE) {
             myToolbar.setTitle("메모 작성");
-            imageUri = new ArrayList<>();
+            mImageUris = new ArrayList<>();
         } else if (myViewMode == MODIFY_MODE) {
             myToolbar.setTitle("메모 수정");
-            titleEdit.setText(memoData.getTitle());
-            contentEdit.setText(memoData.getContent());
-            imageUri = memoData.getImageUri();
+            titleEdit.setText(mMemoData.getTitle());
+            contentEdit.setText(mMemoData.getContent());
+            mImageUris = mMemoData.getImageUri();
         } else {
             // Todo 에러처리
         }
@@ -107,8 +109,7 @@ public class MemoEditActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         imageRecyclerView.setLayoutManager(layoutManager);
 
-        // 임시데이터
-        mAdapter = new ImageAdapter(this, imageUri);
+        mAdapter = new ImageAdapter(this, mImageUris);
         imageRecyclerView.setAdapter(mAdapter);
     }
 
@@ -116,10 +117,22 @@ public class MemoEditActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == GALLERY_REQUEST_CODE) {
-                Uri selectedImg = data.getData();
-                mAdapter.addImage(selectedImg.toString());
+            Log.e("MemoEdit", "onActivityResult RESULT OK");
+            switch (requestCode) {
+                case GALLERY_REQUEST_CODE:
+                    Uri selectedImg = data.getData();
+                    Log.e("MemoEdit-Result", data.getData().toString());
+                    mAdapter.addImage(selectedImg.toString());
+                    break;
+                case CAMERA_REQUEST_CODE:
+                    // 사용자가 카메라 intent에서 사진을 촬영하고 그것을 선택했다면 RESULT_OK이므로 이 곳에 진입
+                    // RESULT_OK로 이곳에 진입했다는 것은 ImageAdapter에서 설정한 사진의 저장경로가 있다는 의미이므로
+                    // getTakenPictureUri을 통해 새로 찍은 사진이 저장된 uri를 가져옴
+                    mAdapter.addImage(mAdapter.getTakenPictureUri());
+                    break;
             }
+        } else {
+            Log.e("MemoEdit", "onActivityResult RESULT NO");
         }
     }
 }
