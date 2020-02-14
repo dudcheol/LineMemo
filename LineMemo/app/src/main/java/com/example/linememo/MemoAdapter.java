@@ -39,8 +39,29 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, final int position) {
-        holder.title.setText(mDataset.get(position).getTitle());
-        holder.content.setText(mDataset.get(position).getContent());
+        String title = mDataset.get(position).getTitle().trim();
+        String content = mDataset.get(position).getContent().trim();
+        List<String> uris = mDataset.get(position).getImageUris();
+
+        if (title.length() != 0) {
+            holder.title.setText(title);
+            holder.title.setVisibility(View.VISIBLE);
+        } else holder.title.setVisibility(View.GONE);
+
+        if (content.length() != 0) {
+            holder.content.setText(content);
+            holder.content.setVisibility(View.VISIBLE);
+        } else holder.content.setVisibility(View.GONE);
+
+        if (uris.size() != 0)
+            Glide.with(mContext)
+                    .load(uris.get(0))
+                    .into(holder.thumbnail);
+        else
+            // 변경에 대해서 명시적으로 삭제해주어야 함
+            Glide.with(mContext)
+                    .clear(holder.thumbnail);
+
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,16 +71,6 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
                 Log.e("Memo_Item_Selected", mDataset.get(position).toString());
             }
         });
-
-        List<String> uris = mDataset.get(position).getImageUris();
-        if (uris.size() != 0)
-            Glide.with(mContext)
-                    .load(uris.get(0))
-                    .into(holder.thumbnail);
-        else
-            // 변경에 대해서 명시적으로 삭제해주어야 함
-            Glide.with(mContext)
-                    .clear(holder.thumbnail);
     }
 
     @Override
@@ -76,10 +87,10 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            title = itemView.findViewById(R.id.itemTitle);
-            content = itemView.findViewById(R.id.itemContent);
-            thumbnail = itemView.findViewById(R.id.itemThumbnail);
-            card = itemView.findViewById(R.id.card);
+            title = itemView.findViewById(R.id.item_title);
+            content = itemView.findViewById(R.id.item_content);
+            thumbnail = itemView.findViewById(R.id.item_thumbnail);
+            card = itemView.findViewById(R.id.item_card);
         }
     }
 

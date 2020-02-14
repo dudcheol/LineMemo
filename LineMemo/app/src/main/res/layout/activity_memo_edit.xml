@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackgroundGrey"
     tools:context=".MemoEditActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -11,98 +12,109 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:theme="@style/Toolbar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar">
+        android:layout_above="@id/save_area"
+        android:layout_below="@id/toolbar"
+        android:background="@color/colorWhite">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
-                android:id="@+id/titleArea"
+                android:id="@+id/image_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/title_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/memo_hint_title"
+                <RelativeLayout
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/colorBackgroundGrey" />
 
-                    android:textSize="15sp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/image_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_below="@id/divider1"
+                    android:background="@color/colorBackgroundGrey" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_below="@id/image_area"
+                android:background="@color/colorBackgroundGrey" />
+
+            <RelativeLayout
+                android:id="@+id/title_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider2"
+                android:background="@color/colorWhite"
+                android:padding="20dp">
 
                 <EditText
-                    android:id="@+id/titleEdit"
+                    android:id="@+id/title_edit"
+                    style="@style/EditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/title_hint"
 
 
                     android:hint="@string/memo_edit_title"
-                    android:inputType="text"
-                    android:maxLines="1"
-
-                    android:textSize="20sp" />
+                    android:maxLines="1000"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="30sp" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/contentArea"
+                android:id="@+id/content_area"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/titleArea">
-
-                <TextView
-                    android:id="@+id/content_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/memo_hint_content"
-
-                    android:textSize="15sp" />
+                android:layout_height="match_parent"
+                android:layout_below="@id/title_area"
+                android:background="@color/colorWhite"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="15dp">
 
                 <EditText
-                    android:id="@+id/contentEdit"
+                    android:id="@+id/content_edit"
+                    style="@style/EditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/content_hint"
+                    android:layout_height="match_parent"
                     android:gravity="top"
 
                     android:hint="@string/memo_edit_content"
-                    android:inputType="textMultiLine"
 
+                    android:minLines="5"
                     android:maxLines="1000"
-                    android:minHeight="400dp"
 
+                    android:textColor="@color/colorDarkGrey"
                     android:textSize="20sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/imageArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:layout_below="@+id/contentArea">
-
-                <TextView
-                    android:id="@+id/image_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:text="@string/memo_edit_upload_img" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/imageRecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/image_hint" />
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/save_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/green_button"
+            android:text="@string/memo_edit_save"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -4,8 +4,8 @@
 
     <item
         android:id="@+id/write"
-        android:title="write"
-        android:icon="@drawable/ic_create_black_24dp"
+        android:title="@string/menu_write"
+        android:icon="@drawable/ic_add_circle_24dp"
         app:showAsAction="always"/>
 
 </menu>

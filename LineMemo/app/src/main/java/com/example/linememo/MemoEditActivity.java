@@ -5,17 +5,21 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,11 +44,14 @@ public class MemoEditActivity extends AppCompatActivity {
     public static final int GALLERY_REQUEST_CODE = 2002;
 
     private MemoViewModel viewModel;
+    private RelativeLayout imageArea;
     private EditText titleEdit;
     private EditText contentEdit;
+    private Button saveButton;
     private RecyclerView imageRecyclerView;
     private ImageAdapter mAdapter;
 
+    private int divider;
     private int myViewMode;
     private Memo mMemoData;
     private List<String> mImageUris;
@@ -68,22 +75,6 @@ public class MemoEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.save:
-                if (myViewMode == CREATE_MODE) {
-                    viewModel.insert(new Memo(
-                            titleEdit.getText().toString(),
-                            contentEdit.getText().toString(),
-                            mImageUris,
-                            System.currentTimeMillis()));
-                } else if (myViewMode == MODIFY_MODE) {
-                    mMemoData.setTitle(titleEdit.getText().toString());
-                    mMemoData.setContent(contentEdit.getText().toString());
-                    mMemoData.setImageUri(mImageUris);
-                    mMemoData.setDate(System.currentTimeMillis());
-                    viewModel.update(mMemoData);
-                }
-                finish();
-                return true;
             case R.id.addPhoto:
                 createUploadDialog().show();
                 return true;
@@ -97,35 +88,83 @@ public class MemoEditActivity extends AppCompatActivity {
         myViewMode = intent.getIntExtra("mode", -1);
         mMemoData = (Memo) intent.getExtras().get("memoData");
 
-        titleEdit = findViewById(R.id.titleEdit);
-        contentEdit = findViewById(R.id.contentEdit);
-        imageRecyclerView = findViewById(R.id.imageRecycler);
+        imageArea = findViewById(R.id.image_area);
+        titleEdit = findViewById(R.id.title_edit);
+        contentEdit = findViewById(R.id.content_edit);
+        imageRecyclerView = findViewById(R.id.image_recycler);
+        saveButton = findViewById(R.id.save_button);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
-        myToolbar.setTitleTextColor(Color.WHITE);
         if (myViewMode == CREATE_MODE) {
-            myToolbar.setTitle("메모 작성");
+            myToolbar.setTitle("새 메모 쓰기");
+            changeSaveButtonState(false);
             mImageUris = new ArrayList<>();
+            imageArea.setVisibility(View.GONE);
         } else if (myViewMode == MODIFY_MODE) {
-            myToolbar.setTitle("메모 수정");
+            myToolbar.setTitle("메모 수정하기");
             titleEdit.setText(mMemoData.getTitle());
             contentEdit.setText(mMemoData.getContent());
             mImageUris = mMemoData.getImageUris();
+            if (mImageUris.isEmpty()) imageArea.setVisibility(View.GONE);
+            else imageArea.setVisibility(View.VISIBLE);
         } else {
             // Todo 에러처리
         }
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_24dp);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveMemoData();
+                finish();
+            }
+        });
+
+        titleEdit.addTextChangedListener(editTextChangeListener);
 
         viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
+        divider = AndroidUtil.dpToPx(this, 5);
     }
 
     void initImageRecyclerView() {
         imageRecyclerView.setHasFixedSize(true);
+        imageRecyclerView.addItemDecoration(imageItemDecoration);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         imageRecyclerView.setLayoutManager(layoutManager);
 
         mAdapter = new ImageAdapter(this, mImageUris, ImageAdapter.IMAGE_ADAPTER_EDIT_MODE);
+        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                Log.e("MemoEdit", "registerAdapterDataObserver onItemRangeInserted");
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                Log.e("MemoEdit", "registerAdapterDataObserver onItemRangeRemoved");
+            }
+
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (mAdapter.getItemCount() == 0) {
+                    if (titleEdit.length() == 0)
+                        changeSaveButtonState(false);
+                    imageArea.setVisibility(View.GONE);
+                } else imageArea.setVisibility(View.VISIBLE);
+            }
+        });
         imageRecyclerView.setAdapter(mAdapter);
     }
 
@@ -139,12 +178,14 @@ public class MemoEditActivity extends AppCompatActivity {
                     Uri selectedImg = data.getData();
                     Log.e("MemoEdit-Result", data.getData().toString());
                     mAdapter.addImage(selectedImg.toString());
+                    changeSaveButtonState(true);
                     break;
                 case CAMERA_REQUEST_CODE:
                     // 사용자가 카메라 intent에서 사진을 촬영하고 그것을 선택했다면 RESULT_OK이므로 이 곳에 진입
                     // RESULT_OK로 이곳에 진입했다는 것은 ImageAdapter에서 설정한 사진의 저장경로가 있다는 의미이므로
                     // getTakenPictureUri을 통해 새로 찍은 사진이 저장된 uri를 가져옴
                     mAdapter.addImage(mCurrentPhotoPath);
+                    changeSaveButtonState(true);
                     break;
             }
         } else {
@@ -184,6 +225,7 @@ public class MemoEditActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAdapter.addImage(getUrlStringFromView(v));
+                        changeSaveButtonState(true);
                     }
                 })
                 .setNegativeButton(R.string.negativeBtn, new DialogInterface.OnClickListener() {
@@ -248,5 +290,61 @@ public class MemoEditActivity extends AppCompatActivity {
         mCurrentPhotoPath = image.getAbsolutePath();
         Log.e("ImageAdapter", "Image URI = " + mCurrentPhotoPath);
         return image;
+    }
+
+    private void saveMemoData() {
+        if (myViewMode == CREATE_MODE) {
+            viewModel.insert(new Memo(
+                    titleEdit.getText().toString(),
+                    contentEdit.getText().toString(),
+                    mImageUris,
+                    System.currentTimeMillis()));
+        } else if (myViewMode == MODIFY_MODE) {
+            mMemoData.setTitle(titleEdit.getText().toString());
+            mMemoData.setContent(contentEdit.getText().toString());
+            mMemoData.setImageUri(mImageUris);
+            mMemoData.setDate(System.currentTimeMillis());
+            viewModel.update(mMemoData);
+        }
+    }
+
+    private TextWatcher editTextChangeListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (charSequence.toString().trim().length() == 0 && mImageUris.isEmpty())
+                changeSaveButtonState(false);
+            else
+                changeSaveButtonState(true);
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+        }
+    };
+
+    private RecyclerView.ItemDecoration imageItemDecoration = new RecyclerView.ItemDecoration() {
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            if (parent.getPaddingLeft() != divider) {
+                parent.setPadding(divider, 0, divider, 0);
+                parent.setClipToPadding(false);
+            }
+            outRect.left = divider;
+            outRect.right = divider;
+        }
+    };
+
+    private void changeSaveButtonState(boolean clickable) {
+        if (clickable) {
+            saveButton.setEnabled(true);
+            saveButton.setBackground(getResources().getDrawable(R.drawable.green_button));
+        } else {
+            saveButton.setEnabled(false);
+            saveButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
+        }
     }
 }

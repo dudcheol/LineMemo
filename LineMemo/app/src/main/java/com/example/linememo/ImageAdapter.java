@@ -53,8 +53,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_image_item, parent, false);
-        ItemViewHolder iv = new ItemViewHolder(v);
-        return iv;
+        return  new ItemViewHolder(v);
     }
 
     @Override
@@ -78,20 +77,20 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                 .into(holder.imageView);
         holder.imageView.setOnClickListener(null); // Todo : 크게보기
 
-        // 어댑터 모드 분기
-        if (currentMode == IMAGE_ADAPTER_EDIT_MODE) {
-            // IMAGE_ADAPTER_EDIT_MODE - 삭제버튼 있어야 함
-            holder.itemDeleteBtn.setVisibility(View.VISIBLE);
-            holder.itemDeleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    removeImage(position);
-                }
-            });
-        } else {
-            // IMAGE_ADAPTER_VIEW_MODE - 삭제버튼 없음
-            holder.itemDeleteBtn.setVisibility(View.GONE);
-        }
+//        // 어댑터 모드 분기
+//        if (currentMode == IMAGE_ADAPTER_EDIT_MODE) {
+//            // IMAGE_ADAPTER_EDIT_MODE - 삭제버튼 있어야 함
+//            holder.itemDeleteBtn.setVisibility(View.VISIBLE);
+//            holder.itemDeleteBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    removeImage(position);
+//                }
+//            });
+//        } else {
+//            // IMAGE_ADAPTER_VIEW_MODE - 삭제버튼 없음
+//            holder.itemDeleteBtn.setVisibility(View.GONE);
+//        }
     }
 
     @Override

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackgroundGrey"
     tools:context=".DetailViewActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -11,85 +12,77 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:theme="@style/Toolbar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar">
+        android:layout_below="@id/toolbar"
+        android:background="@color/colorWhite">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <RelativeLayout
-                android:id="@+id/titleArea"
+                android:id="@+id/image_area"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/title_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/memo_hint_title"
+                <RelativeLayout
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/colorBackgroundGrey" />
 
-                    android:textSize="15sp" />
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/image_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_below="@id/divider1"
+                    android:background="@color/colorBackgroundGrey" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_below="@id/image_area"
+                android:background="@color/colorBackgroundGrey" />
+
+            <RelativeLayout
+                android:id="@+id/title_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider2"
+                android:background="@color/colorWhite"
+                android:padding="20dp">
 
                 <TextView
                     android:id="@+id/title"
+                    style="@style/TitleFont_2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/title_hint"
-
-                    android:textSize="20sp" />
+                    android:layout_height="wrap_content" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/contentArea"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/titleArea">
-
-                <TextView
-                    android:id="@+id/content_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/memo_hint_content"
-
-                    android:textSize="15sp" />
+                android:layout_height="match_parent"
+                android:layout_below="@id/title_area"
+                android:background="@color/colorWhite"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="15dp">
 
                 <TextView
                     android:id="@+id/content"
+                    style="@style/ContentFont_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="400dp"
-                    android:layout_below="@+id/content_hint"
-
-                    android:textSize="20sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/imageArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:layout_below="@+id/contentArea">
-
-                <TextView
-                    android:id="@+id/image_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:text="@string/memo_edit_upload_img" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/imageRecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/image_hint">
-                </androidx.recyclerview.widget.RecyclerView>
+                    android:minLines="1" />
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

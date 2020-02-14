@@ -2,5 +2,17 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#FF005B</color>
+
+    <color name="colorBackgroundNavy">#393E4B</color>
+    <color name="colorIconNavy">#434A64</color>
+    <color name="colorIconGreen">#0EAE40</color>
+    <color name="colorMainGreen">#01B901</color>
+    <color name="colorButtonGreen">#00CB4E</color>
+    <color name="colorButtonClickedGreen">#00A23F</color>
+    <color name="colorBackgroundGrey">#F5F5F5</color>
+    <color name="colorLightGrey">#B3B3B3</color>
+    <color name="colorDarkGrey">#6C6C6C</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
 </resources>

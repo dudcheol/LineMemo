@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class ImageUriConverter {
-
     @TypeConverter
     public static String listToString(List<String> list) {
         Gson gson = new Gson();

@@ -1,28 +1,33 @@
 package com.example.linememo;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 
 public class DetailViewActivity extends AppCompatActivity {
     private RecyclerView imageRecyclerView;
     private ImageAdapter mAdapter;
+    private ImageViewPagerAdapter mViewPagerAdapter;
     private TextView title;
     private TextView content;
+    private ViewPager2 imageViewPager;
+    private RelativeLayout imageArea;
 
     private MemoViewModel viewModel;
     private int memoId;
@@ -71,13 +76,21 @@ public class DetailViewActivity extends AppCompatActivity {
         memoId = intent.getIntExtra("memoId", -1);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
-        myToolbar.setTitle("메모 상세 보기");
-        myToolbar.setTitleTextColor(Color.WHITE);
+        myToolbar.setTitle("");
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_30dp);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         title = findViewById(R.id.title);
         content = findViewById(R.id.content);
-        imageRecyclerView = findViewById(R.id.imageRecycler);
+        imageViewPager = findViewById(R.id.image_view_pager);
+        imageArea = findViewById(R.id.image_area);
 
         viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
     }
@@ -89,7 +102,10 @@ public class DetailViewActivity extends AppCompatActivity {
                 if (memo != null) {
                     title.setText(memo.getTitle());
                     content.setText(memo.getContent());
-                    mAdapter.setImageUris(memo.getImageUris());
+                    if (!memo.getImageUris().isEmpty()) {
+                        mViewPagerAdapter.setImageUris(memo.getImageUris());
+                        imageArea.setVisibility(View.VISIBLE);
+                    } else imageArea.setVisibility(View.GONE);
                     memoData = memo;
                 }
             }
@@ -97,12 +113,27 @@ public class DetailViewActivity extends AppCompatActivity {
     }
 
     private void initImageRecyclerView() {
-        imageRecyclerView.setHasFixedSize(true);
+        mViewPagerAdapter = new ImageViewPagerAdapter(this, new ArrayList<String>());
+        // offsetPx : 미리 보이길 원하는 다음 혹은 이전 이미지의 길이
+        final float offsetPx = AndroidUtil.dpToPx(this, 45);
+        imageViewPager.setClipToPadding(false);
+        imageViewPager.setClipChildren(false);
+        imageViewPager.setOffscreenPageLimit(3);
+        imageViewPager.setPageTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                float offset = position * -(2 * offsetPx);
+                if (imageViewPager.getOrientation() == ViewPager2.ORIENTATION_HORIZONTAL) {
+                    if (ViewCompat.getLayoutDirection(imageViewPager) == ViewCompat.LAYOUT_DIRECTION_RTL)
+                        page.setTranslationX(-offset);
+                    else page.setTranslationX(offset);
+                } else page.setTranslationY(offset);
+            }
+        });
+        imageViewPager.setAdapter(mViewPagerAdapter);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        imageRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new ImageAdapter(this, new ArrayList<String>(), ImageAdapter.IMAGE_ADAPTER_VIEW_MODE);
-        imageRecyclerView.setAdapter(mAdapter);
+//        mAdapter = new ImageAdapter(this, new ArrayList<String>(), ImageAdapter.IMAGE_ADAPTER_VIEW_MODE);
+//        imageRecyclerView.setAdapter(mAdapter);
     }
 }

@@ -2,7 +2,7 @@
     <string name="app_name">LineMemo</string>
 
     <!-- 메모 편집 -->
-    <string name="memo_edit_save">완료</string>
+    <string name="memo_edit_save">저장하기</string>
     <string name="memo_edit_title">제목을 입력하세요</string>
     <string name="memo_edit_content">내용을 입력하세요</string>
     <string name="memo_edit_upload_img">이미지 첨부</string>
@@ -21,7 +21,13 @@
     </string-array>
     <string name="uriEdit_hint">외부 이미지 주소(URL)를 입력하세요</string>
 
-<!-- 공통 -->
+    <!-- 메뉴 -->
+    <string name="menu_write">새 메모쓰기</string>
+    <string name="menu_add_photo">사진 추가하기</string>
+    <string name="menu_delete">삭제하기</string>
+    <string name="menu_edit">수정하기</string>
+
+    <!-- 공통 -->
     <string name="positiveBtn">확인</string>
     <string name="negativeBtn">취소</string>
 </resources>
