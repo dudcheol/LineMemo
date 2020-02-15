@@ -71,7 +71,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailViewActivity.class);
                 intent.putExtra("memoId", mDataset.get(position).getId());
-                ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SHOW_DETAIL_PAGE, intent);
+                ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SHOW_DETAIL_PAGE, intent, MemoListActivity.DETAIL_DELETE_REQUEST_CODE);
                 Log.e("Memo_Item_Selected", mDataset.get(position).toString());
             }
         });

@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">LineMemo</string>
 
+    <!-- 메모장 메인 -->
+    <string name="memo_deleted_snack">메모가 삭제되었습니다.</string>
+    <string name="memo_created_snack">새 메모를 저장했습니다.</string>
+
     <!-- 메모 편집 -->
     <string name="memo_edit_save">저장하기</string>
     <string name="memo_edit_title">제목을 입력하세요</string>
@@ -12,6 +16,7 @@
     <!--  메모 상세 보기  -->
     <string name="memo_hint_title">제목</string>
     <string name="memo_hint_content">내용</string>
+    <string name="memo_delete_alert">이 메모를 삭제할까요?</string>
 
     <!-- 다이얼로그 -->
     <string name="add_image_title">첨부 방법을 선택하세요</string>

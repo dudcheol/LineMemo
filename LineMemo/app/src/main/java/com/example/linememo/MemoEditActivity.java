@@ -132,6 +132,7 @@ public class MemoEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 saveMemoData();
+                setResult(RESULT_OK);
                 onBackPressed();
             }
         });

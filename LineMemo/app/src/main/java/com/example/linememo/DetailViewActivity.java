@@ -1,5 +1,6 @@
 package com.example.linememo;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +17,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
@@ -61,10 +63,7 @@ public class DetailViewActivity extends AppCompatActivity {
                 ActivityTransitionAnim.startActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION, intent);
                 return true;
             case R.id.delete:
-                // Todo 정말 삭제하겠냐는 alert 메시지 띄움
-                viewModel.delete(memoData);
-                Toast.makeText(this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                finish();
+                createDeleteAlert();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -135,6 +134,27 @@ public class DetailViewActivity extends AppCompatActivity {
 
 //        mAdapter = new ImageAdapter(this, new ArrayList<String>(), ImageAdapter.IMAGE_ADAPTER_VIEW_MODE);
 //        imageRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void createDeleteAlert() {
+        new MaterialAlertDialogBuilder(this)
+                .setIcon(R.drawable.ic_warning_24dp)
+                .setTitle(R.string.memo_delete_alert)
+                .setPositiveButton(R.string.positiveBtn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        viewModel.delete(memoData);
+                        setResult(RESULT_OK);
+                        onBackPressed();
+                    }
+                })
+                .setNegativeButton(R.string.negativeBtn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     @Override
