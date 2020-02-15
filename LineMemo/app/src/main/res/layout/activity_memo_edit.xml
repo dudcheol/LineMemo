@@ -27,21 +27,21 @@
             android:layout_height="wrap_content">
 
             <RelativeLayout
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/colorBackgroundGrey" />
+
+            <RelativeLayout
                 android:id="@+id/image_area"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RelativeLayout
-                    android:id="@+id/divider1"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="@color/colorBackgroundGrey" />
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider1">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/image_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:layout_below="@id/divider1"
                     android:background="@color/colorBackgroundGrey"
                     android:overScrollMode="never" />
 
@@ -57,8 +57,8 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center"
-                        android:backgroundTint="@color/colorLightGrey"
-                        android:background="@drawable/ic_sentiment_neutral_black" />
+                        android:background="@drawable/ic_sentiment_neutral_black"
+                        android:backgroundTint="@color/colorLightGrey" />
 
                     <TextView
                         android:layout_width="wrap_content"

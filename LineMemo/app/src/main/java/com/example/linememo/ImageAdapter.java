@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,7 +51,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         Snackbar.make(((Activity) mContext).findViewById(R.id.memo_edit_activity_layout),
-                                "이미지를 불러오는데 실패했습니다. 다시 시도해주세요.",
+                                R.string.memo_edit_load_fail_snack,
                                 Snackbar.LENGTH_LONG)
                                 .setBackgroundTint(mContext.getResources().getColor(R.color.colorErr))
                                 .show();
@@ -61,6 +62,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         holder.itemDeleteBtn.setVisibility(View.VISIBLE);
+                        holder.progressBar.setVisibility(View.GONE);
                         return false;
                     }
                 })
@@ -98,12 +100,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
         private ImageView itemDeleteBtn;
+        private ProgressBar progressBar;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.itemImage);
             itemDeleteBtn = itemView.findViewById(R.id.itemDeleteBtn);
+            progressBar = itemView.findViewById(R.id.progress_bar);
         }
     }
 }
