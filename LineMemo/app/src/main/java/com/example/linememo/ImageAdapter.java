@@ -24,13 +24,10 @@ import java.util.List;
 
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHolder> {
-    public static final int IMAGE_ADAPTER_VIEW_MODE = 3001;
-    public static final int IMAGE_ADAPTER_EDIT_MODE = 3002;
-
     private Context mContext;
     private List<String> mImageUris;
 
-    public ImageAdapter(Context context, List<String> imageUri, int mode) {
+    public ImageAdapter(Context context, List<String> imageUri) {
         this.mContext = context;
         this.mImageUris = imageUri;
     }
@@ -56,8 +53,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                                 Snackbar.LENGTH_LONG)
                                 .setBackgroundTint(mContext.getResources().getColor(R.color.colorErr))
                                 .show();
-                        mImageUris.remove(position);
-                        notifyDataSetChanged(); // AdapterObserver가 감지할 수 있도록 데이터셋 변경을 알림
+                        //Todo : 역시 콜백에서 함부로 지우는건 위험하다
+                        // 다르게 이미지를 가져올 수 없는 경우(URL이 잘못되었거나)에 대한 처리를 해야함..고민해볼것
+                        removeImage(position); // AdapterObserver가 감지할 수 있도록 데이터셋 변경을 알림
                         return false;
                     }
 
@@ -93,6 +91,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
     }
 
     public void removeImage(int position) {
+        if (mImageUris.size() >= position) return;
         mImageUris.remove(position);
         notifyDataSetChanged();
     }

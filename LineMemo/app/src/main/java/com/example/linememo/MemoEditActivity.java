@@ -151,7 +151,7 @@ public class MemoEditActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         imageRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new ImageAdapter(this, mImageUris, ImageAdapter.IMAGE_ADAPTER_EDIT_MODE);
+        mAdapter = new ImageAdapter(this, mImageUris);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
