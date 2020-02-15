@@ -58,7 +58,7 @@ public class DetailViewActivity extends AppCompatActivity {
                 intent = new Intent(this, MemoEditActivity.class);
                 intent.putExtra("mode", MemoEditActivity.MODIFY_MODE);
                 intent.putExtra("memoData", memoData);
-                startActivity(intent);
+                ActivityTransitionAnim.startActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION, intent);
                 return true;
             case R.id.delete:
                 // Todo 정말 삭제하겠냐는 alert 메시지 띄움
@@ -135,5 +135,11 @@ public class DetailViewActivity extends AppCompatActivity {
 
 //        mAdapter = new ImageAdapter(this, new ArrayList<String>(), ImageAdapter.IMAGE_ADAPTER_VIEW_MODE);
 //        imageRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.HIDE_DETAIL_PAGE);
     }
 }

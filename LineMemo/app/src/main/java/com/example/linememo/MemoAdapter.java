@@ -1,5 +1,6 @@
 package com.example.linememo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -67,7 +68,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailViewActivity.class);
                 intent.putExtra("memoId", mDataset.get(position).getId());
-                mContext.startActivity(intent);
+                ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SHOW_DETAIL_PAGE, intent);
                 Log.e("Memo_Item_Selected", mDataset.get(position).toString());
             }
         });

@@ -1,7 +1,6 @@
 package com.example.linememo;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.Menu;
@@ -47,7 +46,7 @@ public class MemoListActivity extends AppCompatActivity {
             case R.id.write:
                 intent = new Intent(this, MemoEditActivity.class);
                 intent.putExtra("mode", MemoEditActivity.CREATE_MODE);
-                startActivity(intent);
+                ActivityTransitionAnim.startActivityWithAnim(this, ActivityTransitionAnim.SHOW_NEW_PAGE, intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

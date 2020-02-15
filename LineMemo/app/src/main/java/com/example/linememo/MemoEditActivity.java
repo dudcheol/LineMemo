@@ -124,11 +124,12 @@ public class MemoEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 saveMemoData();
-                finish();
+                onBackPressed();
             }
         });
 
         titleEdit.addTextChangedListener(editTextChangeListener);
+        titleEdit.requestFocus();
 
         viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
         divider = AndroidUtil.dpToPx(this, 5);
@@ -346,5 +347,14 @@ public class MemoEditActivity extends AppCompatActivity {
             saveButton.setEnabled(false);
             saveButton.setBackgroundColor(getResources().getColor(R.color.colorLightGrey));
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (myViewMode == CREATE_MODE)
+            ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.HIDE_NEW_PAGE);
+        else
+            ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION);
     }
 }
