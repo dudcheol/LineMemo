@@ -41,9 +41,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
+        final String uri = mImageUris.get(position);
         // 이미지 로드
         Glide.with(mContext)
-                .load(mImageUris.get(position))
+                .load(uri)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -53,9 +54,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                                 Snackbar.LENGTH_LONG)
                                 .setBackgroundTint(mContext.getResources().getColor(R.color.colorErr))
                                 .show();
-                        //Todo : 역시 콜백에서 함부로 지우는건 위험하다
-                        // 다르게 이미지를 가져올 수 없는 경우(URL이 잘못되었거나)에 대한 처리를 해야함..고민해볼것
-                        removeImage(position); // AdapterObserver가 감지할 수 있도록 데이터셋 변경을 알림
+                        removeImage(uri); // AdapterObserver가 감지할 수 있도록 데이터셋 변경을 알림
                         return false;
                     }
 
@@ -66,7 +65,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
                     }
                 })
                 .into(holder.imageView);
-        holder.imageView.setOnClickListener(null); // Todo : 크게보기
+        holder.imageView.setOnClickListener(null); // Todo : 크게보기 - 디테일뷰에서 뷰페이저 아이템 클릭했을때와 동일하게
         holder.itemDeleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,19 +79,19 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
         return mImageUris.size();
     }
 
-    public void setImageUris(List<String> imageUris) {
-        mImageUris = imageUris;
-        notifyDataSetChanged();
-    }
-
     public void addImage(String imageUri) {
         mImageUris.add(imageUri);
         notifyDataSetChanged();
     }
 
     public void removeImage(int position) {
-        if (mImageUris.size() >= position) return;
+        if (position >= mImageUris.size()) return;
         mImageUris.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void removeImage(String value) {
+        mImageUris.remove(value);
         notifyDataSetChanged();
     }
 
