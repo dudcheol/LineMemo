@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scale xmlns:android="http://schemas.android.com/apk/res/android"
+    android:scaleGravity="center_vertical|center_horizontal"
+    android:scaleHeight="80%"
+    android:scaleWidth="80%" />

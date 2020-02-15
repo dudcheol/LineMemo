@@ -41,7 +41,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_below="@id/divider1"
-                    android:background="@color/colorBackgroundGrey" />
+                    android:background="@color/colorBackgroundGrey"
+                    android:overScrollMode="never" />
             </RelativeLayout>
 
             <RelativeLayout

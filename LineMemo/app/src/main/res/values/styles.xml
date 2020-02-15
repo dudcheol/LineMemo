@@ -7,6 +7,11 @@
         <item name="colorPrimaryDark">@color/colorBackgroundNavy</item>
         <item name="colorAccent">@color/colorIconGreen</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:scrollViewStyle">@style/Widget.MyTheme.ScrollView</item>
+    </style>
+
+    <style name="Widget.MyTheme.ScrollView" parent="android:Widget.ScrollView">
+        <item name="android:overScrollMode">never</item>
     </style>
 
     <!-- Toolbar Theme -->
@@ -51,6 +56,9 @@
     <style name="Card" parent="CardView">
         <item name="cardCornerRadius">10dp</item>
         <item name="cardElevation">0dp</item>
+        <item name="android:clickable">true</item>
+<!--        <item name="android:foreground">?android:attr/selectableItemBackground</item>-->
+        <item name="android:foreground">@drawable/alpha_button</item>
     </style>
 
 </resources>

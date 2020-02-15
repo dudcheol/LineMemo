@@ -15,4 +15,6 @@
     <color name="colorDarkGrey">#6C6C6C</color>
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="alpha0">#00FFFFFF</color>
+    <color name="halfAlphaBlack">#2D000000</color>
 </resources>
