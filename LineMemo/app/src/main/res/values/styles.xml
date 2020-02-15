@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimary">@color/colorMainGreen</item>
         <item name="colorPrimaryDark">@color/colorBackgroundNavy</item>
         <item name="colorAccent">@color/colorIconGreen</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -15,6 +15,7 @@
         <item name="android:textColorSecondary">@color/colorBackgroundNavy</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">15sp</item>
+        <item name="android:background">@color/colorWhite</item>
     </style>
 
     <!-- Image Scale -->
