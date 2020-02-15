@@ -15,7 +15,7 @@
             android:scaleType="centerCrop"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@color/colorLightGrey" />
+            android:background="@color/colorBackgroundGrey" />
 
         <ImageView
             android:id="@+id/itemDeleteBtn"
@@ -25,6 +25,8 @@
 
             android:layout_margin="5dp"
             android:background="@drawable/ic_cancel_black_24dp"
-            android:backgroundTint="#EF5350"/>
+            android:backgroundTint="#EF5350"
+
+            android:visibility="gone"/>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

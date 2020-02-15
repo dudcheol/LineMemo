@@ -1,11 +1,11 @@
 package com.example.linememo;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,13 @@ import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +52,7 @@ public class MemoEditActivity extends AppCompatActivity {
     public static final int GALLERY_REQUEST_CODE = 2002;
 
     private MemoViewModel viewModel;
-    private RelativeLayout imageArea;
+    private LinearLayout imageAreaNoti;
     private EditText titleEdit;
     private EditText contentEdit;
     private Button saveButton;
@@ -76,7 +84,7 @@ public class MemoEditActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.addPhoto:
-                createUploadDialog().show();
+                createUploadDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -88,7 +96,7 @@ public class MemoEditActivity extends AppCompatActivity {
         myViewMode = intent.getIntExtra("mode", -1);
         mMemoData = (Memo) intent.getExtras().get("memoData");
 
-        imageArea = findViewById(R.id.image_area);
+        imageAreaNoti = findViewById(R.id.image_area_noti);
         titleEdit = findViewById(R.id.title_edit);
         contentEdit = findViewById(R.id.content_edit);
         imageRecyclerView = findViewById(R.id.image_recycler);
@@ -99,14 +107,14 @@ public class MemoEditActivity extends AppCompatActivity {
             myToolbar.setTitle("새 메모 쓰기");
             changeSaveButtonState(false);
             mImageUris = new ArrayList<>();
-            imageArea.setVisibility(View.GONE);
+            imageAreaNoti.setVisibility(View.VISIBLE);
         } else if (myViewMode == MODIFY_MODE) {
             myToolbar.setTitle("메모 수정하기");
             titleEdit.setText(mMemoData.getTitle());
             contentEdit.setText(mMemoData.getContent());
             mImageUris = mMemoData.getImageUris();
-            if (mImageUris.isEmpty()) imageArea.setVisibility(View.GONE);
-            else imageArea.setVisibility(View.VISIBLE);
+            if (mImageUris.isEmpty()) imageAreaNoti.setVisibility(View.VISIBLE);
+            else imageAreaNoti.setVisibility(View.GONE);
         } else {
             // Todo 에러처리
         }
@@ -145,25 +153,17 @@ public class MemoEditActivity extends AppCompatActivity {
         mAdapter = new ImageAdapter(this, mImageUris, ImageAdapter.IMAGE_ADAPTER_EDIT_MODE);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                Log.e("MemoEdit", "registerAdapterDataObserver onItemRangeInserted");
-            }
-
-            @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                super.onItemRangeRemoved(positionStart, itemCount);
-                Log.e("MemoEdit", "registerAdapterDataObserver onItemRangeRemoved");
-            }
-
-            @Override
             public void onChanged() {
                 super.onChanged();
+                Log.e("MemoEdit","mAdapter onChanged and getItemCount = "+ mAdapter.getItemCount());
                 if (mAdapter.getItemCount() == 0) {
                     if (titleEdit.length() == 0)
                         changeSaveButtonState(false);
-                    imageArea.setVisibility(View.GONE);
-                } else imageArea.setVisibility(View.VISIBLE);
+                    imageAreaNoti.setVisibility(View.VISIBLE);
+                } else {
+                    changeSaveButtonState(true);
+                    imageAreaNoti.setVisibility(View.GONE);
+                }
             }
         });
         imageRecyclerView.setAdapter(mAdapter);
@@ -179,14 +179,12 @@ public class MemoEditActivity extends AppCompatActivity {
                     Uri selectedImg = data.getData();
                     Log.e("MemoEdit-Result", data.getData().toString());
                     mAdapter.addImage(selectedImg.toString());
-                    changeSaveButtonState(true);
                     break;
                 case CAMERA_REQUEST_CODE:
                     // 사용자가 카메라 intent에서 사진을 촬영하고 그것을 선택했다면 RESULT_OK이므로 이 곳에 진입
                     // RESULT_OK로 이곳에 진입했다는 것은 ImageAdapter에서 설정한 사진의 저장경로가 있다는 의미이므로
                     // getTakenPictureUri을 통해 새로 찍은 사진이 저장된 uri를 가져옴
                     mAdapter.addImage(mCurrentPhotoPath);
-                    changeSaveButtonState(true);
                     break;
             }
         } else {
@@ -194,13 +192,14 @@ public class MemoEditActivity extends AppCompatActivity {
         }
     }
 
-    private Dialog createUploadDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.add_image_title)
+    private void createUploadDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.add_image_title)
+                .setIcon(R.drawable.ic_attach_file_24dp)
                 .setItems(R.array.add_image_methods_array, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i) {
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
                             case 0: // 사진첩
                                 goToGallery();
                                 break;
@@ -208,25 +207,24 @@ public class MemoEditActivity extends AppCompatActivity {
                                 goToCamera();
                                 break;
                             case 2: // 외부 이미지 주소
-                                createUriInputDialog().show();
+                                createUriInputDialog();
                                 break;
                         }
                     }
-                });
-        return builder.create();
+                })
+                .show();
     }
 
-    private Dialog createUriInputDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private void createUriInputDialog() {
         final LayoutInflater inflater = getLayoutInflater();
         final View v = inflater.inflate(R.layout.dialog_uri_input, null);
-        builder.setView(v)
+        new MaterialAlertDialogBuilder(this)
+                .setView(v)
                 .setCancelable(false)
                 .setPositiveButton(R.string.positiveBtn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAdapter.addImage(getUrlStringFromView(v));
-                        changeSaveButtonState(true);
                     }
                 })
                 .setNegativeButton(R.string.negativeBtn, new DialogInterface.OnClickListener() {
@@ -234,8 +232,8 @@ public class MemoEditActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                     }
-                });
-        return builder.create();
+                })
+                .show();
     }
 
     private void goToCamera() {

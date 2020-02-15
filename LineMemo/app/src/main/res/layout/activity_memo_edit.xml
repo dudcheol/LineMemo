@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/memo_edit_activity_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackgroundGrey"
@@ -43,6 +44,29 @@
                     android:layout_below="@id/divider1"
                     android:background="@color/colorBackgroundGrey"
                     android:overScrollMode="never" />
+
+                <LinearLayout
+                    android:id="@+id/image_area_noti"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@color/colorLightGrey"
+                        android:background="@drawable/ic_sentiment_neutral_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/memo_edit_image_empty"
+                        android:textColor="@color/colorLightGrey" />
+                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -110,11 +134,11 @@
         <Button
             android:id="@+id/save_button"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="48dp"
             android:background="@drawable/green_button"
             android:text="@string/memo_edit_save"
             android:textColor="@color/colorWhite"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
     </RelativeLayout>
 </RelativeLayout>

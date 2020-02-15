@@ -15,6 +15,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,6 +58,8 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
         if (uris.size() != 0)
             Glide.with(mContext)
                     .load(uris.get(0))
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .error(R.drawable.ic_error_black_24dp)
                     .into(holder.thumbnail);
         else
             // 변경에 대해서 명시적으로 삭제해주어야 함

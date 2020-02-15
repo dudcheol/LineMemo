@@ -7,6 +7,7 @@
     <string name="memo_edit_content">내용을 입력하세요</string>
     <string name="memo_edit_upload_img">이미지 첨부</string>
     <string name="memo_edit_uploaded_img">첨부된 이미지</string>
+    <string name="memo_edit_image_empty">첨부된 이미지가 없어요</string>
 
     <!--  메모 상세 보기  -->
     <string name="memo_hint_title">제목</string>
@@ -19,7 +20,9 @@
         <item>카메라 촬영</item>
         <item>외부 이미지 주소(URL)</item>
     </string-array>
-    <string name="uriEdit_hint">외부 이미지 주소(URL)를 입력하세요</string>
+    <string name="uriEdit_hint">이미지 주소(URL)를 입력하세요</string>
+    <string name="add_image_uri_dialog_content1">외부 이미지 첨부하기</string>
+    <string name="add_image_uri_dialog_content2">이 사진이 맞나요? \n아니라면 직접 입력해주세요</string>
 
     <!-- 메뉴 -->
     <string name="menu_write">새 메모쓰기</string>

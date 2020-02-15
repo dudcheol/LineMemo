@@ -17,4 +17,5 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="alpha0">#00FFFFFF</color>
     <color name="halfAlphaBlack">#2D000000</color>
+    <color name="colorErr">#EF5350</color>
 </resources>
