@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">LineMemo</string>
 
+    <!-- DB NAME -->
+    <string name="memo_db_name">memo-test-db-4</string>
+
     <!-- 메모장 메인 -->
     <string name="memo_deleted_snack">메모가 삭제되었습니다</string>
     <string name="memo_created_snack">새 메모를 저장했습니다</string>
+    <string name="memo_empty_message">저장된 메모가 없어요</string>
 
     <!-- 메모 편집 -->
     <string name="memo_edit_save">저장하기</string>

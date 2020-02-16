@@ -1,0 +1,11 @@
+<!--출처 : https://iconmonstr.com/product-3-svg/-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:fillColor="#FF000000"
+      android:pathData="M11.5,23l-8.5,-4.535v-3.953l5.4,3.122 3.1,-3.406v8.772zM12.5,22.999v-8.806l3.162,3.343 5.338,-2.958v3.887l-8.5,4.534zM2.161,12.874l-2.161,-1.244 3,-3.302 -3,-2.823 8.718,-4.505 3.215,2.385 3.325,-2.385 8.742,4.561 -2.995,2.771 2.995,3.443 -2.242,1.241v-0.001l-5.903,3.27 -3.348,-3.541 7.416,-3.962 -7.922,-4.372 -7.923,4.372 7.422,3.937v0.024l-3.297,3.622 -5.203,-3.008 -0.16,-0.092 -0.679,-0.393v0.002z"
+      android:fillType="evenOdd"/>
+</vector>

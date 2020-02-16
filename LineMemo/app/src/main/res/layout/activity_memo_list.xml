@@ -15,11 +15,42 @@
         android:theme="@style/Toolbar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:overScrollMode="never" />
+        android:fillViewport="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="true"
+            android:overScrollMode="never"
+            android:paddingBottom="50dp" />
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/memo_empty_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/toolbar"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/ic_iconmonstr_product_fill"
+            android:backgroundTint="@color/colorLightGrey"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            style="@style/ContentFont_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/memo_empty_message" />
+    </LinearLayout>
 
 </RelativeLayout>

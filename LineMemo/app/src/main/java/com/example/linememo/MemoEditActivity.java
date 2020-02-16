@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -165,7 +166,12 @@ public class MemoEditActivity extends AppCompatActivity {
                     changeSaveButtonState(true);
                     imageAreaNoti.setVisibility(View.GONE);
                 }
-                imageRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                    }
+                }, 600);
             }
         });
         imageRecyclerView.setAdapter(mAdapter);

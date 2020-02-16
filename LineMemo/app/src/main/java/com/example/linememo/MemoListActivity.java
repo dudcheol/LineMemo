@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ public class MemoListActivity extends AppCompatActivity {
     private MemoViewModel memoViewModel;
     private RecyclerView recyclerView;
     private MemoAdapter mAdapter;
+    private LinearLayout memoEmptyMessage;
 
     private int divider;
 
@@ -65,6 +67,7 @@ public class MemoListActivity extends AppCompatActivity {
 
     void initSetting() {
         recyclerView = findViewById(R.id.recycler);
+        memoEmptyMessage = findViewById(R.id.memo_empty_message);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         myToolbar.setTitle("LINE MEMO");
@@ -90,6 +93,8 @@ public class MemoListActivity extends AppCompatActivity {
         memoViewModel.getAll().observe(this, new Observer<List<Memo>>() {
             @Override
             public void onChanged(List<Memo> memos) {
+                if (memos.isEmpty()) memoEmptyMessage.setVisibility(View.VISIBLE);
+                else memoEmptyMessage.setVisibility(View.GONE);
                 mAdapter.setData(memos);
             }
         });
@@ -131,6 +136,7 @@ public class MemoListActivity extends AppCompatActivity {
                             Snackbar.make(findViewById(R.id.memo_list_activity_layout), R.string.memo_created_snack, Snackbar.LENGTH_SHORT)
                                     .setBackgroundTint(getResources().getColor(R.color.colorIconNavy))
                                     .show();
+                            recyclerView.smoothScrollToPosition(0);
                         }
                     }, 600);
                     break;
