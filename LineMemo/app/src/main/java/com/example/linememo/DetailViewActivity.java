@@ -23,8 +23,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 
 public class DetailViewActivity extends AppCompatActivity {
-    private RecyclerView imageRecyclerView;
-    private ImageAdapter mAdapter;
     private ImageViewPagerAdapter mViewPagerAdapter;
     private TextView title;
     private TextView content;
@@ -111,6 +109,7 @@ public class DetailViewActivity extends AppCompatActivity {
                     date.setText(AndroidUtil.longDateToLongString(memo.getDate()));
                     if (!memo.getImageUris().isEmpty()) {
                         mViewPagerAdapter.setImageUris(memo.getImageUris());
+                        imageViewPager.setAdapter(mViewPagerAdapter);
                         imageArea.setVisibility(View.VISIBLE);
                     } else imageArea.setVisibility(View.GONE);
                     memoData = memo;
