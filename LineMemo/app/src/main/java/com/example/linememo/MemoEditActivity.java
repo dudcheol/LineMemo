@@ -69,23 +69,6 @@ public class MemoEditActivity extends AppCompatActivity {
         initImageRecyclerView();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.memo_edit_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.addPhoto:
-                createUploadDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     void initSetting() {
         Intent intent = getIntent();
         myViewMode = intent.getIntExtra("mode", -1);

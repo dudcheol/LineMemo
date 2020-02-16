@@ -2,7 +2,7 @@
     <string name="app_name">LineMemo</string>
 
     <!-- DB NAME -->
-    <string name="memo_db_name">memo-test-db-4</string>
+    <string name="memo_db_name">memo-test-db-3</string>
 
     <!-- 메모장 메인 -->
     <string name="memo_deleted_snack">메모가 삭제되었습니다</string>
@@ -35,7 +35,6 @@
 
     <!-- 메뉴 -->
     <string name="menu_write">새 메모쓰기</string>
-    <string name="menu_add_photo">사진 추가하기</string>
     <string name="menu_delete">삭제하기</string>
     <string name="menu_edit">수정하기</string>
 
