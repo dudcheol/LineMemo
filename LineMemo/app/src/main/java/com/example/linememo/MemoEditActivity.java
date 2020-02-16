@@ -1,11 +1,9 @@
 package com.example.linememo;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,10 +18,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -31,11 +29,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
@@ -156,7 +149,7 @@ public class MemoEditActivity extends AppCompatActivity {
             @Override
             public void onChanged() {
                 super.onChanged();
-                Log.e("MemoEdit","mAdapter onChanged and getItemCount = "+ mAdapter.getItemCount());
+                Log.e("MemoEdit", "mAdapter onChanged and getItemCount = " + mAdapter.getItemCount());
                 if (mAdapter.getItemCount() == 0) {
                     if (titleEdit.length() == 0)
                         changeSaveButtonState(false);
@@ -217,15 +210,14 @@ public class MemoEditActivity extends AppCompatActivity {
     }
 
     private void createUriInputDialog() {
-        final LayoutInflater inflater = getLayoutInflater();
-        final View v = inflater.inflate(R.layout.dialog_uri_input, null);
-        new MaterialAlertDialogBuilder(this)
+        final View v = getLayoutInflater().inflate(R.layout.dialog_uri_input, null);
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this)
                 .setView(v)
                 .setCancelable(false)
                 .setPositiveButton(R.string.positiveBtn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mAdapter.addImage(getUrlStringFromView(v));
+                        mAdapter.addImage(getUrlStringFromEdit((EditText) v.findViewById(R.id.uri_input)));
                     }
                 })
                 .setNegativeButton(R.string.negativeBtn, new DialogInterface.OnClickListener() {
@@ -233,8 +225,31 @@ public class MemoEditActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                     }
-                })
-                .show();
+                });
+        final AlertDialog alertDialog = materialAlertDialogBuilder.show();
+        final Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setEnabled(false);
+
+        EditText uriInput = v.findViewById(R.id.uri_input);
+        uriInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().trim().length() == 0)
+                    positiveButton.setEnabled(false);
+                else
+                    positiveButton.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void goToCamera() {
@@ -271,8 +286,7 @@ public class MemoEditActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "사진첩을 선택하세요"), MemoEditActivity.GALLERY_REQUEST_CODE);
     }
 
-    private String getUrlStringFromView(View v) {
-        EditText urlEdit = v.findViewById(R.id.uriEdit);
+    private String getUrlStringFromEdit(EditText urlEdit) {
         return urlEdit.getText().toString().trim();
     }
 
