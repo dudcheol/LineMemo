@@ -34,7 +34,6 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public ImageAdapter(Context context, List<String> imageUri) {
         this.mContext = context;
         this.mImageUris = imageUri;
-        mImageUris.add("#PHOTO_ADD_BUTTON");
     }
 
     @Override
@@ -58,9 +57,12 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             case 0:
                 final LastItemViewHolder lastItemViewHolder = (LastItemViewHolder) holder;
 
-                if (getItemCount() > 1) lastItemViewHolder.addPhotoCard.setVisibility(View.VISIBLE);
-                else lastItemViewHolder.addPhotoCard.setVisibility(View.GONE);
-                lastItemViewHolder.addPhotoCard.setOnClickListener(new View.OnClickListener() {
+                if (getItemCount() > 1)
+                    lastItemViewHolder.addPhotoButton.setVisibility(View.VISIBLE);
+                else
+                    lastItemViewHolder.addPhotoButton.setVisibility(View.GONE);
+
+                lastItemViewHolder.addPhotoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mContext instanceof MemoEditActivity)
@@ -117,7 +119,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mImageUris.size();
+        return mImageUris.size() + 1; // 마지막 이미지 추가 버튼
     }
 
     public void addImage(String imageUri) {
@@ -137,12 +139,12 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public class LastItemViewHolder extends RecyclerView.ViewHolder {
-        private CardView addPhotoCard;
+        private CardView addPhotoButton;
 
         public LastItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            addPhotoCard = itemView.findViewById(R.id.add_photo_card);
+            addPhotoButton = itemView.findViewById(R.id.add_photo_card);
         }
     }
 
