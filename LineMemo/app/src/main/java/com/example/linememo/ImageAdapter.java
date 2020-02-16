@@ -3,6 +3,7 @@ package com.example.linememo;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import java.util.List;
 
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHolder> {
+    private static final String TAG = "ImageAdapter";
     private Context mContext;
     private List<String> mImageUris;
 
@@ -43,19 +45,27 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemViewHold
     @Override
     public void onBindViewHolder(@NonNull final ItemViewHolder holder, final int position) {
         final String uri = mImageUris.get(position);
+        final boolean[] isAlreadyNotice = {false};
         // 이미지 로드
+        Log.e(TAG, uri + "/position:" + position);
         Glide.with(mContext)
                 .load(uri)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        Snackbar.make(((Activity) mContext).findViewById(R.id.memo_edit_activity_layout),
-                                R.string.memo_edit_load_fail_snack,
-                                Snackbar.LENGTH_LONG)
-                                .setBackgroundTint(mContext.getResources().getColor(R.color.colorErr))
-                                .show();
-                        removeImage(uri); // AdapterObserver가 감지할 수 있도록 데이터셋 변경을 알림
+                        Log.e(TAG, "target = "+target);
+                        Log.e(TAG, model.toString());
+                        Log.e(TAG, uri);
+                        if(!isAlreadyNotice[0]) {
+                            Snackbar.make(((Activity) mContext).findViewById(R.id.memo_edit_activity_layout),
+                                    R.string.memo_edit_load_fail_snack,
+                                    Snackbar.LENGTH_LONG)
+                                    .setBackgroundTint(mContext.getResources().getColor(R.color.colorErr))
+                                    .show();
+                            removeImage(uri); // AdapterObserver가 감지할 수 있도록 데이터셋 변경을 알림
+                            isAlreadyNotice[0] = true;
+                        }
                         return false;
                     }
 

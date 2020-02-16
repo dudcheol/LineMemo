@@ -44,6 +44,8 @@ public class MemoEditActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 2001;
     public static final int GALLERY_REQUEST_CODE = 2002;
 
+    private static final String TAG = "MemoEditActivity";
+
     private MemoViewModel viewModel;
     private LinearLayout imageAreaNoti;
     private EditText titleEdit;
@@ -149,7 +151,7 @@ public class MemoEditActivity extends AppCompatActivity {
             @Override
             public void onChanged() {
                 super.onChanged();
-                Log.e("MemoEdit", "mAdapter onChanged and getItemCount = " + mAdapter.getItemCount());
+                Log.e(TAG, "mAdapter onChanged and getItemCount = " + mAdapter.getItemCount());
                 if (mAdapter.getItemCount() == 0) {
                     if (titleEdit.length() == 0)
                         changeSaveButtonState(false);
@@ -167,11 +169,11 @@ public class MemoEditActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            Log.e("MemoEdit", "onActivityResult RESULT OK");
+            Log.e(TAG, "onActivityResult RESULT OK");
             switch (requestCode) {
                 case GALLERY_REQUEST_CODE:
                     Uri selectedImg = data.getData();
-                    Log.e("MemoEdit-Result", data.getData().toString());
+                    Log.e(TAG, data.getData().toString());
                     mAdapter.addImage(selectedImg.toString());
                     break;
                 case CAMERA_REQUEST_CODE:
@@ -182,7 +184,7 @@ public class MemoEditActivity extends AppCompatActivity {
                     break;
             }
         } else {
-            Log.e("MemoEdit", "onActivityResult RESULT NO");
+            Log.e(TAG, "onActivityResult RESULT NO");
         }
     }
 
@@ -265,7 +267,7 @@ public class MemoEditActivity extends AppCompatActivity {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.example.linememo.fileprovider",
                         photoFile);
-                Log.e("ImageAdapter", "photoURI = " + photoURI.toString());
+                Log.e(TAG, "photoURI = " + photoURI.toString());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 //                takePictureIntent.putExtra("imgUri", photoURI);
                 startActivityForResult(takePictureIntent, MemoEditActivity.CAMERA_REQUEST_CODE);
@@ -302,7 +304,7 @@ public class MemoEditActivity extends AppCompatActivity {
         );
 
         mCurrentPhotoPath = image.getAbsolutePath();
-        Log.e("ImageAdapter", "Image URI = " + mCurrentPhotoPath);
+        Log.e(TAG, "Image URI = " + mCurrentPhotoPath);
         return image;
     }
 
