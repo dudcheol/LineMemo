@@ -24,6 +24,6 @@ public class AndroidUtil {
 
     public static String longDateToLongString(long longDate) {
         Date date = new Date(longDate);
-        return new SimpleDateFormat("yyyy년 M월 d일 a h:m").format(date);
+        return new SimpleDateFormat("yyyy년 M월 d일 a h:mm").format(date);
     }
 }
