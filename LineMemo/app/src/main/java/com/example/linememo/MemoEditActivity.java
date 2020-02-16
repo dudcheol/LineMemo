@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,6 +130,12 @@ public class MemoEditActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        imageAreaNoti.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createUploadDialog();
+            }
+        });
 
         titleEdit.addTextChangedListener(editTextChangeListener);
         titleEdit.requestFocus();
@@ -152,7 +157,7 @@ public class MemoEditActivity extends AppCompatActivity {
             public void onChanged() {
                 super.onChanged();
                 Log.e(TAG, "mAdapter onChanged and getItemCount = " + mAdapter.getItemCount());
-                if (mAdapter.getItemCount() == 0) {
+                if (mAdapter.getItemCount() <= 1) {
                     if (titleEdit.length() == 0)
                         changeSaveButtonState(false);
                     imageAreaNoti.setVisibility(View.VISIBLE);
@@ -160,6 +165,7 @@ public class MemoEditActivity extends AppCompatActivity {
                     changeSaveButtonState(true);
                     imageAreaNoti.setVisibility(View.GONE);
                 }
+                imageRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
             }
         });
         imageRecyclerView.setAdapter(mAdapter);
@@ -188,7 +194,7 @@ public class MemoEditActivity extends AppCompatActivity {
         }
     }
 
-    private void createUploadDialog() {
+    public void createUploadDialog() {
         new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.add_image_title)
                 .setIcon(R.drawable.ic_attach_file_24dp)

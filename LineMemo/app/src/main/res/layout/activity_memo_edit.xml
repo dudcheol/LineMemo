@@ -44,29 +44,6 @@
                     android:layout_height="100dp"
                     android:background="@color/colorBackgroundGrey"
                     android:overScrollMode="never" />
-
-                <LinearLayout
-                    android:id="@+id/image_area_noti"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/ic_sentiment_neutral_black"
-                        android:backgroundTint="@color/colorLightGrey" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/memo_edit_image_empty"
-                        android:textColor="@color/colorLightGrey" />
-                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -122,6 +99,30 @@
                     android:textColor="@color/colorDarkGrey"
                     android:textSize="20sp" />
             </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/image_area_noti"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_alignTop="@+id/divider1"
+                android:background="@drawable/alpha_button"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_sentiment_neutral_black"
+                    android:backgroundTint="@color/colorLightGrey" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/memo_edit_image_empty"
+                    android:textColor="@color/colorLightGrey" />
+            </LinearLayout>
         </RelativeLayout>
     </ScrollView>
 

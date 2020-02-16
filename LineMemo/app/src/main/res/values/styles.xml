@@ -11,7 +11,9 @@
         <item name="android:scrollViewStyle">@style/Widget.MyTheme.ScrollView</item>
 
         <!-- Material Style Setting -->
-        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog</item>
+        <item name="materialAlertDialogTheme">
+            @style/ThemeOverlay.MaterialComponents.MaterialAlertDialog
+        </item>
     </style>
 
     <!-- Material Style Setting -->
