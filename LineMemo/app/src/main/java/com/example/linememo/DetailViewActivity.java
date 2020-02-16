@@ -15,7 +15,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;

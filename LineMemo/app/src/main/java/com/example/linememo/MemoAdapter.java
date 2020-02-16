@@ -60,8 +60,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
         if (uris.size() != 0)
             Glide.with(mContext)
                     .load(uris.get(0))
+                    .override(200) // 한번에 많은 이미지 로딩 고려한 사이즈 조절
                     .transition(DrawableTransitionOptions.withCrossFade())
-                    .error(R.drawable.ic_error_black_24dp)
+                    .error(R.drawable.ic_unknown_50dp)
                     .into(holder.thumbnail);
         else
             // 변경에 대해서 명시적으로 삭제해주어야 함

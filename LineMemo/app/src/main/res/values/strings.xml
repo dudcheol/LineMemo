@@ -41,4 +41,7 @@
     <!-- 공통 -->
     <string name="positiveBtn">확인</string>
     <string name="negativeBtn">취소</string>
+    
+    <!-- 포토뷰 -->
+    <string name="photo_view_notice">확대해서 볼 수 있습니다.</string>
 </resources>

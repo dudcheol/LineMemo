@@ -1,8 +1,8 @@
 package com.example.linememo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +36,16 @@ public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImageViewPagerAd
     public void onBindViewHolder(@NonNull ImageViewPagerViewHolder holder, final int position) {
         Glide.with(mContext)
                 .load(mImageUris.get(position))
+                .override(1000)
+                .error(R.drawable.ic_unknown_50dp)
                 .into(holder.viewPagerImage);
 
         holder.viewPagerCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mImageUris.get(position)));
-                intent.setType("image/*");
-                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, PhotoViewActivity.class);
+                intent.putExtra("uri", mImageUris.get(position));
+                ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SCALE_UP_FADE_IN, intent);
             }
         });
     }

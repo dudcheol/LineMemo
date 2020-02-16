@@ -72,4 +72,16 @@
         <!--        <item name="android:foreground">?android:attr/selectableItemBackground</item>-->
         <item name="android:foreground">@drawable/alpha_button</item>
     </style>
+
+    <!-- Transparent Activity -->
+    <style name="Theme.PhotoView" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+<!--        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>-->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:background">@color/colorBlack</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

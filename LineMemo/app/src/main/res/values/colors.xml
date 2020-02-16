@@ -18,4 +18,6 @@
     <color name="alpha0">#00FFFFFF</color>
     <color name="halfAlphaBlack">#12000000</color>
     <color name="colorErr">#EF5350</color>
+    <color name="alphaBlack">#CC000000</color>
+    <color name="alphaWhite">#CCFFFFFF</color>
 </resources>

@@ -2,6 +2,7 @@ package com.example.linememo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -106,7 +107,14 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             }
                         })
                         .into(itemViewHolder.imageView);
-                itemViewHolder.imageView.setOnClickListener(null); // Todo : 크게보기 - 디테일뷰에서 뷰페이저 아이템 클릭했을때와 동일하게
+                itemViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, PhotoViewActivity.class);
+                        intent.putExtra("uri", mImageUris.get(position));
+                        ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SCALE_UP_FADE_IN, intent);
+                    }
+                });
                 itemViewHolder.itemDeleteBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
