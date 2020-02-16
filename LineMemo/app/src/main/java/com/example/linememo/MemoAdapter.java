@@ -45,6 +45,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
         String title = mDataset.get(position).getTitle().trim();
         String content = mDataset.get(position).getContent().trim();
         List<String> uris = mDataset.get(position).getImageUris();
+        long date = mDataset.get(position).getDate();
 
         if (title.length() != 0) {
             holder.title.setText(title);
@@ -67,6 +68,8 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
             Glide.with(mContext)
                     .clear(holder.thumbnail);
 
+        holder.date.setText(AndroidUtil.longDateToShortString(date));
+
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,6 +91,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
         private TextView content;
         private ImageView thumbnail;
         private CardView card;
+        private TextView date;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -96,6 +100,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
             content = itemView.findViewById(R.id.item_content);
             thumbnail = itemView.findViewById(R.id.item_thumbnail);
             card = itemView.findViewById(R.id.item_card);
+            date = itemView.findViewById(R.id.item_date);
         }
     }
 

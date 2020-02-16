@@ -28,6 +28,7 @@ public class DetailViewActivity extends AppCompatActivity {
     private ImageViewPagerAdapter mViewPagerAdapter;
     private TextView title;
     private TextView content;
+    private TextView date;
     private ViewPager2 imageViewPager;
     private RelativeLayout imageArea;
     private RelativeLayout memoArea;
@@ -88,6 +89,7 @@ public class DetailViewActivity extends AppCompatActivity {
         imageViewPager = findViewById(R.id.image_view_pager);
         imageArea = findViewById(R.id.image_area);
         memoArea = findViewById(R.id.memo_area);
+        date = findViewById(R.id.date);
 
         memoArea.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +108,7 @@ public class DetailViewActivity extends AppCompatActivity {
                 if (memo != null) {
                     title.setText(memo.getTitle());
                     content.setText(memo.getContent());
+                    date.setText(AndroidUtil.longDateToLongString(memo.getDate()));
                     if (!memo.getImageUris().isEmpty()) {
                         mViewPagerAdapter.setImageUris(memo.getImageUris());
                         imageArea.setVisibility(View.VISIBLE);

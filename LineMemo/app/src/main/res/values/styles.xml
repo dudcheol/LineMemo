@@ -72,5 +72,4 @@
         <!--        <item name="android:foreground">?android:attr/selectableItemBackground</item>-->
         <item name="android:foreground">@drawable/alpha_button</item>
     </style>
-
 </resources>
