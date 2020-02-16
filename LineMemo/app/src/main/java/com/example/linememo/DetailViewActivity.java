@@ -30,6 +30,7 @@ public class DetailViewActivity extends AppCompatActivity {
     private TextView content;
     private ViewPager2 imageViewPager;
     private RelativeLayout imageArea;
+    private RelativeLayout memoArea;
 
     private MemoViewModel viewModel;
     private int memoId;
@@ -54,13 +55,9 @@ public class DetailViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case R.id.edit:
-                intent = new Intent(this, MemoEditActivity.class);
-                intent.putExtra("mode", MemoEditActivity.MODIFY_MODE);
-                intent.putExtra("memoData", memoData);
-                ActivityTransitionAnim.startActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION, intent);
+                changeEditMode();
                 return true;
             case R.id.delete:
                 createDeleteAlert();
@@ -90,6 +87,14 @@ public class DetailViewActivity extends AppCompatActivity {
         content = findViewById(R.id.content);
         imageViewPager = findViewById(R.id.image_view_pager);
         imageArea = findViewById(R.id.image_area);
+        memoArea = findViewById(R.id.memo_area);
+
+        memoArea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeEditMode();
+            }
+        });
 
         viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
     }
@@ -130,10 +135,6 @@ public class DetailViewActivity extends AppCompatActivity {
             }
         });
         imageViewPager.setAdapter(mViewPagerAdapter);
-
-
-//        mAdapter = new ImageAdapter(this, new ArrayList<String>(), ImageAdapter.IMAGE_ADAPTER_VIEW_MODE);
-//        imageRecyclerView.setAdapter(mAdapter);
     }
 
     private void createDeleteAlert() {
@@ -155,6 +156,13 @@ public class DetailViewActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    private void changeEditMode() {
+        Intent intent = new Intent(this, MemoEditActivity.class);
+        intent.putExtra("mode", MemoEditActivity.MODIFY_MODE);
+        intent.putExtra("memoData", memoData);
+        ActivityTransitionAnim.startActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION, intent);
     }
 
     @Override

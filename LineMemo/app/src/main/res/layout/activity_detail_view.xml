@@ -18,9 +18,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:background="@color/colorWhite">
+        android:background="@color/colorWhite"
+        android:fillViewport="true">
 
         <RelativeLayout
+            android:id="@+id/memo_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
