@@ -24,14 +24,18 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 public class MemoListActivity extends AppCompatActivity {
+    public static final String MEMO_LIST_VIEW_MODE_KEY = "viewMode";
     public static final int CREATE_MEMO_REQUEST_CODE = 8000;
     public static final int DETAIL_DELETE_REQUEST_CODE = 9000;
     private MemoViewModel memoViewModel;
     private RecyclerView recyclerView;
     private MemoAdapter mAdapter;
     private LinearLayout memoEmptyMessage;
+    private Toolbar myToolbar;
+    private Menu menu;
 
     private int divider;
+    private int currentSpan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,9 @@ public class MemoListActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.memo_list_menu, menu);
+        changeViewModeMenuIcon(currentSpan);
         return true;
     }
 
@@ -52,6 +58,10 @@ public class MemoListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
+            case R.id.view_mode:
+                changeRecyclerViewLayout(currentSpan == 2 ? 1 : 2);
+                changeViewModeMenuIcon(currentSpan);
+                return true;
             case R.id.write:
                 intent = new Intent(this, MemoEditActivity.class);
                 intent.putExtra("mode", MemoEditActivity.CREATE_MODE);
@@ -69,13 +79,16 @@ public class MemoListActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler);
         memoEmptyMessage = findViewById(R.id.memo_empty_message);
 
-        Toolbar myToolbar = findViewById(R.id.toolbar);
+        myToolbar = findViewById(R.id.toolbar);
         myToolbar.setTitle("LINE MEMO");
         myToolbar.setTitleTextColor(getResources().getColor(R.color.colorIconGreen));
         setSupportActionBar(myToolbar);
 
         memoViewModel = new ViewModelProvider(this).get(MemoViewModel.class);
         divider = AndroidUtil.dpToPx(this, 10);
+
+        int savedSpan = SharedPreferenceManager.getInt(this, MEMO_LIST_VIEW_MODE_KEY);
+        currentSpan = savedSpan == -1 ? 2 : savedSpan;
     }
 
     void initRecyclerView() {
@@ -85,7 +98,7 @@ public class MemoListActivity extends AppCompatActivity {
         mAdapter = new MemoAdapter(this);
 
         // 사용하는 레이아웃 = StaggeredGridLayoutManager
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(currentSpan, StaggeredGridLayoutManager.VERTICAL);
         layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
@@ -93,11 +106,32 @@ public class MemoListActivity extends AppCompatActivity {
         memoViewModel.getAll().observe(this, new Observer<List<Memo>>() {
             @Override
             public void onChanged(List<Memo> memos) {
-                if (memos.isEmpty()) memoEmptyMessage.setVisibility(View.VISIBLE);
-                else memoEmptyMessage.setVisibility(View.GONE);
+                if (memos.isEmpty()) {
+                    menu.getItem(0).setVisible(false);
+                    memoEmptyMessage.setVisibility(View.VISIBLE);
+                } else {
+                    menu.getItem(0).setVisible(true);
+                    memoEmptyMessage.setVisibility(View.GONE);
+                }
                 mAdapter.setData(memos);
             }
         });
+    }
+
+    void changeRecyclerViewLayout(int spanCount) {
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL);
+        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        recyclerView.setLayoutManager(layoutManager);
+        mAdapter.notifyDataSetChanged();
+        currentSpan = spanCount;
+        SharedPreferenceManager.setInt(this, MEMO_LIST_VIEW_MODE_KEY, spanCount);
+    }
+
+    void changeViewModeMenuIcon(int spanCount) {
+        if (spanCount == 1)
+            menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_grid_on_24dp));
+        else
+            menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_grid_off_24dp));
     }
 
     private RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {

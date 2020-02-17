@@ -20,7 +20,7 @@ public abstract class MemoDatabase extends RoomDatabase {
         synchronized (sLock) {
             if (INSTANCE == null) {
                 INSTANCE = Room
-                        .databaseBuilder(context.getApplicationContext(), MemoDatabase.class, String.valueOf(R.string.memo_db_name))
+                        .databaseBuilder(context.getApplicationContext(), MemoDatabase.class, "memo-test-db-3")
                         .build();
             }
             return INSTANCE;
