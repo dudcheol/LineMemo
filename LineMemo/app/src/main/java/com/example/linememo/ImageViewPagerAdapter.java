@@ -44,7 +44,7 @@ public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImageViewPagerAd
     public void onBindViewHolder(@NonNull final ImageViewPagerViewHolder holder, final int position) {
         Glide.with(mContext)
                 .load(mImageUris.get(position))
-                .override(500 ,500)
+                .override(700 ,700)
                 .centerCrop()
                 .listener(new RequestListener<Drawable>() {
                     @Override

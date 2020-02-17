@@ -81,6 +81,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 Log.e(TAG, uri + "/position:" + position);
                 Glide.with(mContext)
                         .load(uri)
+                        .override(100,100)
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .listener(new RequestListener<Drawable>() {
                             @Override
