@@ -12,14 +12,11 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -122,6 +119,7 @@ public class MemoEditActivity extends AppCompatActivity {
         });
 
         titleEdit.addTextChangedListener(editTextChangeListener);
+        contentEdit.addTextChangedListener(editTextChangeListener);
         titleEdit.requestFocus();
 
         viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
@@ -326,7 +324,7 @@ public class MemoEditActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (charSequence.toString().trim().length() == 0 && mImageUris.isEmpty())
+            if (titleEdit.getText().toString().trim().length() == 0 && contentEdit.getText().toString().trim().length() == 0 && mImageUris.isEmpty())
                 changeSaveButtonState(false);
             else
                 changeSaveButtonState(true);
