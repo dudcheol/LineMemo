@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -102,6 +103,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             @Override
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                                 itemViewHolder.itemDeleteBtn.setVisibility(View.VISIBLE);
+                                itemViewHolder.zoomIcon.setVisibility(View.VISIBLE);
                                 itemViewHolder.progressBar.setVisibility(View.GONE);
                                 return false;
                             }
@@ -160,6 +162,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private ImageView imageView;
         private ImageView itemDeleteBtn;
         private ProgressBar progressBar;
+        private RelativeLayout zoomIcon;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -167,6 +170,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             imageView = itemView.findViewById(R.id.itemImage);
             itemDeleteBtn = itemView.findViewById(R.id.itemDeleteBtn);
             progressBar = itemView.findViewById(R.id.progress_bar);
+            zoomIcon = itemView.findViewById(R.id.zoom_icon);
         }
     }
 }

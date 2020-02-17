@@ -21,4 +21,21 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter" />
     </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:id="@+id/zoom_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignEnd="@id/view_pager_card"
+        android:layout_alignBottom="@id/view_pager_card"
+        android:background="@drawable/oval_shape"
+        android:backgroundTint="@color/alphaSemiBlack"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_zoom_in_black_24dp"
+            android:backgroundTint="@color/alphaSemiWhite" />
+    </RelativeLayout>
 </RelativeLayout>

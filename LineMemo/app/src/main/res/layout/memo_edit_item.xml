@@ -12,10 +12,10 @@
 
         <ImageView
             android:id="@+id/itemImage"
-            android:scaleType="centerCrop"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@color/colorBackgroundGrey" />
+            android:background="@color/colorBackgroundGrey"
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/itemDeleteBtn"
@@ -27,13 +27,29 @@
             android:background="@drawable/ic_cancel_black_24dp"
             android:backgroundTint="#EF5350"
 
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:id="@+id/zoom_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:backgroundTint="@color/alphaSemiBlack"
+        android:background="@drawable/oval_shape"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_zoom_in_black_24dp"
+            android:backgroundTint="@color/alphaSemiWhite"/>
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:indeterminateTint="@color/colorLightGrey"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/colorLightGrey" />
 </RelativeLayout>

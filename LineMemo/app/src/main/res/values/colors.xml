@@ -20,4 +20,6 @@
     <color name="colorErr">#EF5350</color>
     <color name="alphaBlack">#CC000000</color>
     <color name="alphaWhite">#CCFFFFFF</color>
+    <color name="alphaSemiBlack">#59000000</color>
+    <color name="alphaSemiWhite">#80FFFFFF</color>
 </resources>

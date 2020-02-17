@@ -43,5 +43,5 @@
     <string name="negativeBtn">취소</string>
     
     <!-- 포토뷰 -->
-    <string name="photo_view_notice">확대해서 볼 수 있습니다.</string>
+    <string name="photo_view_notice">두 손가락으로 확대해보세요</string>
 </resources>
