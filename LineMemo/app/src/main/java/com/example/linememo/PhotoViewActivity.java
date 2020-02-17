@@ -56,6 +56,9 @@ public class PhotoViewActivity extends AppCompatActivity {
         });
 
         photoView.setZoomTransitionDuration(400);
+        photoView.setMaximumScale(5f);
+        photoView.setMediumScale(2f);
+        photoView.setMinimumScale(1f);
 
         photoView.setOnScaleChangeListener(new OnScaleChangedListener() {
             @Override
