@@ -20,7 +20,7 @@
             android:id="@+id/view_pager_image"
             style="@style/ImageScale_FITCENTER"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </androidx.cardview.widget.CardView>
 
     <RelativeLayout
@@ -29,6 +29,7 @@
         android:layout_height="50dp"
         android:layout_alignEnd="@id/view_pager_card"
         android:layout_alignBottom="@id/view_pager_card"
+        android:layout_margin="10dp"
         android:background="@drawable/oval_shape"
         android:backgroundTint="@color/alphaSemiBlack"
         android:visibility="visible">

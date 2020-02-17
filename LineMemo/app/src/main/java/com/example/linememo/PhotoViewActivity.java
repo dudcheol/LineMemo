@@ -1,14 +1,12 @@
 package com.example.linememo;
 
 import android.content.Intent;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -20,7 +18,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.github.chrisbanes.photoview.OnMatrixChangedListener;
+import com.github.chrisbanes.photoview.OnScaleChangedListener;
+import com.github.chrisbanes.photoview.OnViewTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
 
 public class PhotoViewActivity extends AppCompatActivity {
@@ -30,8 +29,6 @@ public class PhotoViewActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ImageView photoViewCloseButton;
     private TextView photoViewText;
-
-    private int MAX_IMAGE_SIZE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,22 +55,28 @@ public class PhotoViewActivity extends AppCompatActivity {
             }
         });
 
-        photoView.setOnMatrixChangeListener(new OnMatrixChangedListener() {
+        photoView.setZoomTransitionDuration(400);
+
+        photoView.setOnScaleChangeListener(new OnScaleChangedListener() {
             @Override
-            public void onMatrixChanged(RectF rect) {
-                Log.e(TAG, "rect=" + rect);
-                if (rect.left >= 0) {
-                    photoViewCloseButton.setVisibility(View.VISIBLE);
-                    photoViewText.setVisibility(View.VISIBLE);
-                } else {
+            public void onScaleChange(float scaleFactor, float focusX, float focusY) {
+                Log.e(TAG, "getcale=" + photoView.getScale());
+                if (photoView.getScale() >= 1.1) {
                     photoViewCloseButton.setVisibility(View.GONE);
                     photoViewText.setVisibility(View.GONE);
+                } else {
+                    photoViewCloseButton.setVisibility(View.VISIBLE);
+                    photoViewText.setVisibility(View.VISIBLE);
                 }
             }
         });
 
-        MAX_IMAGE_SIZE = AndroidUtil.getSupportedMaxBitmapSize();
-        Log.e(TAG, MAX_IMAGE_SIZE+"");
+        photoView.setOnViewTapListener(new OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                photoView.setScale(1f, true);
+            }
+        });
     }
 
     private void showPhotoView() {
@@ -85,7 +88,7 @@ public class PhotoViewActivity extends AppCompatActivity {
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        Log.e(TAG, e+"");
+                        Log.e(TAG, e + "");
                         progressBar.setVisibility(View.GONE);
                         photoViewText.setText(R.string.memo_edit_load_fail_snack);
                         return false;
@@ -104,6 +107,6 @@ public class PhotoViewActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION);
+        ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.SCALE_DOWN_FADE_OUT);
     }
 }

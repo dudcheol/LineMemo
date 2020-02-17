@@ -30,7 +30,7 @@ public class ActivityTransitionAnim {
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 break;
             case SCALE_UP_FADE_IN:
-                activity.overridePendingTransition(R.anim.scale_up_fade_in, R.anim.non_anim);
+                activity.overridePendingTransition(R.anim.scale_up_fade_in, R.anim.fade_out);
                 break;
         }
     }
@@ -69,7 +69,7 @@ public class ActivityTransitionAnim {
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 break;
             case SCALE_DOWN_FADE_OUT:
-                activity.overridePendingTransition(R.anim.non_anim, R.anim.scale_down_fade_out);
+                activity.overridePendingTransition(R.anim.fade_in, R.anim.scale_down_fade_out);
         }
     }
 }
