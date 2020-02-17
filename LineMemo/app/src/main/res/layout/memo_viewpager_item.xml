@@ -12,14 +12,15 @@
         android:layout_centerInParent="true"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
+        android:minWidth="300dp"
+        android:minHeight="300dp"
         app:cardBackgroundColor="@color/colorWhite">
 
         <ImageView
             android:id="@+id/view_pager_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter" />
+            style="@style/ImageScale_FITCENTER"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </androidx.cardview.widget.CardView>
 
     <RelativeLayout
@@ -38,4 +39,10 @@
             android:background="@drawable/ic_zoom_in_black_24dp"
             android:backgroundTint="@color/alphaSemiWhite" />
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/progressBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 </RelativeLayout>

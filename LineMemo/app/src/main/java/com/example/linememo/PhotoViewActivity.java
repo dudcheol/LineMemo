@@ -28,9 +28,10 @@ public class PhotoViewActivity extends AppCompatActivity {
     private PhotoView photoView;
     private String uri;
     private ProgressBar progressBar;
-    private RelativeLayout fullScreen;
     private ImageView photoViewCloseButton;
     private TextView photoViewText;
+
+    private int MAX_IMAGE_SIZE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,6 @@ public class PhotoViewActivity extends AppCompatActivity {
 
         photoView = findViewById(R.id.photo_view);
         progressBar = findViewById(R.id.progress_bar);
-        fullScreen = findViewById(R.id.full_screen);
         photoViewCloseButton = findViewById(R.id.photo_view_close_button);
         photoViewText = findViewById(R.id.photo_view_text);
 
@@ -71,16 +71,21 @@ public class PhotoViewActivity extends AppCompatActivity {
                 }
             }
         });
+
+        MAX_IMAGE_SIZE = AndroidUtil.getSupportedMaxBitmapSize();
+        Log.e(TAG, MAX_IMAGE_SIZE+"");
     }
 
     private void showPhotoView() {
         Glide.with(this)
                 .load(uri)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .override(2048, 2048)
+                .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        Log.e(TAG, e+"");
                         progressBar.setVisibility(View.GONE);
                         photoViewText.setText(R.string.memo_edit_load_fail_snack);
                         return false;

@@ -48,8 +48,7 @@
 
     <ProgressBar
         android:id="@+id/progress_bar"
+        style="@style/progressBar"
         android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:indeterminateTint="@color/colorLightGrey" />
+        android:layout_height="50dp" />
 </RelativeLayout>

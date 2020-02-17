@@ -35,6 +35,10 @@
         <item name="android:scaleType">fitCenter</item>
         <item name="android:adjustViewBounds">true</item>
     </style>
+    <style name="ImageScale_CENTERCROP">
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
 
     <!-- Font -->
     <style name="TitleFont_1">
@@ -83,5 +87,10 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:background">@color/colorBlack</item>
         <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="progressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:indeterminateTint">@color/colorLightGrey</item>
     </style>
 </resources>

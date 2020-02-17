@@ -16,11 +16,11 @@
 
             <ImageView
                 android:id="@+id/item_thumbnail"
-                style="@style/ImageScale_FITCENTER"
+                style="@style/ImageScale_CENTERCROP"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
-                android:maxHeight="300dp"
+                android:maxHeight="200dp"
                 android:minHeight="29dp" />
 
             <TextView
