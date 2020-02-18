@@ -1,107 +1,51 @@
 package com.example.linememo.viewmodel;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.linememo.dao.MemoDao;
-import com.example.linememo.dao.MemoDatabase;
 import com.example.linememo.model.Memo;
+import com.example.linememo.repository.MemoRepository;
+import com.example.linememo.util.SharedPreferenceManager;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class MemoViewModel extends AndroidViewModel {
-    private MemoDao memoDao;
+    public static final String MEMO_LIST_VIEW_MODE_KEY = "viewMode";
+    private MemoRepository mRepository;
 
-    public MemoViewModel(@NonNull Application application) {
+    public MemoViewModel(Application application) {
         super(application);
-        memoDao = MemoDatabase.getInstance(application).memoDao();
+        mRepository = new MemoRepository(application);
     }
 
     public LiveData<List<Memo>> getAll() {
-        return memoDao.getAll();
+        return mRepository.getAll();
     }
 
     public LiveData<Memo> find(int id) {
-        try {
-            return new FindAsyncTask(memoDao).execute(id).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            return null;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return mRepository.find(id);
     }
 
     public void insert(Memo memo) {
-        new InsertAsyncTask(memoDao).execute(memo);
+        mRepository.insert(memo);
     }
 
     public void delete(Memo memo) {
-        new DeleteAsyncTask(memoDao).execute(memo);
+        mRepository.delete(memo);
     }
 
     public void update(Memo memo) {
-        new UpdateAsyncTask(memoDao).execute(memo);
+        mRepository.update(memo);
     }
 
-    private static class InsertAsyncTask extends AsyncTask<Memo, Void, Void> {
-        private MemoDao mMemoDao;
-
-        public InsertAsyncTask(MemoDao memoDao) {
-            this.mMemoDao = memoDao;
-        }
-
-        @Override
-        protected Void doInBackground(Memo... memos) {
-            mMemoDao.insert(memos[0]);
-            return null;
-        }
+    public void saveRecyclerLayoutState(int spanCount) {
+        SharedPreferenceManager.setInt(getApplication(), MEMO_LIST_VIEW_MODE_KEY, spanCount);
     }
 
-    private static class DeleteAsyncTask extends AsyncTask<Memo, Void, Void> {
-        private MemoDao mMemoDao;
-
-        public DeleteAsyncTask(MemoDao memoDao) {
-            this.mMemoDao = memoDao;
-        }
-
-        @Override
-        protected Void doInBackground(Memo... memos) {
-            mMemoDao.delete(memos[0]);
-            return null;
-        }
-    }
-
-    private static class UpdateAsyncTask extends AsyncTask<Memo, Void, Void> {
-        private MemoDao mMemoDao;
-
-        public UpdateAsyncTask(MemoDao memoDao) {
-            this.mMemoDao = memoDao;
-        }
-
-        @Override
-        protected Void doInBackground(Memo... memos) {
-            mMemoDao.update(memos[0]);
-            return null;
-        }
-    }
-
-    private static class FindAsyncTask extends AsyncTask<Integer, Void, LiveData<Memo>> {
-        private MemoDao mMemoDao;
-
-        public FindAsyncTask(MemoDao memoDao) {
-            this.mMemoDao = memoDao;
-        }
-
-        @Override
-        protected LiveData<Memo> doInBackground(Integer... integers) {
-            return mMemoDao.find(integers[0]);
-        }
+    public int getSavedRecyclerLayoutState() {
+        int savedSpan = SharedPreferenceManager.getInt(getApplication(), MEMO_LIST_VIEW_MODE_KEY);
+        return savedSpan == -1 ? 2 : savedSpan;
     }
 }

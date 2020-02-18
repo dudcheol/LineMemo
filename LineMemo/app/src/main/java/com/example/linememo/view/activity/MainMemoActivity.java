@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,19 +20,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.example.linememo.viewmodel.MemoViewModel;
 import com.example.linememo.R;
-import com.example.linememo.view.adapter.MemoAdapter;
 import com.example.linememo.model.Memo;
-import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.util.ConvertUtil;
-import com.example.linememo.util.SharedPreferenceManager;
+import com.example.linememo.util.SnackbarPresenter;
+import com.example.linememo.view.adapter.MemoAdapter;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
+import com.example.linememo.viewmodel.MemoViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
 public class MainMemoActivity extends AppCompatActivity {
-    public static final String MEMO_LIST_VIEW_MODE_KEY = "viewMode";
     public static final int CREATE_MEMO_REQUEST_CODE = 8000;
     public static final int DETAIL_DELETE_REQUEST_CODE = 9000;
 
@@ -42,11 +41,10 @@ public class MainMemoActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MemoAdapter mAdapter;
     private LinearLayout memoEmptyMessage;
-    private StaggeredGridLayoutManager layoutManager;
-    private Toolbar myToolbar;
     private Menu menu;
 
     private int currentRecyclerLayoutSpan;
+    private RelativeLayout memoListActivityLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +60,7 @@ public class MainMemoActivity extends AppCompatActivity {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.memo_list_menu, menu);
         changeViewModeMenuIcon(currentRecyclerLayoutSpan);
-        Log.e(TAG, "onCreateOptionsMenu");
+        Log.e(TAG, "onCreateOptionsMenu - " + currentRecyclerLayoutSpan);
         return true;
     }
 
@@ -70,7 +68,7 @@ public class MainMemoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.view_mode:
-                currentRecyclerLayoutSpan = changeRecyclerViewLayout(currentRecyclerLayoutSpan == 2 ? 1 : 2);
+                currentRecyclerLayoutSpan = setRecyclerViewLayout(currentRecyclerLayoutSpan == 2 ? 1 : 2);
                 changeViewModeMenuIcon(currentRecyclerLayoutSpan);
                 return true;
             case R.id.write:
@@ -87,38 +85,40 @@ public class MainMemoActivity extends AppCompatActivity {
     }
 
     void initSetting() {
+        findViewByIds();
+        setToolbar();
+        mAdapter = new MemoAdapter(this);
+        memoViewModel = new ViewModelProvider(this).get(MemoViewModel.class);
+        currentRecyclerLayoutSpan = memoViewModel.getSavedRecyclerLayoutState();
+    }
+
+    void findViewByIds() {
+        memoListActivityLayout = findViewById(R.id.memo_list_activity_layout);
         recyclerView = findViewById(R.id.recycler);
         memoEmptyMessage = findViewById(R.id.memo_empty_message);
+    }
 
-        myToolbar = findViewById(R.id.toolbar);
+    void setToolbar() {
+        Toolbar myToolbar = findViewById(R.id.toolbar);
         myToolbar.setTitle(R.string.app_name);
         myToolbar.setTitleTextColor(getResources().getColor(R.color.colorIconGreen));
         setSupportActionBar(myToolbar);
-
-        currentRecyclerLayoutSpan = getSavedRecyclerLayoutState();
-        memoViewModel = new ViewModelProvider(this).get(MemoViewModel.class);
     }
 
     void initRecyclerView() {
-        // 레이아웃 사이즈 설정
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(itemDecoration);
-        mAdapter = new MemoAdapter(this);
-
-        // 사용하는 레이아웃 = StaggeredGridLayoutManager
-        layoutManager = new StaggeredGridLayoutManager(currentRecyclerLayoutSpan, StaggeredGridLayoutManager.VERTICAL);
-        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        recyclerView.setLayoutManager(layoutManager);
+        setRecyclerViewLayout(currentRecyclerLayoutSpan);
         recyclerView.setAdapter(mAdapter);
 
         memoViewModel.getAll().observe(this, new Observer<List<Memo>>() {
             @Override
             public void onChanged(List<Memo> memos) {
                 if (memos.isEmpty()) {
-                    if (menu != null) menu.getItem(0).setVisible(false);
+                    if (menu != null) menu.findItem(R.id.view_mode).setVisible(false);
                     memoEmptyMessage.setVisibility(View.VISIBLE);
                 } else {
-                    if (menu != null) menu.getItem(0).setVisible(true);
+                    if (menu != null) menu.findItem(R.id.view_mode).setVisible(true);
                     memoEmptyMessage.setVisibility(View.GONE);
                 }
                 mAdapter.setData(memos);
@@ -126,7 +126,7 @@ public class MainMemoActivity extends AppCompatActivity {
         });
     }
 
-    int changeRecyclerViewLayout(int spanCount) {
+    int setRecyclerViewLayout(int spanCount) {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL);
         layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(layoutManager);
@@ -135,24 +135,21 @@ public class MainMemoActivity extends AppCompatActivity {
     }
 
     void changeViewModeMenuIcon(int spanCount) {
-        if (spanCount == 1)
-            menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_grid_on_24dp));
-        else
-            menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_grid_off_24dp));
-    }
-
-    int getSavedRecyclerLayoutState() {
-        int savedSpan = SharedPreferenceManager.getInt(this, MEMO_LIST_VIEW_MODE_KEY);
-        return savedSpan == -1 ? 2 : savedSpan;
-    }
-
-    void saveViewState(int spanCount) {
-        SharedPreferenceManager.setInt(this, MEMO_LIST_VIEW_MODE_KEY, spanCount);
+        MenuItem menuItem = menu.findItem(R.id.view_mode);
+        if (mAdapter.getItemCount() == 0) {
+            menuItem.setVisible(false);
+        } else {
+            menuItem.setVisible(true);
+            if (spanCount == 1)
+                menuItem.setIcon(getResources().getDrawable(R.drawable.ic_grid_on_24dp));
+            else
+                menuItem.setIcon(getResources().getDrawable(R.drawable.ic_grid_off_24dp));
+        }
     }
 
     private RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
         @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, RecyclerView parent, @NonNull RecyclerView.State state) {
             int divider = ConvertUtil.dpToPx(getApplicationContext(), 10);
             if (parent.getPaddingLeft() != divider) {
                 parent.setPadding(divider, divider, divider, divider);
@@ -168,37 +165,29 @@ public class MainMemoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK)
             switch (requestCode) {
                 case DETAIL_DELETE_REQUEST_CODE:
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Snackbar.make(findViewById(R.id.memo_list_activity_layout), R.string.memo_deleted_snack, Snackbar.LENGTH_SHORT)
-                                    .setBackgroundTint(getResources().getColor(R.color.colorIconNavy))
-                                    .show();
-                        }
-                    }, 600);
+                    SnackbarPresenter.show(SnackbarPresenter.NORMAL
+                            , memoListActivityLayout
+                            , R.string.memo_deleted_snack
+                            , Snackbar.LENGTH_SHORT
+                            , 600);
                     break;
                 case CREATE_MEMO_REQUEST_CODE:
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Snackbar.make(findViewById(R.id.memo_list_activity_layout), R.string.memo_created_snack, Snackbar.LENGTH_SHORT)
-                                    .setBackgroundTint(getResources().getColor(R.color.colorIconNavy))
-                                    .show();
-                            recyclerView.smoothScrollToPosition(0);
-                        }
-                    }, 600);
+                    SnackbarPresenter.show(SnackbarPresenter.NORMAL
+                            , memoListActivityLayout
+                            , R.string.memo_created_snack
+                            , Snackbar.LENGTH_SHORT
+                            , 600);
                     break;
             }
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.e(TAG, "onStop()");
-        saveViewState(currentRecyclerLayoutSpan);
+        memoViewModel.saveRecyclerLayoutState(currentRecyclerLayoutSpan);
     }
 }
