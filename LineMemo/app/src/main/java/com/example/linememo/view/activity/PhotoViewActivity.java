@@ -96,7 +96,8 @@ public class PhotoViewActivity extends AppCompatActivity {
         @Override
         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
             progressBar.setVisibility(View.GONE);
-            photoViewText.setText(R.string.memo_edit_load_fail_snack);
+            photoViewText.setText(R.string.photo_view_load_fail_notice);
+            photoViewText.setTextColor(getResources().getColor(R.color.colorErr));
             return false;
         }
 
