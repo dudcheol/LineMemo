@@ -25,18 +25,18 @@ import com.example.linememo.R;
 import com.example.linememo.view.adapter.MemoAdapter;
 import com.example.linememo.db.entity.Memo;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
-import com.example.linememo.util.AndroidUtil;
+import com.example.linememo.util.ConvertUtil;
 import com.example.linememo.util.SharedPreferenceManager;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-public class MemoListActivity extends AppCompatActivity {
+public class MainMemoActivity extends AppCompatActivity {
     public static final String MEMO_LIST_VIEW_MODE_KEY = "viewMode";
     public static final int CREATE_MEMO_REQUEST_CODE = 8000;
     public static final int DETAIL_DELETE_REQUEST_CODE = 9000;
 
-    private static final String TAG = "MemoListActivity";
+    private static final String TAG = "MainMemoActivity";
 
     private MemoViewModel memoViewModel;
     private RecyclerView recyclerView;
@@ -74,8 +74,8 @@ public class MemoListActivity extends AppCompatActivity {
                 changeViewModeMenuIcon(currentRecyclerLayoutSpan);
                 return true;
             case R.id.write:
-                Intent intent = new Intent(this, MemoEditActivity.class);
-                intent.putExtra("mode", MemoEditActivity.CREATE_MODE);
+                Intent intent = new Intent(this, EditMemoActivity.class);
+                intent.putExtra("mode", EditMemoActivity.CREATE_MODE);
                 ActivityTransitionAnim.startActivityWithAnim(this
                         , ActivityTransitionAnim.SHOW_NEW_PAGE
                         , intent
@@ -153,7 +153,7 @@ public class MemoListActivity extends AppCompatActivity {
     private RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int divider = AndroidUtil.dpToPx(getApplicationContext(), 10);
+            int divider = ConvertUtil.dpToPx(getApplicationContext(), 10);
             if (parent.getPaddingLeft() != divider) {
                 parent.setPadding(divider, divider, divider, divider);
                 parent.setClipToPadding(false);

@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".view.activity.MemoListActivity">
+        <activity android:name=".view.activity.MainMemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,8 +30,8 @@
             android:name=".view.activity.PhotoViewActivity"
             android:theme="@style/Theme.PhotoView" />
 
-        <activity android:name=".view.activity.MemoEditActivity" />
-        <activity android:name=".view.activity.DetailViewActivity" />
+        <activity android:name=".view.activity.EditMemoActivity" />
+        <activity android:name=".view.activity.DetailMemoActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

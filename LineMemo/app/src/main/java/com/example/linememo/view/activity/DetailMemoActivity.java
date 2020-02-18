@@ -22,12 +22,12 @@ import com.example.linememo.R;
 import com.example.linememo.view.adapter.ImageViewPagerAdapter;
 import com.example.linememo.db.entity.Memo;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
-import com.example.linememo.util.AndroidUtil;
+import com.example.linememo.util.ConvertUtil;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-public class DetailViewActivity extends AppCompatActivity {
+public class DetailMemoActivity extends AppCompatActivity {
     private ImageViewPagerAdapter mViewPagerAdapter;
     private TextView title;
     private TextView content;
@@ -111,7 +111,7 @@ public class DetailViewActivity extends AppCompatActivity {
                 if (memo != null) {
                     title.setText(memo.getTitle());
                     content.setText(memo.getContent());
-                    date.setText(AndroidUtil.longDateToLongString(memo.getDate()));
+                    date.setText(ConvertUtil.longDateToLongString(memo.getDate()));
                     if (!memo.getImageUris().isEmpty()) {
                         mViewPagerAdapter.setImageUris(memo.getImageUris());
                         imageViewPager.setAdapter(mViewPagerAdapter);
@@ -126,7 +126,7 @@ public class DetailViewActivity extends AppCompatActivity {
     private void initImageRecyclerView() {
         mViewPagerAdapter = new ImageViewPagerAdapter(this, new ArrayList<String>());
         // offsetPx : 미리 보이길 원하는 다음 혹은 이전 이미지의 길이
-        final float offsetPx = AndroidUtil.dpToPx(this, 45);
+        final float offsetPx = ConvertUtil.dpToPx(this, 45);
         imageViewPager.setClipToPadding(false);
         imageViewPager.setClipChildren(false);
         imageViewPager.setOffscreenPageLimit(3);
@@ -166,8 +166,8 @@ public class DetailViewActivity extends AppCompatActivity {
     }
 
     private void changeEditMode() {
-        Intent intent = new Intent(this, MemoEditActivity.class);
-        intent.putExtra("mode", MemoEditActivity.MODIFY_MODE);
+        Intent intent = new Intent(this, EditMemoActivity.class);
+        intent.putExtra("mode", EditMemoActivity.MODIFY_MODE);
         intent.putExtra("memoData", memoData);
         ActivityTransitionAnim.startActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION, intent);
     }

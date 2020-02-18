@@ -23,7 +23,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.example.linememo.view.activity.MemoEditActivity;
+import com.example.linememo.view.activity.EditMemoActivity;
 import com.example.linememo.view.activity.PhotoViewActivity;
 import com.example.linememo.R;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
@@ -71,8 +71,8 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 lastItemViewHolder.addPhotoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mContext instanceof MemoEditActivity)
-                            ((MemoEditActivity) mContext).createUploadDialog();
+                        if (mContext instanceof EditMemoActivity)
+                            ((EditMemoActivity) mContext).createUploadDialog();
                     }
                 });
                 break;

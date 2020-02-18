@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackgroundGrey"
-    tools:context=".view.activity.MemoEditActivity">
+    tools:context=".view.activity.EditMemoActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

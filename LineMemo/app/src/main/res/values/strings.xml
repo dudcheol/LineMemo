@@ -14,6 +14,8 @@
     <string name="memo_edit_uploaded_img">첨부된 이미지</string>
     <string name="memo_edit_image_empty">첨부된 이미지가 없어요</string>
     <string name="memo_edit_load_fail_snack">이미지를 불러오는데 실패했습니다</string>
+    <string name="memo_eidt_camera_select">카메라를 선택하세요</string>
+    <string name="memo_eidt_gallery_select">사진첩을 선택하세요</string>
 
     <!--  메모 상세 보기  -->
     <string name="memo_hint_title">제목</string>

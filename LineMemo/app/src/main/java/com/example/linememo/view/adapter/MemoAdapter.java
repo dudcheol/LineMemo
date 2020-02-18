@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.example.linememo.view.activity.DetailViewActivity;
-import com.example.linememo.view.activity.MemoListActivity;
+import com.example.linememo.view.activity.DetailMemoActivity;
+import com.example.linememo.view.activity.MainMemoActivity;
 import com.example.linememo.R;
 import com.example.linememo.db.entity.Memo;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
-import com.example.linememo.util.AndroidUtil;
+import com.example.linememo.util.ConvertUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,14 +75,14 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
             Glide.with(mContext)
                     .clear(holder.thumbnail);
 
-        holder.date.setText(AndroidUtil.longDateToShortString(date));
+        holder.date.setText(ConvertUtil.longDateToShortString(date));
 
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, DetailViewActivity.class);
+                Intent intent = new Intent(mContext, DetailMemoActivity.class);
                 intent.putExtra("memoId", mDataset.get(position).getId());
-                ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SHOW_DETAIL_PAGE, intent, MemoListActivity.DETAIL_DELETE_REQUEST_CODE);
+                ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SHOW_DETAIL_PAGE, intent, MainMemoActivity.DETAIL_DELETE_REQUEST_CODE);
                 Log.e(TAG, mDataset.get(position).toString());
             }
         });
