@@ -7,21 +7,18 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.example.linememo.view.activity.PhotoViewActivity;
 import com.example.linememo.R;
+import com.example.linememo.util.GlideUtil;
+import com.example.linememo.view.activity.PhotoViewActivity;
 import com.example.linememo.view.adapter.viewholder.ImagePagerItemViewHolder;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 
@@ -45,25 +42,12 @@ public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImagePagerItemVi
 
     @Override
     public void onBindViewHolder(@NonNull final ImagePagerItemViewHolder holder, final int position) {
-        Glide.with(mContext)
-                .load(mImageUris.get(position))
-                .override(700 ,700)
-                .centerCrop()
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        holder.progressBar.setVisibility(View.GONE);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        holder.progressBar.setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                .error(R.drawable.ic_unknown_50dp)
-                .into(holder.viewPagerImage);
+        GlideUtil.showAddReqListener(mContext
+                , mImageUris.get(position)
+                , new int[]{700, 700}
+                , holder.viewPagerImage
+                , setRequestListener(holder)
+                , false);
 
         holder.viewPagerCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,5 +67,21 @@ public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImagePagerItemVi
     public void setImageUris(List<String> imageUris) {
         this.mImageUris = imageUris;
         notifyDataSetChanged();
+    }
+
+    private RequestListener setRequestListener(final ImagePagerItemViewHolder holder) {
+        return new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                holder.progressBar.setVisibility(View.GONE);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                holder.progressBar.setVisibility(View.GONE);
+                return false;
+            }
+        };
     }
 }

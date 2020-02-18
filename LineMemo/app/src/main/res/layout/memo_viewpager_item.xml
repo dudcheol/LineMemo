@@ -18,7 +18,7 @@
 
         <ImageView
             android:id="@+id/view_pager_image"
-            style="@style/ImageScale_FITCENTER"
+            style="@style/ImageScale_CENTERCROP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </androidx.cardview.widget.CardView>

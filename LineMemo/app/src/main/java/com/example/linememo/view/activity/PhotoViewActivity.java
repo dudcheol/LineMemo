@@ -12,13 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.linememo.R;
+import com.example.linememo.util.GlideUtil;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.github.chrisbanes.photoview.OnScaleChangedListener;
 import com.github.chrisbanes.photoview.OnViewTapListener;
@@ -38,7 +37,7 @@ public class PhotoViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo_view);
 
         initSetting();
-        showPhotoView();
+        showPhoto();
     }
 
     private void initSetting() {
@@ -84,30 +83,29 @@ public class PhotoViewActivity extends AppCompatActivity {
         });
     }
 
-    private void showPhotoView() {
-        Glide.with(this)
-                .load(uri)
-                .override(2048, 2048)
-                .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        Log.e(TAG, e + "");
-                        progressBar.setVisibility(View.GONE);
-                        photoViewText.setText(R.string.memo_edit_load_fail_snack);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        progressBar.setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                .error(R.drawable.ic_unknown_50dp)
-                .into(photoView);
+    private void showPhoto() {
+        GlideUtil.showAddReqListener(this
+                , uri
+                , new int[]{2048, 2048}
+                , photoView
+                , requestListener
+                , true);
     }
+
+    private RequestListener requestListener = new RequestListener<Drawable>() {
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+            progressBar.setVisibility(View.GONE);
+            photoViewText.setText(R.string.memo_edit_load_fail_snack);
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+            progressBar.setVisibility(View.GONE);
+            return false;
+        }
+    };
 
     @Override
     public void onBackPressed() {

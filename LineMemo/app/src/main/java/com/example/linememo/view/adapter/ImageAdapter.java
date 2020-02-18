@@ -13,20 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.linememo.R;
+import com.example.linememo.util.GlideUtil;
 import com.example.linememo.util.SnackbarPresenter;
 import com.example.linememo.view.activity.EditMemoActivity;
 import com.example.linememo.view.activity.PhotoViewActivity;
 import com.example.linememo.view.adapter.viewholder.ImageItemViewHolder;
 import com.example.linememo.view.adapter.viewholder.ImageLastItemViewHolder;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -87,38 +85,13 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 final String uri = mImageUris.get(position);
                 final boolean[] isAlreadyNotice = {false};
 
-                // 이미지 로드
-                Log.e(TAG, uri + "/position:" + position);
-                Glide.with(mContext)
-                        .load(uri)
-                        .override(100, 100)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                Log.e(TAG, "target = " + target);
-                                Log.e(TAG, model.toString());
-                                Log.e(TAG, uri);
-                                if (!isAlreadyNotice[0]) {
-                                    SnackbarPresenter.show(SnackbarPresenter.ERROR
-                                            , ((Activity) mContext).findViewById(R.id.memo_edit_activity_layout)
-                                            , R.string.memo_edit_load_fail_snack
-                                            , SnackbarPresenter.LENGTH_LONG);
-                                    removeImage(uri);
-                                    isAlreadyNotice[0] = true;
-                                }
-                                return false;
-                            }
+                GlideUtil.showAddReqListener(mContext
+                        , uri
+                        , new int[]{100, 100}
+                        , itemViewHolder.imageView
+                        , setRequestListener(itemViewHolder, uri, isAlreadyNotice)
+                        , false);
 
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                itemViewHolder.itemDeleteBtn.setVisibility(View.VISIBLE);
-                                itemViewHolder.zoomIcon.setVisibility(View.VISIBLE);
-                                itemViewHolder.progressBar.setVisibility(View.GONE);
-                                return false;
-                            }
-                        })
-                        .into(itemViewHolder.imageView);
                 itemViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -156,5 +129,30 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void removeImage(String value) {
         mImageUris.remove(value);
         notifyDataSetChanged();
+    }
+
+    private RequestListener setRequestListener(final ImageItemViewHolder holder, final String uri, final boolean[] isAlreadyNotice) {
+        return new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                if (!isAlreadyNotice[0]) {
+                    SnackbarPresenter.show(SnackbarPresenter.ERROR
+                            , ((Activity) mContext).findViewById(R.id.memo_edit_activity_layout)
+                            , R.string.memo_edit_load_fail_snack
+                            , SnackbarPresenter.LENGTH_LONG);
+                    removeImage(uri);
+                    isAlreadyNotice[0] = true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                holder.itemDeleteBtn.setVisibility(View.VISIBLE);
+                holder.zoomIcon.setVisibility(View.VISIBLE);
+                holder.progressBar.setVisibility(View.GONE);
+                return false;
+            }
+        };
     }
 }
