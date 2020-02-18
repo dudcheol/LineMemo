@@ -26,6 +26,8 @@ import com.bumptech.glide.request.target.Target;
 import com.example.linememo.view.activity.EditMemoActivity;
 import com.example.linememo.view.activity.PhotoViewActivity;
 import com.example.linememo.R;
+import com.example.linememo.view.adapter.viewholder.ImageItemViewHolder;
+import com.example.linememo.view.adapter.viewholder.ImageLastItemViewHolder;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -42,6 +44,14 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.mImageUris = imageUri;
     }
 
+    /**
+     * viewType에 따라 다른 viewHolder 사용
+     *
+     * @param position
+     * @return
+     *      0 = 마지막 아이템으로, 이미지 추가버튼
+     *      1 = 마지막을 제외한 아이템으로, 사용자가 추가한 이미지 표시
+     */
     @Override
     public int getItemViewType(int position) {
         if (position == getItemCount() - 1) return 0; // 마지막은 이미지 추가 버튼
@@ -52,16 +62,16 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == 0)
-            return new LastItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_edit_last_item, parent, false));
+            return new ImageLastItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_edit_last_item, parent, false));
         else
-            return new ItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_edit_item, parent, false));
+            return new ImageItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_edit_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         switch (holder.getItemViewType()) {
             case 0:
-                final LastItemViewHolder lastItemViewHolder = (LastItemViewHolder) holder;
+                final ImageLastItemViewHolder lastItemViewHolder = (ImageLastItemViewHolder) holder;
 
                 if (getItemCount() > 1)
                     lastItemViewHolder.addPhotoButton.setVisibility(View.VISIBLE);
@@ -77,7 +87,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 });
                 break;
             case 1:
-                final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
+                final ImageItemViewHolder itemViewHolder = (ImageItemViewHolder) holder;
                 final String uri = mImageUris.get(position);
                 final boolean[] isAlreadyNotice = {false};
 
@@ -151,31 +161,5 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void removeImage(String value) {
         mImageUris.remove(value);
         notifyDataSetChanged();
-    }
-
-    public class LastItemViewHolder extends RecyclerView.ViewHolder {
-        private CardView addPhotoButton;
-
-        public LastItemViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            addPhotoButton = itemView.findViewById(R.id.add_photo_card);
-        }
-    }
-
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
-        private ImageView itemDeleteBtn;
-        private ProgressBar progressBar;
-        private RelativeLayout zoomIcon;
-
-        public ItemViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            imageView = itemView.findViewById(R.id.itemImage);
-            itemDeleteBtn = itemView.findViewById(R.id.itemDeleteBtn);
-            progressBar = itemView.findViewById(R.id.progress_bar);
-            zoomIcon = itemView.findViewById(R.id.zoom_icon);
-        }
     }
 }

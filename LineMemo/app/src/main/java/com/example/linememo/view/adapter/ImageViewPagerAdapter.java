@@ -22,11 +22,12 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.linememo.view.activity.PhotoViewActivity;
 import com.example.linememo.R;
+import com.example.linememo.view.adapter.viewholder.ImagePagerItemViewHolder;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 
 import java.util.List;
 
-public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImageViewPagerAdapter.ImageViewPagerViewHolder> {
+public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImagePagerItemViewHolder> {
     private Context mContext;
     private List<String> mImageUris;
 
@@ -37,13 +38,13 @@ public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImageViewPagerAd
 
     @NonNull
     @Override
-    public ImageViewPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ImagePagerItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_viewpager_item, parent, false);
-        return new ImageViewPagerViewHolder(v);
+        return new ImagePagerItemViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ImageViewPagerViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ImagePagerItemViewHolder holder, final int position) {
         Glide.with(mContext)
                 .load(mImageUris.get(position))
                 .override(700 ,700)
@@ -77,19 +78,6 @@ public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImageViewPagerAd
     @Override
     public int getItemCount() {
         return mImageUris.size();
-    }
-
-    public class ImageViewPagerViewHolder extends RecyclerView.ViewHolder {
-        private ImageView viewPagerImage;
-        private CardView viewPagerCard;
-        private ProgressBar progressBar;
-
-        public ImageViewPagerViewHolder(@NonNull View itemView) {
-            super(itemView);
-            viewPagerImage = itemView.findViewById(R.id.view_pager_image);
-            viewPagerCard = itemView.findViewById(R.id.view_pager_card);
-            progressBar = itemView.findViewById(R.id.progress_bar);
-        }
     }
 
     public void setImageUris(List<String> imageUris) {

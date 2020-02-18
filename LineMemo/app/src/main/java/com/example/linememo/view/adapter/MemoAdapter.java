@@ -20,6 +20,7 @@ import com.example.linememo.view.activity.DetailMemoActivity;
 import com.example.linememo.view.activity.MainMemoActivity;
 import com.example.linememo.R;
 import com.example.linememo.model.Memo;
+import com.example.linememo.view.adapter.viewholder.MemoItemViewholder;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.util.ConvertUtil;
 
@@ -28,7 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder> {
+public class MemoAdapter extends RecyclerView.Adapter<MemoItemViewholder> {
     private static final String TAG = "MemoAdapter";
     private Context mContext;
     private List<Memo> mDataset;
@@ -40,14 +41,14 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
 
     @NonNull
     @Override
-    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MemoItemViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_list_item_grid, parent, false);
-        ItemViewHolder iv = new ItemViewHolder(v);
+        MemoItemViewholder iv = new MemoItemViewholder(v);
         return iv;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull MemoItemViewholder holder, final int position) {
         String title = mDataset.get(position).getTitle().trim();
         String content = mDataset.get(position).getContent().trim();
         List<String> uris = mDataset.get(position).getImageUris();
@@ -91,24 +92,6 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ItemViewHolder
     @Override
     public int getItemCount() {
         return mDataset.size();
-    }
-
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView title;
-        private TextView content;
-        private ImageView thumbnail;
-        private CardView card;
-        private TextView date;
-
-        public ItemViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            title = itemView.findViewById(R.id.item_title);
-            content = itemView.findViewById(R.id.item_content);
-            thumbnail = itemView.findViewById(R.id.item_thumbnail);
-            card = itemView.findViewById(R.id.item_card);
-            date = itemView.findViewById(R.id.item_date);
-        }
     }
 
     public void setData(List<Memo> newData) {
