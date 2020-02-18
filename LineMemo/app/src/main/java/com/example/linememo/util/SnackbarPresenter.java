@@ -11,6 +11,8 @@ import com.google.android.material.snackbar.Snackbar;
 public class SnackbarPresenter {
     public static final int ERROR = 0;
     public static final int NORMAL = 1;
+    public static final int LENGTH_SHORT = Snackbar.LENGTH_SHORT;
+    public static final int LENGTH_LONG = Snackbar.LENGTH_LONG;
 
     private static final int[] MODE_COLOR = {R.color.colorErr, R.color.colorIconNavy};
 

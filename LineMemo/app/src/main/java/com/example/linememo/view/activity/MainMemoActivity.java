@@ -171,14 +171,14 @@ public class MainMemoActivity extends AppCompatActivity {
                     SnackbarPresenter.show(SnackbarPresenter.NORMAL
                             , memoListActivityLayout
                             , R.string.memo_deleted_snack
-                            , Snackbar.LENGTH_SHORT
+                            , SnackbarPresenter.LENGTH_SHORT
                             , 600);
                     break;
                 case CREATE_MEMO_REQUEST_CODE:
                     SnackbarPresenter.show(SnackbarPresenter.NORMAL
                             , memoListActivityLayout
                             , R.string.memo_created_snack
-                            , Snackbar.LENGTH_SHORT
+                            , SnackbarPresenter.LENGTH_SHORT
                             , 600);
                     break;
             }

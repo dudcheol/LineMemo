@@ -8,13 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,9 +19,10 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.linememo.R;
+import com.example.linememo.util.SnackbarPresenter;
 import com.example.linememo.view.activity.EditMemoActivity;
 import com.example.linememo.view.activity.PhotoViewActivity;
-import com.example.linememo.R;
 import com.example.linememo.view.adapter.viewholder.ImageItemViewHolder;
 import com.example.linememo.view.adapter.viewholder.ImageLastItemViewHolder;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
@@ -48,9 +45,8 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      * viewType에 따라 다른 viewHolder 사용
      *
      * @param position
-     * @return
-     *      0 = 마지막 아이템으로, 이미지 추가버튼
-     *      1 = 마지막을 제외한 아이템으로, 사용자가 추가한 이미지 표시
+     * @return 0 = 마지막 아이템으로, 이미지 추가버튼
+     * 1 = 마지막을 제외한 아이템으로, 사용자가 추가한 이미지 표시
      */
     @Override
     public int getItemViewType(int position) {
@@ -95,7 +91,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 Log.e(TAG, uri + "/position:" + position);
                 Glide.with(mContext)
                         .load(uri)
-                        .override(100,100)
+                        .override(100, 100)
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .listener(new RequestListener<Drawable>() {
                             @Override
@@ -104,11 +100,10 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 Log.e(TAG, model.toString());
                                 Log.e(TAG, uri);
                                 if (!isAlreadyNotice[0]) {
-                                    Snackbar.make(((Activity) mContext).findViewById(R.id.memo_edit_activity_layout),
-                                            R.string.memo_edit_load_fail_snack,
-                                            Snackbar.LENGTH_LONG)
-                                            .setBackgroundTint(mContext.getResources().getColor(R.color.colorErr))
-                                            .show();
+                                    SnackbarPresenter.show(SnackbarPresenter.ERROR
+                                            , ((Activity) mContext).findViewById(R.id.memo_edit_activity_layout)
+                                            , R.string.memo_edit_load_fail_snack
+                                            , SnackbarPresenter.LENGTH_LONG);
                                     removeImage(uri);
                                     isAlreadyNotice[0] = true;
                                 }
