@@ -7,22 +7,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.example.linememo.view.activity.DetailMemoActivity;
-import com.example.linememo.view.activity.MainMemoActivity;
 import com.example.linememo.R;
 import com.example.linememo.model.Memo;
+import com.example.linememo.util.ConvertUtil;
+import com.example.linememo.view.activity.DetailMemoActivity;
+import com.example.linememo.view.activity.MainMemoActivity;
 import com.example.linememo.view.adapter.viewholder.MemoItemViewholder;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
-import com.example.linememo.util.ConvertUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,9 +52,15 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoItemViewholder> {
         long date = mDataset.get(position).getDate();
 
         if (title.length() != 0) {
+            int padding = ConvertUtil.dpToPx(mContext, 10);
             holder.title.setText(title);
             holder.title.setVisibility(View.VISIBLE);
-        } else holder.title.setVisibility(View.GONE);
+            holder.content.setPadding(padding, 0, padding, padding);
+        } else {
+            int padding = ConvertUtil.dpToPx(mContext, 10);
+            holder.title.setVisibility(View.GONE);
+            holder.content.setPadding(padding, padding, padding, padding);
+        }
 
         if (content.length() != 0) {
             holder.content.setText(content);
@@ -67,7 +70,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoItemViewholder> {
         if (uris.size() != 0)
             Glide.with(mContext)
                     .load(uris.get(0))
-                    .override(200,150) // 한번에 많은 이미지 로딩 고려한 사이즈 조절
+                    .override(200, 150) // 한번에 많은 이미지 로딩 고려한 사이즈 조절
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_unknown_50dp)
                     .into(holder.thumbnail);
