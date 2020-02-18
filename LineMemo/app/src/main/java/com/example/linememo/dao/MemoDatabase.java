@@ -1,4 +1,4 @@
-package com.example.linememo.db;
+package com.example.linememo.dao;
 
 import android.content.Context;
 
@@ -7,8 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.example.linememo.db.dao.MemoDao;
-import com.example.linememo.db.entity.Memo;
+import com.example.linememo.model.Memo;
 
 /**
  * Todo : apk 배포시 exportSchema = false 처리하여 스키마 버전 내역을 app에 포함시키지 않아야 한다

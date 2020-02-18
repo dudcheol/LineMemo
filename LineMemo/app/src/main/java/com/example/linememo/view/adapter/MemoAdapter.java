@@ -19,7 +19,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.linememo.view.activity.DetailMemoActivity;
 import com.example.linememo.view.activity.MainMemoActivity;
 import com.example.linememo.R;
-import com.example.linememo.db.entity.Memo;
+import com.example.linememo.model.Memo;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.util.ConvertUtil;
 

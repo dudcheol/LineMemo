@@ -1,4 +1,4 @@
-package com.example.linememo.view.viewmodel;
+package com.example.linememo.viewmodel;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -7,9 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.linememo.db.dao.MemoDao;
-import com.example.linememo.db.MemoDatabase;
-import com.example.linememo.db.entity.Memo;
+import com.example.linememo.dao.MemoDao;
+import com.example.linememo.dao.MemoDatabase;
+import com.example.linememo.model.Memo;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

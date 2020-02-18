@@ -1,4 +1,4 @@
-package com.example.linememo.db.dao;
+package com.example.linememo.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.linememo.db.entity.Memo;
+import com.example.linememo.model.Memo;
 
 import java.util.List;
 

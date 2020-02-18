@@ -17,10 +17,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.linememo.view.viewmodel.MemoViewModel;
+import com.example.linememo.viewmodel.MemoViewModel;
 import com.example.linememo.R;
 import com.example.linememo.view.adapter.ImageViewPagerAdapter;
-import com.example.linememo.db.entity.Memo;
+import com.example.linememo.model.Memo;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.util.ConvertUtil;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;

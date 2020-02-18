@@ -20,10 +20,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.example.linememo.view.viewmodel.MemoViewModel;
+import com.example.linememo.viewmodel.MemoViewModel;
 import com.example.linememo.R;
 import com.example.linememo.view.adapter.MemoAdapter;
-import com.example.linememo.db.entity.Memo;
+import com.example.linememo.model.Memo;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.util.ConvertUtil;
 import com.example.linememo.util.SharedPreferenceManager;

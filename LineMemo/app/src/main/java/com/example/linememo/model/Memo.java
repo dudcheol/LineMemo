@@ -1,4 +1,4 @@
-package com.example.linememo.db.entity;
+package com.example.linememo.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -67,10 +67,10 @@ public class Memo implements Serializable {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append("title=" + title + ", ");
-        sb.append("content=" + content + ", ");
-        sb.append("imageUri=" + imageUris + ", ");
-        sb.append("date=" + date);
+        sb.append("title=").append(title).append(", ");
+        sb.append("content=").append(content).append(", ");
+        sb.append("imageUri=").append(imageUris).append(", ");
+        sb.append("date=").append(date);
         return sb.toString();
     }
 }
