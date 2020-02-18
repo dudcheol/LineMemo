@@ -4,13 +4,14 @@
 
     <item
         android:id="@+id/view_mode"
-        android:title="@string/menu_view_mode"
         android:icon="@drawable/ic_grid_off_24dp"
+        android:title="@string/menu_view_mode"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/write"
-        android:title="@string/menu_write"
         android:icon="@drawable/ic_add_circle_24dp"
-        app:showAsAction="always"/>
+        android:title="@string/menu_write"
+        app:showAsAction="always" />
 </menu>
