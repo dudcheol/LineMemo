@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.view.viewmodel;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -6,6 +6,10 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.example.linememo.db.dao.MemoDao;
+import com.example.linememo.db.MemoDatabase;
+import com.example.linememo.db.entity.Memo;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -18,23 +22,11 @@ public class MemoViewModel extends AndroidViewModel {
         memoDao = MemoDatabase.getInstance(application).memoDao();
     }
 
-    LiveData<List<Memo>> getAll() {
+    public LiveData<List<Memo>> getAll() {
         return memoDao.getAll();
     }
 
-    void insert(Memo memo) {
-        new InsertAsyncTask(memoDao).execute(memo);
-    }
-
-    void delete(Memo memo) {
-        new DeleteAsyncTask(memoDao).execute(memo);
-    }
-
-    void update(Memo memo) {
-        new UpdateAsyncTask(memoDao).execute(memo);
-    }
-
-    LiveData<Memo> find(int id) {
+    public LiveData<Memo> find(int id) {
         try {
             return new FindAsyncTask(memoDao).execute(id).get();
         } catch (ExecutionException e) {
@@ -44,6 +36,18 @@ public class MemoViewModel extends AndroidViewModel {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void insert(Memo memo) {
+        new InsertAsyncTask(memoDao).execute(memo);
+    }
+
+    public void delete(Memo memo) {
+        new DeleteAsyncTask(memoDao).execute(memo);
+    }
+
+    public void update(Memo memo) {
+        new UpdateAsyncTask(memoDao).execute(memo);
     }
 
     private static class InsertAsyncTask extends AsyncTask<Memo, Void, Void> {

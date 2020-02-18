@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.view.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,6 +20,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.example.linememo.view.viewmodel.MemoViewModel;
+import com.example.linememo.R;
+import com.example.linememo.view.adapter.MemoAdapter;
+import com.example.linememo.db.entity.Memo;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
+import com.example.linememo.util.AndroidUtil;
+import com.example.linememo.util.SharedPreferenceManager;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;

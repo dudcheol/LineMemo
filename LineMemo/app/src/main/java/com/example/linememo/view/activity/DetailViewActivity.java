@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.view.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +17,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.linememo.view.viewmodel.MemoViewModel;
+import com.example.linememo.R;
+import com.example.linememo.view.adapter.ImageViewPagerAdapter;
+import com.example.linememo.db.entity.Memo;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
+import com.example.linememo.util.AndroidUtil;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;

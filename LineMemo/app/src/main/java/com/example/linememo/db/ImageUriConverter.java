@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.db;
 
 import androidx.room.TypeConverter;
 

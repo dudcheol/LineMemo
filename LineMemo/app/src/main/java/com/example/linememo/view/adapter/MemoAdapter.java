@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.view.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.example.linememo.view.activity.DetailViewActivity;
+import com.example.linememo.view.activity.MemoListActivity;
+import com.example.linememo.R;
+import com.example.linememo.db.entity.Memo;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
+import com.example.linememo.util.AndroidUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;

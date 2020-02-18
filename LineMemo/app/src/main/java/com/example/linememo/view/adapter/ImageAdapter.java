@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.view.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,6 +23,10 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.linememo.view.activity.MemoEditActivity;
+import com.example.linememo.view.activity.PhotoViewActivity;
+import com.example.linememo.R;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.db.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

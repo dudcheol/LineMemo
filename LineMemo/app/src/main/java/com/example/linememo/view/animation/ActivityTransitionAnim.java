@@ -1,7 +1,9 @@
-package com.example.linememo;
+package com.example.linememo.view.animation;
 
 import android.app.Activity;
 import android.content.Intent;
+
+import com.example.linememo.R;
 
 public class ActivityTransitionAnim {
     public static final int DEFAULT = 9999;

@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.view.activity;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -26,6 +26,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.linememo.view.viewmodel.MemoViewModel;
+import com.example.linememo.R;
+import com.example.linememo.view.adapter.ImageAdapter;
+import com.example.linememo.db.entity.Memo;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
+import com.example.linememo.util.AndroidUtil;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
@@ -91,7 +97,7 @@ public class MemoEditActivity extends AppCompatActivity {
             if (mImageUris.isEmpty()) imageAreaNoti.setVisibility(View.VISIBLE);
             else imageAreaNoti.setVisibility(View.GONE);
         } else {
-            // Todo 에러처리
+            onBackPressed();
         }
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

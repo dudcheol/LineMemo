@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.view.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +20,9 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.linememo.view.activity.PhotoViewActivity;
+import com.example.linememo.R;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
 
 import java.util.List;
 

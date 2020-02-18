@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.view.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -18,6 +18,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.linememo.R;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.github.chrisbanes.photoview.OnScaleChangedListener;
 import com.github.chrisbanes.photoview.OnViewTapListener;
 import com.github.chrisbanes.photoview.PhotoView;

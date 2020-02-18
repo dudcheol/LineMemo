@@ -1,4 +1,4 @@
-package com.example.linememo;
+package com.example.linememo.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
