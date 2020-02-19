@@ -33,9 +33,9 @@
     <string name="add_image_uri_dialog_content1">외부 이미지 첨부하기</string>
 
     <!-- 메뉴 -->
-    <string name="menu_write">새 메모쓰기</string>
+    <string name="menu_write">새 메모 쓰기</string>
     <string name="menu_delete">삭제하기</string>
-    <string name="menu_edit">수정하기</string>
+    <string name="menu_edit">메모 수정하기</string>
     <string name="menu_view_mode">카드 모양 바꾸기</string>
 
     <!-- 공통 -->

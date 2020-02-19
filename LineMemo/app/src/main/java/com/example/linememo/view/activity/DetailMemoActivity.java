@@ -17,17 +17,19 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.linememo.viewmodel.MemoViewModel;
 import com.example.linememo.R;
-import com.example.linememo.view.adapter.ImageViewPagerAdapter;
 import com.example.linememo.model.Memo;
-import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.util.ConvertUtil;
+import com.example.linememo.view.adapter.ImageViewPagerAdapter;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
+import com.example.linememo.viewmodel.MemoViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
 public class DetailMemoActivity extends AppCompatActivity {
+    private static final int ERROR = -1;
+
     private ImageViewPagerAdapter mViewPagerAdapter;
     private TextView title;
     private TextView content;
@@ -39,7 +41,6 @@ public class DetailMemoActivity extends AppCompatActivity {
     private MemoViewModel viewModel;
     private int memoId;
     private Memo memoData;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,39 +73,46 @@ public class DetailMemoActivity extends AppCompatActivity {
     }
 
     private void initSetting() {
-        Intent intent = getIntent();
-        memoId = intent.getIntExtra("memoId", -1);
+        findViewByIds();
+        initData();
+        setToolbar();
+        setListener();
+    }
 
-        Toolbar myToolbar = findViewById(R.id.toolbar);
-        myToolbar.setTitle("");
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_30dp);
-        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+    private void initData() {
+        memoId = getIntent().getIntExtra("memoId", ERROR);
+        viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
+    }
 
+    private void findViewByIds() {
         title = findViewById(R.id.title);
         content = findViewById(R.id.content);
         imageViewPager = findViewById(R.id.image_view_pager);
         imageArea = findViewById(R.id.image_area);
         memoArea = findViewById(R.id.memo_area);
         date = findViewById(R.id.date);
+    }
 
-        memoArea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeEditMode();
-            }
-        });
+    private void setToolbar() {
+        Toolbar myToolbar = findViewById(R.id.toolbar);
+        myToolbar.setTitle("");
+        setSupportActionBar(myToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_30dp);
+        }
+        myToolbar.setNavigationOnClickListener(new BackButtonClick());
+    }
 
-        viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
+    private void setListener() {
+        memoArea.setOnClickListener(new MoveEditActivityButtonClick());
     }
 
     private void showMemo() {
+        if (memoId == ERROR) {
+            onBackPressed();
+            return;
+        }
         viewModel.find(memoId).observe(this, new Observer<Memo>() {
             @Override
             public void onChanged(Memo memo) {
@@ -113,7 +121,7 @@ public class DetailMemoActivity extends AppCompatActivity {
                     content.setText(memo.getContent());
                     date.setText(ConvertUtil.longDateToLongString(memo.getDate()));
                     if (!memo.getImageUris().isEmpty()) {
-                        mViewPagerAdapter.setImageUris(memo.getImageUris());
+                        mViewPagerAdapter.setData(memo.getImageUris());
                         imageViewPager.setAdapter(mViewPagerAdapter);
                         imageArea.setVisibility(View.VISIBLE);
                     } else imageArea.setVisibility(View.GONE);
@@ -161,8 +169,7 @@ public class DetailMemoActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                })
-                .show();
+                }).show();
     }
 
     private void changeEditMode() {
@@ -176,5 +183,19 @@ public class DetailMemoActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.HIDE_DETAIL_PAGE);
+    }
+
+    private class BackButtonClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            onBackPressed();
+        }
+    }
+
+    private class MoveEditActivityButtonClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            changeEditMode();
+        }
     }
 }

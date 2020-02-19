@@ -131,6 +131,11 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
+    public void setData(List<String> imageUris){
+        this.mImageUris = imageUris;
+        notifyDataSetChanged();
+    }
+
     private RequestListener setRequestListener(final ImageItemViewHolder holder, final String uri, final boolean[] isAlreadyNotice) {
         return new RequestListener<Drawable>() {
             @Override

@@ -26,12 +26,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.linememo.viewmodel.MemoViewModel;
 import com.example.linememo.R;
-import com.example.linememo.view.adapter.ImageAdapter;
 import com.example.linememo.model.Memo;
-import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.util.ConvertUtil;
+import com.example.linememo.view.adapter.ImageAdapter;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
+import com.example.linememo.viewmodel.MemoViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
@@ -44,12 +44,15 @@ import java.util.List;
 public class EditMemoActivity extends AppCompatActivity {
     public static final int CREATE_MODE = 1001;
     public static final int MODIFY_MODE = 1002;
+    public static final int CREATE_MODE_MEMO_ID = -2;
     public static final int CAMERA_REQUEST_CODE = 2001;
     public static final int GALLERY_REQUEST_CODE = 2002;
 
     private static final String TAG = "EditMemoActivity";
+    private static final int ERROR = -1;
 
     private MemoViewModel viewModel;
+    private Toolbar myToolbar;
     private LinearLayout imageAreaNoti;
     private EditText titleEdit;
     private EditText contentEdit;
@@ -57,8 +60,7 @@ public class EditMemoActivity extends AppCompatActivity {
     private RecyclerView imageRecyclerView;
     private ImageAdapter mAdapter;
 
-    private int divider;
-    private int myViewMode;
+    private int viewMode;
     private Memo mMemoData;
     private List<String> mImageUris;
     private String mCurrentPhotoPath;
@@ -69,76 +71,69 @@ public class EditMemoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_memo_edit);
 
         initSetting();
+        showMemo();
         initImageRecyclerView();
     }
 
     void initSetting() {
-        Intent intent = getIntent();
-        myViewMode = intent.getIntExtra("mode", -1);
-        mMemoData = (Memo) intent.getExtras().get("memoData");
+        findViewByIds();
+        initData();
+        setToolbar();
+        setListener();
+    }
 
+    private void initData() {
+        viewMode = getIntent().getIntExtra("mode", ERROR);
+        mMemoData = (Memo) getIntent().getExtras().get("memoData");
+        mImageUris = mMemoData == null ? new ArrayList<String>() : mMemoData.getImageUris();
+        viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
+    }
+
+    private void findViewByIds() {
+        myToolbar = findViewById(R.id.toolbar);
         imageAreaNoti = findViewById(R.id.image_area_noti);
         titleEdit = findViewById(R.id.title_edit);
         contentEdit = findViewById(R.id.content_edit);
         imageRecyclerView = findViewById(R.id.image_recycler);
         saveButton = findViewById(R.id.save_button);
+    }
 
-        Toolbar myToolbar = findViewById(R.id.toolbar);
-        if (myViewMode == CREATE_MODE) {
-            myToolbar.setTitle("새 메모 쓰기");
-            changeSaveButtonState(false);
-            mImageUris = new ArrayList<>();
-            imageAreaNoti.setVisibility(View.VISIBLE);
-        } else if (myViewMode == MODIFY_MODE) {
-            myToolbar.setTitle("메모 수정하기");
-            titleEdit.setText(mMemoData.getTitle());
-            contentEdit.setText(mMemoData.getContent());
-            mImageUris = mMemoData.getImageUris();
-            if (mImageUris.isEmpty()) imageAreaNoti.setVisibility(View.VISIBLE);
-            else imageAreaNoti.setVisibility(View.GONE);
-        } else {
-            onBackPressed();
-        }
+    private void setToolbar() {
+        if (viewMode == CREATE_MODE)
+            myToolbar.setTitle(R.string.menu_write);
+        else if (viewMode == MODIFY_MODE)
+            myToolbar.setTitle(R.string.menu_edit);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_24dp);
-        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        myToolbar.setNavigationOnClickListener(new BackButtonClick());
+    }
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveMemoData();
-                setResult(RESULT_OK);
-                onBackPressed();
-            }
-        });
-        imageAreaNoti.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createUploadDialog();
-            }
-        });
+    private void setListener() {
+        saveButton.setOnClickListener(new SaveButtonClick());
+        imageAreaNoti.setOnClickListener(new ImageAreaButtonClick());
 
         titleEdit.addTextChangedListener(editTextChangeListener);
         contentEdit.addTextChangedListener(editTextChangeListener);
-        titleEdit.requestFocus();
+    }
 
-        viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
-        divider = ConvertUtil.dpToPx(this, 5);
+    private void showMemo() {
+        if (viewMode == CREATE_MODE) {
+            changeSaveButtonState(false);
+            imageAreaNoti.setVisibility(View.VISIBLE);
+        } else if (viewMode == MODIFY_MODE) {
+            titleEdit.setText(mMemoData.getTitle());
+            contentEdit.setText(mMemoData.getContent());
+            if (mImageUris.isEmpty()) imageAreaNoti.setVisibility(View.VISIBLE);
+            else imageAreaNoti.setVisibility(View.GONE);
+        }
+        titleEdit.requestFocus();
     }
 
     void initImageRecyclerView() {
         imageRecyclerView.setHasFixedSize(true);
         imageRecyclerView.addItemDecoration(imageItemDecoration);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        imageRecyclerView.setLayoutManager(layoutManager);
-
+        imageRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mAdapter = new ImageAdapter(this, mImageUris);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -176,9 +171,11 @@ public class EditMemoActivity extends AppCompatActivity {
                     mAdapter.addImage(selectedImg.toString());
                     break;
                 case CAMERA_REQUEST_CODE:
-                    // 사용자가 카메라 intent에서 사진을 촬영하고 그것을 선택했다면 RESULT_OK이므로 이 곳에 진입
-                    // RESULT_OK로 이곳에 진입했다는 것은 ImageAdapter에서 설정한 사진의 저장경로가 있다는 의미이므로
-                    // getTakenPictureUri을 통해 새로 찍은 사진이 저장된 uri를 가져옴
+                    /**
+                     *  사용자가 카메라로 사진을 촬영하고 촬영한 사진을 선택했다면 RESULT_OK임
+                     *  RESULT_OK로 이곳에 진입했다는 것은 createImageFile에서 생성한 사진의 저장경로가 존재한다는 것과 같음
+                     *  따라서 mCurrentPhotoPath를 이용해 어댑터에 추가함
+                     */
                     mAdapter.addImage(mCurrentPhotoPath);
                     break;
             }
@@ -218,7 +215,7 @@ public class EditMemoActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.positiveBtn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mAdapter.addImage(getStringFromEdit((EditText) v.findViewById(R.id.uri_input)));
+                        mAdapter.addImage(ConvertUtil.getString((EditText) v.findViewById(R.id.uri_input)));
                     }
                 })
                 .setNegativeButton(R.string.negativeBtn, new DialogInterface.OnClickListener() {
@@ -287,10 +284,6 @@ public class EditMemoActivity extends AppCompatActivity {
                 , getResources().getString(R.string.memo_eidt_gallery_select)), EditMemoActivity.GALLERY_REQUEST_CODE);
     }
 
-    private String getStringFromEdit(EditText editText) {
-        return editText.getText().toString().trim();
-    }
-
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "LINEMEMO_" + timeStamp + "_";
@@ -308,13 +301,13 @@ public class EditMemoActivity extends AppCompatActivity {
     }
 
     private void saveMemoData() {
-        if (myViewMode == CREATE_MODE) {
+        if (viewMode == CREATE_MODE) {
             viewModel.insert(new Memo(
                     titleEdit.getText().toString(),
                     contentEdit.getText().toString(),
                     mImageUris,
                     System.currentTimeMillis()));
-        } else if (myViewMode == MODIFY_MODE) {
+        } else if (viewMode == MODIFY_MODE) {
             mMemoData.setTitle(titleEdit.getText().toString());
             mMemoData.setContent(contentEdit.getText().toString());
             mMemoData.setImageUri(mImageUris);
@@ -330,7 +323,7 @@ public class EditMemoActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (titleEdit.getText().toString().trim().length() == 0 && contentEdit.getText().toString().trim().length() == 0 && mImageUris.isEmpty())
+            if (ConvertUtil.getString(titleEdit).length() == 0 && ConvertUtil.getString(contentEdit).length() == 0 && mImageUris.isEmpty())
                 changeSaveButtonState(false);
             else
                 changeSaveButtonState(true);
@@ -344,6 +337,7 @@ public class EditMemoActivity extends AppCompatActivity {
     private RecyclerView.ItemDecoration imageItemDecoration = new RecyclerView.ItemDecoration() {
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int divider = ConvertUtil.dpToPx(getApplicationContext(), 5);
             if (parent.getPaddingLeft() != divider) {
                 parent.setPadding(divider, 0, divider, 0);
                 parent.setClipToPadding(false);
@@ -366,9 +360,32 @@ public class EditMemoActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (myViewMode == CREATE_MODE)
+        if (viewMode == CREATE_MODE)
             ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.HIDE_NEW_PAGE);
-        else
+        else if (viewMode == MODIFY_MODE)
             ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION);
+    }
+
+    private class SaveButtonClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            saveMemoData();
+            setResult(RESULT_OK);
+            onBackPressed();
+        }
+    }
+
+    private class ImageAreaButtonClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            createUploadDialog();
+        }
+    }
+
+    private class BackButtonClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            onBackPressed();
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.linememo.util;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.widget.EditText;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,5 +72,17 @@ public class ConvertUtil {
         Date date = new Date(longDate);
 
         return new SimpleDateFormat("yyyy년 M월 d일 a h:mm").format(date);
+    }
+
+
+    /**
+     * EditText에 적혀있는 글자를 String으로 변환하고 공백제거
+     *
+     * @param editText
+     * @return
+     */
+
+    public static String getString(EditText editText){
+        return editText.getText().toString().trim();
     }
 }

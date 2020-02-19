@@ -64,7 +64,7 @@ public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImagePagerItemVi
         return mImageUris.size();
     }
 
-    public void setImageUris(List<String> imageUris) {
+    public void setData(List<String> imageUris) {
         this.mImageUris = imageUris;
         notifyDataSetChanged();
     }

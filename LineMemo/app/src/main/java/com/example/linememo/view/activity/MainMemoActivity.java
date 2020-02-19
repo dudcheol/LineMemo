@@ -27,7 +27,6 @@ import com.example.linememo.util.SnackbarPresenter;
 import com.example.linememo.view.adapter.MemoAdapter;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.viewmodel.MemoViewModel;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -84,28 +83,32 @@ public class MainMemoActivity extends AppCompatActivity {
         }
     }
 
-    void initSetting() {
+    private void initSetting() {
         findViewByIds();
+        initData();
         setToolbar();
+    }
+
+    private void  initData(){
         mAdapter = new MemoAdapter(this);
         memoViewModel = new ViewModelProvider(this).get(MemoViewModel.class);
         currentRecyclerLayoutSpan = memoViewModel.getSavedRecyclerLayoutState();
     }
 
-    void findViewByIds() {
+    private void findViewByIds() {
         memoListActivityLayout = findViewById(R.id.memo_list_activity_layout);
         recyclerView = findViewById(R.id.recycler);
         memoEmptyMessage = findViewById(R.id.memo_empty_message);
     }
 
-    void setToolbar() {
+    private void setToolbar() {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         myToolbar.setTitle(R.string.app_name);
         myToolbar.setTitleTextColor(getResources().getColor(R.color.colorIconGreen));
         setSupportActionBar(myToolbar);
     }
 
-    void initRecyclerView() {
+    private void initRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(itemDecoration);
         setRecyclerViewLayout(currentRecyclerLayoutSpan);
@@ -126,7 +129,7 @@ public class MainMemoActivity extends AppCompatActivity {
         });
     }
 
-    int setRecyclerViewLayout(int spanCount) {
+    private int setRecyclerViewLayout(int spanCount) {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL);
         layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(layoutManager);
@@ -134,7 +137,7 @@ public class MainMemoActivity extends AppCompatActivity {
         return spanCount;
     }
 
-    void changeViewModeMenuIcon(int spanCount) {
+    private void changeViewModeMenuIcon(int spanCount) {
         MenuItem menuItem = menu.findItem(R.id.view_mode);
         if (mAdapter.getItemCount() == 0) {
             menuItem.setVisible(false);
@@ -175,6 +178,7 @@ public class MainMemoActivity extends AppCompatActivity {
                             , 600);
                     break;
                 case CREATE_MEMO_REQUEST_CODE:
+                    recyclerView.smoothScrollToPosition(0);
                     SnackbarPresenter.show(SnackbarPresenter.NORMAL
                             , memoListActivityLayout
                             , R.string.memo_created_snack

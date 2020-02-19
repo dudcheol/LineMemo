@@ -1,6 +1,5 @@
 package com.example.linememo.view.activity;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,14 +40,31 @@ public class PhotoViewActivity extends AppCompatActivity {
     }
 
     private void initSetting() {
-        Intent intent = getIntent();
-        uri = intent.getStringExtra("uri");
+        findViewByIds();
+        initData();
+        setPhotoView();
+        setListener();
+    }
 
+    private void findViewByIds() {
         photoView = findViewById(R.id.photo_view);
         progressBar = findViewById(R.id.progress_bar);
         photoViewCloseButton = findViewById(R.id.photo_view_close_button);
         photoViewText = findViewById(R.id.photo_view_text);
+    }
 
+    private void initData() {
+        uri = getIntent().getStringExtra("uri");
+    }
+
+    private void setPhotoView() {
+        photoView.setZoomTransitionDuration(400);
+        photoView.setMaximumScale(5f);
+        photoView.setMediumScale(2f);
+        photoView.setMinimumScale(1f);
+    }
+
+    private void setListener() {
         photoViewCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,15 +72,10 @@ public class PhotoViewActivity extends AppCompatActivity {
             }
         });
 
-        photoView.setZoomTransitionDuration(400);
-        photoView.setMaximumScale(5f);
-        photoView.setMediumScale(2f);
-        photoView.setMinimumScale(1f);
-
         photoView.setOnScaleChangeListener(new OnScaleChangedListener() {
             @Override
             public void onScaleChange(float scaleFactor, float focusX, float focusY) {
-                Log.e(TAG, "getcale=" + photoView.getScale());
+//                Log.e(TAG, "getcale=" + photoView.getScale());
                 if (photoView.getScale() >= 1.1) {
                     photoViewCloseButton.setVisibility(View.GONE);
                     photoViewText.setVisibility(View.GONE);
