@@ -38,7 +38,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoItemViewholder> {
     @NonNull
     @Override
     public MemoItemViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_list_item_grid, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_main_item, parent, false);
         MemoItemViewholder iv = new MemoItemViewholder(v);
         return iv;
     }
