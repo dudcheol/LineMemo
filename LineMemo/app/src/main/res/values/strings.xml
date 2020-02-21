@@ -31,6 +31,8 @@
     </string-array>
     <string name="uriEdit_hint">이미지 주소(URL) 입력</string>
     <string name="add_image_uri_dialog_content1">외부 이미지 첨부하기</string>
+    <string name="err_dialog_title">ERROR</string>
+    <string name="err_dialog_message">예상치 못한 오류가 발생했습니다.\n다시 시도해주세요.</string>
 
     <!-- 메뉴 -->
     <string name="menu_write">새 메모 쓰기</string>

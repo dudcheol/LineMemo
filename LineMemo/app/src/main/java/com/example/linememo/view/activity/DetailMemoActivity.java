@@ -20,10 +20,10 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.linememo.R;
 import com.example.linememo.model.Memo;
 import com.example.linememo.util.ConvertUtil;
+import com.example.linememo.util.DialogUtil;
 import com.example.linememo.view.adapter.ImageViewPagerAdapter;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.viewmodel.MemoViewModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
@@ -65,7 +65,14 @@ public class DetailMemoActivity extends AppCompatActivity {
                 changeEditMode();
                 return true;
             case R.id.delete:
-                createDeleteAlert();
+                DialogUtil.showDialog(this
+                        , R.drawable.ic_warning_24dp
+                        , getResources().getString(R.string.memo_delete_alert)
+                        , null
+                        , getResources().getString(R.string.positiveBtn)
+                        , getResources().getString(R.string.negativeBtn)
+                        , onClickDeleteListener
+                        , DialogUtil.onClickCancelListener);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -152,26 +159,6 @@ public class DetailMemoActivity extends AppCompatActivity {
         imageViewPager.setAdapter(mViewPagerAdapter);
     }
 
-    private void createDeleteAlert() {
-        new MaterialAlertDialogBuilder(this)
-                .setIcon(R.drawable.ic_warning_24dp)
-                .setTitle(R.string.memo_delete_alert)
-                .setPositiveButton(R.string.positiveBtn, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        viewModel.delete(memoData);
-                        setResult(RESULT_OK);
-                        onBackPressed();
-                    }
-                })
-                .setNegativeButton(R.string.negativeBtn, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-    }
-
     private void changeEditMode() {
         Intent intent = new Intent(this, EditMemoActivity.class);
         intent.putExtra("mode", EditMemoActivity.MODIFY_MODE);
@@ -184,6 +171,15 @@ public class DetailMemoActivity extends AppCompatActivity {
         super.onBackPressed();
         ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.HIDE_DETAIL_PAGE);
     }
+
+    private DialogInterface.OnClickListener onClickDeleteListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            viewModel.delete(memoData);
+            setResult(RESULT_OK);
+            onBackPressed();
+        }
+    };
 
     private class BackButtonClick implements View.OnClickListener {
         @Override

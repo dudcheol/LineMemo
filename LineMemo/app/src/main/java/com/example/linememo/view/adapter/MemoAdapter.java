@@ -68,16 +68,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoItemViewholder> {
 
         if (uris.size() != 0)
             GlideUtil.show(mContext, uris.get(0), new int[]{200, 150}, holder.thumbnail);
-//        Glide.with(mContext)
-//                .load(uris.get(0))
-//                .override(200, 150) // 한번에 많은 이미지 로딩 고려한 사이즈 조절
-//                .transition(DrawableTransitionOptions.withCrossFade())
-//                .error(R.drawable.ic_unknown_50dp)
-//                .into(holder.thumbnail);
         else
-            // 변경에 대해서 명시적으로 삭제해주어야 함
-//            Glide.with(mContext)
-//                    .clear(holder.thumbnail);
             GlideUtil.clear(mContext, holder.thumbnail);
 
         holder.date.setText(ConvertUtil.longDateToShortString(date));
