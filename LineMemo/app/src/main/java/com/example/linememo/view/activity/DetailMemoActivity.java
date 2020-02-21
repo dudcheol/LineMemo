@@ -88,6 +88,7 @@ public class DetailMemoActivity extends AppCompatActivity {
 
     private void initData() {
         memoId = getIntent().getIntExtra("memoId", ERROR);
+        if (memoId == ERROR) DialogUtil.showErrDialog(this);
         viewModel = new ViewModelProvider(this).get(MemoViewModel.class);
     }
 
@@ -116,10 +117,6 @@ public class DetailMemoActivity extends AppCompatActivity {
     }
 
     private void showMemo() {
-        if (memoId == ERROR) {
-            onBackPressed();
-            return;
-        }
         viewModel.findLive(memoId).observe(this, new Observer<Memo>() {
             @Override
             public void onChanged(Memo memo) {

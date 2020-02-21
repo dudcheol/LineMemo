@@ -1,7 +1,6 @@
 package com.example.linememo.view.activity;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -84,7 +83,8 @@ public class EditMemoActivity extends AppCompatActivity {
 
     private void initData() {
         viewMode = getIntent().getIntExtra("mode", ERROR);
-        mMemoId =  getIntent().getIntExtra("memoId", ERROR);
+        mMemoId = getIntent().getIntExtra("memoId", ERROR);
+        if (viewMode == ERROR || mMemoId == ERROR) DialogUtil.showErrDialog(this);
         mMemoViewModel = new ViewModelProvider(this).get(MemoViewModel.class);
         mEditViewModel = new ViewModelProvider(this).get(EditViewModel.class);
         mMemoData = mMemoViewModel.find(mMemoId);
