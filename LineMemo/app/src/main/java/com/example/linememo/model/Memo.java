@@ -67,6 +67,7 @@ public class Memo implements Serializable {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
+        sb.append("id=").append(id).append(", ");
         sb.append("title=").append(title).append(", ");
         sb.append("content=").append(content).append(", ");
         sb.append("imageUri=").append(imageUris).append(", ");

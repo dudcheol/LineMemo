@@ -23,7 +23,7 @@ public interface MemoDao {
     Memo find(int id);
 
     @Insert
-    void insert(Memo memo);
+    long insert(Memo memo);
 
     @Update
     void update(Memo memo);

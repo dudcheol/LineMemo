@@ -32,7 +32,7 @@ public class MemoRepository {
         }
     }
 
-    public Memo find(int id){
+    public Memo find(int id) {
         try {
             return new FindAsyncTask(mMemoDao).execute(id).get();
         } catch (ExecutionException | InterruptedException e) {
