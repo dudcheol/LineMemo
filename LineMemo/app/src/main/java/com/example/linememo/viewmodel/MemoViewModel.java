@@ -7,12 +7,10 @@ import androidx.lifecycle.LiveData;
 
 import com.example.linememo.model.Memo;
 import com.example.linememo.repository.MemoRepository;
-import com.example.linememo.util.SharedPreferenceManager;
 
 import java.util.List;
 
 public class MemoViewModel extends AndroidViewModel {
-    public static final String MEMO_LIST_VIEW_MODE_KEY = "viewMode";
     private MemoRepository mRepository;
 
     public MemoViewModel(Application application) {
@@ -44,13 +42,11 @@ public class MemoViewModel extends AndroidViewModel {
         mRepository.update(memo);
     }
 
-    //Todo : save, get 비즈니스 로직은 레파지토리에서
     public void saveRecyclerLayoutState(int spanCount) {
-        SharedPreferenceManager.setInt(getApplication(), MEMO_LIST_VIEW_MODE_KEY, spanCount);
+        mRepository.saveRecyclerLayoutState(spanCount);
     }
 
     public int getSavedRecyclerLayoutState() {
-        int savedSpan = SharedPreferenceManager.getInt(getApplication(), MEMO_LIST_VIEW_MODE_KEY);
-        return savedSpan == -1 ? 2 : savedSpan;
+        return mRepository.getSavedRecyclerLayoutState();
     }
 }

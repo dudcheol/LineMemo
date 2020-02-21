@@ -8,15 +8,18 @@ import androidx.lifecycle.LiveData;
 import com.example.linememo.dao.MemoDao;
 import com.example.linememo.dao.MemoDatabase;
 import com.example.linememo.model.Memo;
+import com.example.linememo.util.SharedPreferenceManager;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MemoRepository {
     private MemoDao mMemoDao;
+    private Application application;
 
     public MemoRepository(Application application) {
         mMemoDao = MemoDatabase.getInstance(application).memoDao();
+        this.application = application;
     }
 
     public LiveData<List<Memo>> getAll() {
@@ -51,6 +54,15 @@ public class MemoRepository {
 
     public void update(Memo memo) {
         new UpdateAsyncTask(mMemoDao).execute(memo);
+    }
+
+    public void saveRecyclerLayoutState(int spanCount) {
+        SharedPreferenceManager.setInt(application.getApplicationContext(), "viewMode", spanCount);
+    }
+
+    public int getSavedRecyclerLayoutState() {
+        int savedSpan = SharedPreferenceManager.getInt(application.getApplicationContext(), "viewMode");
+        return savedSpan == -1 ? 2 : savedSpan;
     }
 
     private static class InsertAsyncTask extends AsyncTask<Memo, Void, Void> {

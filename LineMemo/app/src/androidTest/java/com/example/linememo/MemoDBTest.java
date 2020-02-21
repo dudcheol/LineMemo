@@ -38,13 +38,11 @@ public class MemoDBTest {
     private static final String TAG = "MemoDBTest";
     private MemoDao memoDao;
     private MemoDatabase db;
-    private MemoRepository memoRepository;
 
     @Before
     public void createDb() {
         Log.e(TAG, "테스트 시작");
         Context context = ApplicationProvider.getApplicationContext();
-        memoRepository = new MemoRepository((Application) context);
         db = Room.inMemoryDatabaseBuilder(context, MemoDatabase.class).build();
         memoDao = db.memoDao();
     }
