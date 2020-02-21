@@ -24,7 +24,11 @@ public class MemoViewModel extends AndroidViewModel {
         return mRepository.getAll();
     }
 
-    public LiveData<Memo> find(int id) {
+    public LiveData<Memo> findLive(int id) {
+        return mRepository.findLive(id);
+    }
+
+    public Memo find(int id) {
         return mRepository.find(id);
     }
 
@@ -40,6 +44,7 @@ public class MemoViewModel extends AndroidViewModel {
         mRepository.update(memo);
     }
 
+    //Todo : save, get 비즈니스 로직은 레파지토리에서
     public void saveRecyclerLayoutState(int spanCount) {
         SharedPreferenceManager.setInt(getApplication(), MEMO_LIST_VIEW_MODE_KEY, spanCount);
     }

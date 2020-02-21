@@ -23,7 +23,16 @@ public class MemoRepository {
         return mMemoDao.getAll();
     }
 
-    public LiveData<Memo> find(int id) {
+    public LiveData<Memo> findLive(int id) {
+        try {
+            return new FindLiveAsyncTask(mMemoDao).execute(id).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Memo find(int id){
         try {
             return new FindAsyncTask(mMemoDao).execute(id).get();
         } catch (ExecutionException | InterruptedException e) {
@@ -86,7 +95,20 @@ public class MemoRepository {
         }
     }
 
-    private static class FindAsyncTask extends AsyncTask<Integer, Void, LiveData<Memo>> {
+    private static class FindLiveAsyncTask extends AsyncTask<Integer, Void, LiveData<Memo>> {
+        private MemoDao mMemoDao;
+
+        public FindLiveAsyncTask(MemoDao memoDao) {
+            this.mMemoDao = memoDao;
+        }
+
+        @Override
+        protected LiveData<Memo> doInBackground(Integer... integers) {
+            return mMemoDao.findLive(integers[0]);
+        }
+    }
+
+    private static class FindAsyncTask extends AsyncTask<Integer, Void, Memo> {
         private MemoDao mMemoDao;
 
         public FindAsyncTask(MemoDao memoDao) {
@@ -94,7 +116,7 @@ public class MemoRepository {
         }
 
         @Override
-        protected LiveData<Memo> doInBackground(Integer... integers) {
+        protected Memo doInBackground(Integer... integers) {
             return mMemoDao.find(integers[0]);
         }
     }

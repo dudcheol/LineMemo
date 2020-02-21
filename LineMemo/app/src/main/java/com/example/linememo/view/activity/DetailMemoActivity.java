@@ -120,7 +120,7 @@ public class DetailMemoActivity extends AppCompatActivity {
             onBackPressed();
             return;
         }
-        viewModel.find(memoId).observe(this, new Observer<Memo>() {
+        viewModel.findLive(memoId).observe(this, new Observer<Memo>() {
             @Override
             public void onChanged(Memo memo) {
                 if (memo != null) {
@@ -162,7 +162,7 @@ public class DetailMemoActivity extends AppCompatActivity {
     private void changeEditMode() {
         Intent intent = new Intent(this, EditMemoActivity.class);
         intent.putExtra("mode", EditMemoActivity.MODIFY_MODE);
-        intent.putExtra("memoData", memoData);
+        intent.putExtra("memoId", memoId);
         ActivityTransitionAnim.startActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION, intent);
     }
 

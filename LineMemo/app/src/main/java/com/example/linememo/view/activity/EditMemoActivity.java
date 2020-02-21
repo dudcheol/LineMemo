@@ -61,6 +61,7 @@ public class EditMemoActivity extends AppCompatActivity {
     private ImageAdapter mAdapter;
 
     private int viewMode;
+    private int mMemoId;
     private Memo mMemoData;
     private List<String> mImageUris;
 
@@ -83,10 +84,11 @@ public class EditMemoActivity extends AppCompatActivity {
 
     private void initData() {
         viewMode = getIntent().getIntExtra("mode", ERROR);
-        mMemoData = (Memo) getIntent().getExtras().get("memoData");
-        mImageUris = mMemoData == null ? new ArrayList<String>() : mMemoData.getImageUris();
+        mMemoId =  getIntent().getIntExtra("memoId", ERROR);
         mMemoViewModel = new ViewModelProvider(this).get(MemoViewModel.class);
         mEditViewModel = new ViewModelProvider(this).get(EditViewModel.class);
+        mMemoData = mMemoViewModel.find(mMemoId);
+        mImageUris = mMemoData == null ? new ArrayList<String>() : mMemoData.getImageUris();
     }
 
     private void findViewByIds() {
