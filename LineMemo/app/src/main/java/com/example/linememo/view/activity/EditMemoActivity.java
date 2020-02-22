@@ -75,8 +75,8 @@ public class EditMemoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         initSetting();
-        showMemo();
         initImageRecyclerView();
+        showMemo();
     }
 
     void initSetting() {

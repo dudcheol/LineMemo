@@ -10,7 +10,7 @@ import androidx.room.TypeConverters;
 import com.example.linememo.model.Memo;
 
 /**
- * Todo : apk 배포시 exportSchema = false 처리하여 스키마 버전 내역을 app에 포함시키지 않아야 한다
+ * apk 배포시 exportSchema = false 처리하여 스키마 버전 내역을 app에 포함시키지 않아야 한다
  */
 @Database(entities = {Memo.class}, version = 1, exportSchema = false)
 @TypeConverters({ImageUriConverter.class})
