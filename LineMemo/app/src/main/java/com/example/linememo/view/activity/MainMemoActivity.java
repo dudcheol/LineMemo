@@ -5,17 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.linememo.R;
+import com.example.linememo.databinding.ActivityMainMemoBinding;
 import com.example.linememo.model.Memo;
 import com.example.linememo.util.BaseActivity;
 import com.example.linememo.util.ConvertUtil;
@@ -32,18 +30,11 @@ public class MainMemoActivity extends BaseActivity {
 
     private static final String TAG = "MainMemoActivity";
 
-    private MemoViewModel memoViewModel;
-    private RecyclerView recyclerView;
+    private int mCurrentRecyclerLayoutSpan;
+
+    private ActivityMainMemoBinding mBinding;
+    private MemoViewModel mViewModel;
     private MemoAdapter mAdapter;
-    private LinearLayout memoEmptyMessage;
-
-    private int currentRecyclerLayoutSpan;
-    private RelativeLayout memoListActivityLayout;
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.activity_main_memo;
-    }
 
     @Override
     protected int getActivityType() {
@@ -58,8 +49,10 @@ public class MainMemoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setBinding(R.layout.activity_main_memo);
 
         initSetting();
+        showMemoList();
         initRecyclerView();
     }
 
@@ -67,16 +60,10 @@ public class MainMemoActivity extends BaseActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.view_mode:
-                currentRecyclerLayoutSpan = setRecyclerViewLayout(currentRecyclerLayoutSpan == 2 ? 1 : 2);
+                recyclerLayoutChange();
                 return true;
             case R.id.write:
-                Intent intent = new Intent(this, EditMemoActivity.class);
-                intent.putExtra("mode", EditMemoActivity.CREATE_MODE);
-                intent.putExtra("memoId", EditMemoActivity.CREATE_MODE);
-                ActivityTransitionAnim.startActivityWithAnim(this
-                        , ActivityTransitionAnim.SHOW_NEW_PAGE
-                        , intent
-                        , CREATE_MEMO_REQUEST_CODE);
+                startEditActivityForCreateMode();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -84,51 +71,54 @@ public class MainMemoActivity extends BaseActivity {
     }
 
     private void initSetting() {
-        findViewByIds();
-        initData();
-    }
+        mBinding = (ActivityMainMemoBinding) getBinding();
+        mBinding.setLifecycleOwner(this);
+        mViewModel = new ViewModelProvider(this).get(MemoViewModel.class);
+        mBinding.setViewModel(mViewModel);
 
-    private void initData() {
         mAdapter = new MemoAdapter(this);
-        memoViewModel = new ViewModelProvider(this).get(MemoViewModel.class);
-        currentRecyclerLayoutSpan = memoViewModel.getSavedRecyclerLayoutState();
-        setRecyclerViewLayout(currentRecyclerLayoutSpan);
+        mCurrentRecyclerLayoutSpan = mViewModel.getSavedRecyclerLayoutState();
     }
 
-    private void findViewByIds() {
-        memoListActivityLayout = findViewById(R.id.memo_list_activity_layout);
-        recyclerView = findViewById(R.id.recycler);
-        memoEmptyMessage = findViewById(R.id.memo_empty_message);
-    }
-
-    private void initRecyclerView() {
-        recyclerView.setHasFixedSize(true);
-        int divider = ConvertUtil.dpToPx(this, 10);
-        recyclerView.addItemDecoration(ConvertUtil.getRecyclerPaddingItemDeco(divider, divider, divider, divider));
-        setRecyclerViewLayout(currentRecyclerLayoutSpan);
-        recyclerView.setAdapter(mAdapter);
-
-        memoViewModel.getAll().observe(this, new Observer<List<Memo>>() {
+    private void showMemoList() {
+        mViewModel.getAll().observe(this, new Observer<List<Memo>>() {
             @Override
             public void onChanged(List<Memo> memos) {
-                if (memos.isEmpty()) {
-                    if (menu != null) menu.findItem(R.id.view_mode).setVisible(false);
-                    memoEmptyMessage.setVisibility(View.VISIBLE);
-                } else {
-                    if (menu != null) menu.findItem(R.id.view_mode).setVisible(true);
-                    memoEmptyMessage.setVisibility(View.GONE);
-                }
+                if (memos.isEmpty()) mBinding.memoEmptyMessage.setVisibility(View.VISIBLE);
+                else mBinding.memoEmptyMessage.setVisibility(View.GONE);
                 mAdapter.setData(memos);
             }
         });
+        mViewModel.getCount();
+    }
+
+    private void initRecyclerView() {
+        mBinding.recyclerView.setHasFixedSize(true);
+        int divider = ConvertUtil.dpToPx(this, 10);
+        mBinding.recyclerView.addItemDecoration(ConvertUtil.getRecyclerPaddingItemDeco(divider, divider, divider, divider));
+        setRecyclerViewLayout(mCurrentRecyclerLayoutSpan);
+        mBinding.recyclerView.setAdapter(mAdapter);
     }
 
     private int setRecyclerViewLayout(int spanCount) {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL);
         layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        recyclerView.setLayoutManager(layoutManager);
+        mBinding.recyclerView.setLayoutManager(layoutManager);
         mAdapter.notifyDataSetChanged();
         return spanCount;
+    }
+
+    private void recyclerLayoutChange() {
+        mCurrentRecyclerLayoutSpan = setRecyclerViewLayout(mCurrentRecyclerLayoutSpan == 2 ? 1 : 2);
+        SnackbarPresenter.show(SnackbarPresenter.NORMAL, mBinding.memoListActivityLayout
+                , R.string.memo_layout_change, SnackbarPresenter.LENGTH_SHORT);
+    }
+
+    private void startEditActivityForCreateMode() {
+        Intent intent = new Intent(this, EditMemoActivity.class);
+        intent.putExtra("mode", EditMemoActivity.CREATE_MODE);
+        intent.putExtra("memoId", EditMemoActivity.CREATE_MODE);
+        ActivityTransitionAnim.startActivityWithAnim(this, ActivityTransitionAnim.SHOW_NEW_PAGE, intent, CREATE_MEMO_REQUEST_CODE);
     }
 
     @Override
@@ -137,19 +127,13 @@ public class MainMemoActivity extends BaseActivity {
         if (resultCode == Activity.RESULT_OK)
             switch (requestCode) {
                 case DETAIL_DELETE_REQUEST_CODE:
-                    SnackbarPresenter.show(SnackbarPresenter.NORMAL
-                            , memoListActivityLayout
-                            , R.string.memo_deleted_snack
-                            , SnackbarPresenter.LENGTH_SHORT
-                            , 600);
+                    SnackbarPresenter.show(SnackbarPresenter.NORMAL, mBinding.memoListActivityLayout
+                            , R.string.memo_deleted_snack, SnackbarPresenter.LENGTH_SHORT, 600);
                     break;
                 case CREATE_MEMO_REQUEST_CODE:
-                    recyclerView.smoothScrollToPosition(0);
-                    SnackbarPresenter.show(SnackbarPresenter.NORMAL
-                            , memoListActivityLayout
-                            , R.string.memo_created_snack
-                            , SnackbarPresenter.LENGTH_SHORT
-                            , 600);
+                    mBinding.recyclerView.smoothScrollToPosition(0);
+                    SnackbarPresenter.show(SnackbarPresenter.NORMAL, mBinding.memoListActivityLayout
+                            , R.string.memo_created_snack, SnackbarPresenter.LENGTH_SHORT, 600);
                     break;
             }
     }
@@ -157,6 +141,6 @@ public class MainMemoActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        memoViewModel.saveRecyclerLayoutState(currentRecyclerLayoutSpan);
+        mViewModel.saveRecyclerLayoutState(mCurrentRecyclerLayoutSpan);
     }
 }

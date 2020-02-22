@@ -1,56 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/memo_list_activity_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBackgroundGrey"
-    tools:context=".view.activity.MainMemoActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:theme="@style/Toolbar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/memo_list_activity_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:fillViewport="true">
+        android:background="@color/colorBackgroundGrey"
+        tools:context=".view.activity.MainMemoActivity">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="true"
-            android:overScrollMode="never"
-            android:paddingBottom="50dp" />
-    </ScrollView>
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/Toolbar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <LinearLayout
-        android:id="@+id/memo_empty_message"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@id/toolbar"
-        android:gravity="center"
-        android:visibility="gone">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:fillViewport="true">
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@drawable/ic_iconmonstr_product_fill"
-            android:backgroundTint="@color/colorLightGrey"
-            android:layout_marginBottom="10dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="true"
+                android:overScrollMode="never"
+                android:paddingBottom="50dp" />
+        </ScrollView>
 
-        <TextView
-            style="@style/ContentFont_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/memo_empty_message" />
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/memo_empty_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility='gone'>
 
-</RelativeLayout>
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/ic_iconmonstr_product_fill"
+                android:backgroundTint="@color/colorLightGrey" />
+
+            <TextView
+                style="@style/ContentFont_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/memo_empty_message" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

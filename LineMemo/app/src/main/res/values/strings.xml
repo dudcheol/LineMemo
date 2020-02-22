@@ -5,6 +5,7 @@
     <string name="memo_deleted_snack">메모가 삭제되었습니다</string>
     <string name="memo_created_snack">새 메모를 저장했습니다</string>
     <string name="memo_empty_message">저장된 메모가 없어요</string>
+    <string name="memo_layout_change">메모 리스트 레이아웃 스타일을 변경했습니다</string>
 
     <!-- 메모 편집 -->
     <string name="memo_edit_save">저장하기</string>
