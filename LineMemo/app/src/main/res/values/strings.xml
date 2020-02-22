@@ -43,7 +43,7 @@
     <!-- 공통 -->
     <string name="positiveBtn">확인</string>
     <string name="negativeBtn">취소</string>
-    
+
     <!-- 포토뷰 -->
     <string name="photo_view_notice">손가락으로 확대해보세요</string>
     <string name="photo_view_load_fail_notice">이미지를 불러오는데 실패했습니다\n외부 이미지라면 URL을 확인해주시고\n이상이 없다면 인터넷 환경을 확인해주세요</string>

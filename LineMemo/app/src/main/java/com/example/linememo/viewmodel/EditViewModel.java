@@ -1,8 +1,10 @@
 package com.example.linememo.viewmodel;
 
 import android.app.Application;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
@@ -15,11 +17,13 @@ import java.util.Date;
 import java.util.List;
 
 public class EditViewModel extends AndroidViewModel {
-    public String uri;
+    private String uri;
+    public Application application;
 
     public EditViewModel(@NonNull Application application) {
         super(application);
-        uri = "";
+        this.uri = "";
+        this.application = application;
     }
 
     public File createImageFile() throws IOException {
@@ -40,7 +44,7 @@ public class EditViewModel extends AndroidViewModel {
         Uri imageUri = FileProvider.getUriForFile(getApplication(),
                 "com.example.linememo.fileprovider",
                 image);
-        this.uri = imageUri.toString();
+        setUri(imageUri.toString());
         return imageUri;
     }
 
@@ -55,5 +59,31 @@ public class EditViewModel extends AndroidViewModel {
         }
         if (!ls.isEmpty()) return true;
         return false;
+    }
+
+    public Intent openCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(application.getPackageManager()) != null) {
+            File photoFile;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                return null;
+            }
+            if (photoFile != null) {
+                Uri photoURI = createImageUri(photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                return takePictureIntent;
+            }
+        }
+        return null;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }

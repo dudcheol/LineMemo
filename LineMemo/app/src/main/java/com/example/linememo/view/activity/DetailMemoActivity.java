@@ -19,6 +19,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.linememo.R;
 import com.example.linememo.model.Memo;
+import com.example.linememo.util.BaseActivity;
 import com.example.linememo.util.ConvertUtil;
 import com.example.linememo.util.DialogUtil;
 import com.example.linememo.view.adapter.ImageViewPagerAdapter;
@@ -27,7 +28,7 @@ import com.example.linememo.viewmodel.MemoViewModel;
 
 import java.util.ArrayList;
 
-public class DetailMemoActivity extends AppCompatActivity {
+public class DetailMemoActivity extends BaseActivity {
     private static final int ERROR = -1;
 
     private ImageViewPagerAdapter mViewPagerAdapter;
@@ -43,19 +44,27 @@ public class DetailMemoActivity extends AppCompatActivity {
     private Memo memoData;
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_detail_memo;
+    }
+
+    @Override
+    protected int getActivityType() {
+        return BaseActivity.DETAIL_ACTIVITY;
+    }
+
+    @Override
+    protected int getBackPressAnim() {
+        return DETAIL_ACTIVITY;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_memo);
 
         initSetting();
         showMemo();
         initImageRecyclerView();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.memo_detail_menu, menu);
-        return true;
     }
 
     @Override
@@ -82,7 +91,6 @@ public class DetailMemoActivity extends AppCompatActivity {
     private void initSetting() {
         findViewByIds();
         initData();
-        setToolbar();
         setListener();
     }
 
@@ -99,17 +107,6 @@ public class DetailMemoActivity extends AppCompatActivity {
         imageArea = findViewById(R.id.image_area);
         memoArea = findViewById(R.id.memo_area);
         date = findViewById(R.id.date);
-    }
-
-    private void setToolbar() {
-        Toolbar myToolbar = findViewById(R.id.toolbar);
-        myToolbar.setTitle("");
-        setSupportActionBar(myToolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_30dp);
-        }
-        myToolbar.setNavigationOnClickListener(new BackButtonClick());
     }
 
     private void setListener() {
@@ -163,12 +160,6 @@ public class DetailMemoActivity extends AppCompatActivity {
         ActivityTransitionAnim.startActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION, intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.HIDE_DETAIL_PAGE);
-    }
-
     private DialogInterface.OnClickListener onClickDeleteListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -177,13 +168,6 @@ public class DetailMemoActivity extends AppCompatActivity {
             onBackPressed();
         }
     };
-
-    private class BackButtonClick implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            onBackPressed();
-        }
-    }
 
     private class MoveEditActivityButtonClick implements View.OnClickListener {
         @Override

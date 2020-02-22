@@ -3,11 +3,8 @@ package com.example.linememo.view.activity;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,31 +15,26 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.linememo.R;
 import com.example.linememo.model.Memo;
+import com.example.linememo.util.BaseActivity;
 import com.example.linememo.util.ConvertUtil;
 import com.example.linememo.util.DialogUtil;
 import com.example.linememo.view.adapter.ImageAdapter;
-import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.viewmodel.EditViewModel;
 import com.example.linememo.viewmodel.MemoViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditMemoActivity extends AppCompatActivity {
+public class EditMemoActivity extends BaseActivity {
     public static final int CREATE_MODE = -1001;
     public static final int MODIFY_MODE = -1002;
-    public static final int CREATE_MODE_MEMO_ID = -2;
     public static final int CAMERA_REQUEST_CODE = 2001;
     public static final int GALLERY_REQUEST_CODE = 2002;
 
@@ -51,7 +43,6 @@ public class EditMemoActivity extends AppCompatActivity {
 
     private MemoViewModel mMemoViewModel;
     private EditViewModel mEditViewModel;
-    private Toolbar myToolbar;
     private LinearLayout imageAreaNoti;
     private EditText titleEdit;
     private EditText contentEdit;
@@ -65,9 +56,23 @@ public class EditMemoActivity extends AppCompatActivity {
     private List<String> mImageUris;
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_edit_memo;
+    }
+
+    @Override
+    protected int getActivityType() {
+        return BaseActivity.EDIT_ACTIVITY;
+    }
+
+    @Override
+    protected int getBackPressAnim() {
+        return super.editViewMode;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_memo);
 
         initSetting();
         showMemo();
@@ -77,12 +82,11 @@ public class EditMemoActivity extends AppCompatActivity {
     void initSetting() {
         findViewByIds();
         initData();
-        setToolbar();
         setListener();
     }
 
     private void initData() {
-        viewMode = getIntent().getIntExtra("mode", ERROR);
+        viewMode = super.editViewMode;
         mMemoId = getIntent().getIntExtra("memoId", ERROR);
         if (viewMode == ERROR || mMemoId == ERROR) DialogUtil.showErrDialog(this);
         mMemoViewModel = new ViewModelProvider(this).get(MemoViewModel.class);
@@ -92,23 +96,11 @@ public class EditMemoActivity extends AppCompatActivity {
     }
 
     private void findViewByIds() {
-        myToolbar = findViewById(R.id.toolbar);
         imageAreaNoti = findViewById(R.id.image_area_noti);
         titleEdit = findViewById(R.id.title_edit);
         contentEdit = findViewById(R.id.content_edit);
         imageRecyclerView = findViewById(R.id.image_recycler);
         saveButton = findViewById(R.id.save_button);
-    }
-
-    private void setToolbar() {
-        if (viewMode == CREATE_MODE)
-            myToolbar.setTitle(R.string.menu_write);
-        else if (viewMode == MODIFY_MODE)
-            myToolbar.setTitle(R.string.menu_edit);
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_24dp);
-        myToolbar.setNavigationOnClickListener(new BackButtonClick());
     }
 
     private void setListener() {
@@ -134,14 +126,14 @@ public class EditMemoActivity extends AppCompatActivity {
 
     void initImageRecyclerView() {
         imageRecyclerView.setHasFixedSize(true);
-        imageRecyclerView.addItemDecoration(imageItemDecoration);
+        int divider = ConvertUtil.dpToPx(this, 5);
+        imageRecyclerView.addItemDecoration(ConvertUtil.getRecyclerPaddingItemDeco(divider, 0, divider, 0));
         imageRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mAdapter = new ImageAdapter(this, mImageUris);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
-                Log.e(TAG, "mAdapter onChanged and getItemCount = " + mAdapter.getItemCount());
                 if (mAdapter.getItemCount() <= 1) {
                     if (titleEdit.length() == 0)
                         changeSaveButtonState(false);
@@ -165,54 +157,26 @@ public class EditMemoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            Log.e(TAG, "onActivityResult RESULT OK");
             switch (requestCode) {
                 case GALLERY_REQUEST_CODE:
-                    Uri selectedImg = data.getData();
-                    Log.e(TAG, data.getData().toString());
-                    mAdapter.addImage(selectedImg.toString());
+                    mAdapter.addImage(data.getData().toString());
                     break;
                 case CAMERA_REQUEST_CODE:
-                    /**
-                     *  사용자가 카메라로 사진을 촬영하고 촬영한 사진을 선택했다면 RESULT_OK임
-                     *  RESULT_OK로 이곳에 진입했다는 것은 createImageFile에서 생성한 사진의 저장경로가 존재한다는 것과 같음
-                     *  따라서 mCurrentPhotoPath를 이용해 어댑터에 추가함
-                     */
-                    mAdapter.addImage(mEditViewModel.uri);
+                    mAdapter.addImage(mEditViewModel.getUri()); // 카메라 촬영 후 촬영한 사진 선택 -> 선택된 사진 어댑터 리스트에 추가
                     break;
             }
-        } else {
-            Log.e(TAG, "onActivityResult RESULT NO");
-        }
+        } else Log.e(TAG, "onActivityResult RESULT NO");
     }
 
-    private void oepnCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = mEditViewModel.createImageFile();
-            } catch (IOException ex) {
-                // Todo : 에러뜨는지확인해보기
-                DialogUtil.showErrDialog(this);
-            }
-            if (photoFile != null) {
-                Uri photoURI = mEditViewModel.createImageUri(photoFile);
-                Log.e(TAG, "photoURI = " + photoURI.toString());
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(Intent.createChooser(takePictureIntent
-                        , getResources().getString(R.string.memo_eidt_camera_select)), EditMemoActivity.CAMERA_REQUEST_CODE);
-            }
-        }
+    private void openCamera() {
+        Intent intent = mEditViewModel.openCamera();
+        if (intent != null)
+            startActivityForResult(Intent.createChooser(intent
+                    , getResources().getString(R.string.memo_eidt_camera_select)), EditMemoActivity.CAMERA_REQUEST_CODE);
+        else DialogUtil.showErrDialog(this);
     }
 
     private void oepnAlbum() {
-        /**
-         * <!> 주의 -- Intent intent = new Intent(Intent.ACTION_PICK) 사용에 대한 문제점
-         * ACTION_PICK 사용 시, 파일 uri를 받아올 때 '일시적인 권한'으로 접근할 수 있게 한다.(보안상의 이유로 안드로이드에서 의도한 것)
-         * 이렇게 해서 얻은 uri를 통해 다른 컨텍스트에서 접근하려고 한다면, 액세스 불가능하다는 보안 에러가 뜬다.
-         * 전달받은 uri는 다른 컨텍스트에서도 접근 가능해야하므로 채택하지 않았다.
-         */
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent
@@ -220,13 +184,13 @@ public class EditMemoActivity extends AppCompatActivity {
     }
 
     private void saveMemoData() {
-        if (viewMode == CREATE_MODE) {
+        if (viewMode == CREATE_MODE) { // '새 메모 쓰기'화면 일 경우 새로운 메모 추가
             mMemoViewModel.insert(new Memo(
                     titleEdit.getText().toString(),
                     contentEdit.getText().toString(),
                     mImageUris,
                     System.currentTimeMillis()));
-        } else if (viewMode == MODIFY_MODE) {
+        } else if (viewMode == MODIFY_MODE) { // '메모 수정하기'일 경우 기존 메모의 데이터를 변경 후 업데이트
             mMemoData.setTitle(titleEdit.getText().toString());
             mMemoData.setContent(contentEdit.getText().toString());
             mMemoData.setImageUri(mImageUris);
@@ -247,19 +211,6 @@ public class EditMemoActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-        }
-    };
-
-    private RecyclerView.ItemDecoration imageItemDecoration = new RecyclerView.ItemDecoration() {
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int divider = ConvertUtil.dpToPx(getApplicationContext(), 5);
-            if (parent.getPaddingLeft() != divider) {
-                parent.setPadding(divider, 0, divider, 0);
-                parent.setClipToPadding(false);
-            }
-            outRect.left = divider;
-            outRect.right = divider;
         }
     };
 
@@ -284,7 +235,6 @@ public class EditMemoActivity extends AppCompatActivity {
 
     private void createUriInputDialog() {
         final View v = getLayoutInflater().inflate(R.layout.dialog_uri_input, null);
-
         MaterialAlertDialogBuilder materialAlertDialogBuilder = DialogUtil.makeDialogWithView(this
                 , R.drawable.ic_web_24dp
                 , getResources().getString(R.string.add_image_uri_dialog_content1)
@@ -302,9 +252,7 @@ public class EditMemoActivity extends AppCompatActivity {
         final AlertDialog alertDialog = materialAlertDialogBuilder.show();
         final Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setEnabled(false);
-
-        EditText uriInput = v.findViewById(R.id.uri_input);
-        uriInput.addTextChangedListener(new TextWatcher() {
+        ((EditText) v.findViewById(R.id.uri_input)).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -320,15 +268,6 @@ public class EditMemoActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (viewMode == CREATE_MODE)
-            ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.HIDE_NEW_PAGE);
-        else if (viewMode == MODIFY_MODE)
-            ActivityTransitionAnim.finishActivityWithAnim(this, ActivityTransitionAnim.FADE_TRANSITION);
     }
 
     private class SaveButtonClick implements View.OnClickListener {
@@ -355,7 +294,7 @@ public class EditMemoActivity extends AppCompatActivity {
                     oepnAlbum();
                     break;
                 case 1: // 카메라 촬영
-                    oepnCamera();
+                    openCamera();
                     break;
                 case 2: // 외부 이미지 주소
                     createUriInputDialog();
@@ -363,11 +302,4 @@ public class EditMemoActivity extends AppCompatActivity {
             }
         }
     };
-
-    private class BackButtonClick implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            onBackPressed();
-        }
-    }
 }

@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".util.BaseActivity"></activity>
         <activity android:name=".view.activity.MainMemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,11 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".view.activity.PhotoViewActivity"
             android:theme="@style/Theme.PhotoView" />
-
         <activity android:name=".view.activity.EditMemoActivity" />
         <activity android:name=".view.activity.DetailMemoActivity" />
 

@@ -4,9 +4,8 @@
 
     <item
         android:id="@+id/view_mode"
-        android:icon="@drawable/ic_grid_off_24dp"
+        android:icon="@drawable/ic_view_agenda_black_24dp"
         android:title="@string/menu_view_mode"
-        android:visible="false"
         app:showAsAction="always" />
 
     <item

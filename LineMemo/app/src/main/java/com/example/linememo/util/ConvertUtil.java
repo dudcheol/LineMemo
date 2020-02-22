@@ -1,14 +1,19 @@
 package com.example.linememo.util;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- *  데이터 변환 클래스
+ * 데이터 변환 클래스
  */
 
 public class ConvertUtil {
@@ -82,7 +87,34 @@ public class ConvertUtil {
      * @return
      */
 
-    public static String getString(EditText editText){
+    public static String getString(EditText editText) {
         return editText.getText().toString().trim();
+    }
+
+
+    /**
+     * RecyclerView 겹치지 않고 일정한 Padding으로 변환해주는 itemDecoration
+     *
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     * @return
+     */
+
+    public static RecyclerView.ItemDecoration getRecyclerPaddingItemDeco(final int left, final int top, final int right, final int bottom) {
+        return new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, RecyclerView parent, @NonNull RecyclerView.State state) {
+                if (parent.getPaddingLeft() != left) {
+                    parent.setPadding(left, top, right, bottom);
+                    parent.setClipToPadding(false);
+                }
+                outRect.top = top;
+                outRect.bottom = bottom;
+                outRect.left = left;
+                outRect.right = right;
+            }
+        };
     }
 }
