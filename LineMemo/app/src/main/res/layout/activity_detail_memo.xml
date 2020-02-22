@@ -1,102 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBackgroundGrey"
-    tools:context=".view.activity.DetailMemoActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:theme="@style/Toolbar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    <data>
 
-    <ScrollView
+        <variable
+            name="viewModel"
+            type="com.example.linememo.viewmodel.MemoViewModel" />
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:background="@color/colorWhite"
-        android:fillViewport="true">
+        android:background="@color/colorBackgroundGrey"
+        tools:context=".view.activity.DetailMemoActivity">
 
-        <RelativeLayout
-            android:id="@+id/memo_area"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/Toolbar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:background="@color/colorWhite"
+            android:fillViewport="true">
 
             <RelativeLayout
-                android:id="@+id/image_area"
+                android:id="@+id/memo_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:onClick="@{() -> viewModel.doOnClick(viewModel.buttonClickCallback)}">
 
                 <RelativeLayout
-                    android:id="@+id/divider1"
+                    android:id="@+id/image_area"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.hasImages(viewModel.findLiveMemo.imageUris)}">
+
+                    <RelativeLayout
+                        android:id="@+id/divider1"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="@color/colorBackgroundGrey" />
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/image_view_pager"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_below="@id/divider1"
+                        android:background="@color/colorBackgroundGrey"
+                        android:overScrollMode="never" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/divider2"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
+                    android:layout_below="@id/image_area"
                     android:background="@color/colorBackgroundGrey" />
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/image_view_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_below="@id/divider1"
-                    android:background="@color/colorBackgroundGrey"
-                    android:overScrollMode="never" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_below="@id/image_area"
-                android:background="@color/colorBackgroundGrey" />
-
-            <RelativeLayout
-                android:id="@+id/title_area"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/divider2"
-                android:background="@color/colorWhite"
-                android:padding="20dp">
-
-                <TextView
-                    android:id="@+id/date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="@color/colorLightGrey"
-                    android:textSize="15dp"
-                    android:textStyle="bold"
-                    android:paddingBottom="10dp"/>
-
-                <TextView
-                    android:id="@+id/title"
-                    style="@style/TitleFont_2"
+                <RelativeLayout
+                    android:id="@+id/title_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/date" />
-            </RelativeLayout>
+                    android:layout_below="@id/divider2"
+                    android:background="@color/colorWhite"
+                    android:padding="20dp">
 
-            <RelativeLayout
-                android:id="@+id/contentArea"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/title_area"
-                android:background="@color/colorWhite"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="15dp">
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:paddingBottom="10dp"
+                        android:text="@{viewModel.convertDate(viewModel.findLiveMemo.date)}"
+                        android:textColor="@color/colorLightGrey"
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/content"
-                    style="@style/ContentFont_1"
+                    <TextView
+                        android:id="@+id/title"
+                        style="@style/TitleFont_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/date"
+                        android:text="@{viewModel.findLiveMemo.title}" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/contentArea"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minLines="1" />
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/title_area"
+                    android:background="@color/colorWhite"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/content"
+                        style="@style/ContentFont_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minLines="1"
+                        android:text="@{viewModel.findLiveMemo.content}" />
+                </RelativeLayout>
             </RelativeLayout>
-        </RelativeLayout>
-    </ScrollView>
-</RelativeLayout>
+        </ScrollView>
+    </RelativeLayout>
+</layout>
