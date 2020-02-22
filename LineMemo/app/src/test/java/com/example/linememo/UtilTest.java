@@ -9,7 +9,6 @@ import org.junit.Test;
 
 public class UtilTest {
     String TAG = "utilTest = ";
-    Context context = null;
 
     // convert util check
     // 날짜변환

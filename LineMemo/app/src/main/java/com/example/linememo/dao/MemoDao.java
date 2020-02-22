@@ -16,6 +16,9 @@ public interface MemoDao {
     @Query("SELECT * FROM Memo")
     LiveData<List<Memo>> getAll();
 
+    @Query("SELECT COUNT(*) FROM Memo")
+    LiveData<Integer> getCount();
+
     @Query("SELECT * FROM Memo WHERE id = :id")
     LiveData<Memo> findLive(int id);
 

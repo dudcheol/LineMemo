@@ -26,13 +26,12 @@ public class MemoRepository {
         return mMemoDao.getAll();
     }
 
+    public LiveData<Integer> getCount() {
+        return mMemoDao.getCount();
+    }
+
     public LiveData<Memo> findLive(int id) {
-        try {
-            return new FindLiveAsyncTask(mMemoDao).execute(id).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return mMemoDao.findLive(id);
     }
 
     public Memo find(int id) {

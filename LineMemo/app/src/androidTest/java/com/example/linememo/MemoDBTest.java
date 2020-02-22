@@ -83,6 +83,26 @@ public class MemoDBTest {
             Log.e(TAG, "메모 저장 완료!");
         }
 
+        // 메모 갯수 세기 getCount
+        {
+            Log.e(TAG, "메모 갯수 세기");
+            final CountDownLatch lock = new CountDownLatch(1);
+            final LiveData<Integer> count = memoDao.getCount();
+            Observer<Integer> observer = new Observer<Integer>() {
+                @Override
+                public void onChanged(Integer cnt) {
+                    Assert.assertNotNull(cnt);
+                    Assert.assertEquals(2, cnt.intValue());
+                    count.removeObserver(this);
+                    Log.e(TAG, "현재 메모의 수 = " + cnt);
+                    lock.countDown();
+                }
+            };
+            count.observeForever(observer);
+            lock.await(1, TimeUnit.DAYS);
+            Log.e(TAG, "메모 갯수 세기 완료");
+        }
+
         // 저장된 메모 찾기 find
         {
             Log.e(TAG, "저장된 메모 찾기");
