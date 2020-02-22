@@ -40,8 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditMemoActivity extends AppCompatActivity {
-    public static final int CREATE_MODE = 1001;
-    public static final int MODIFY_MODE = 1002;
+    public static final int CREATE_MODE = -1001;
+    public static final int MODIFY_MODE = -1002;
     public static final int CREATE_MODE_MEMO_ID = -2;
     public static final int CAMERA_REQUEST_CODE = 2001;
     public static final int GALLERY_REQUEST_CODE = 2002;

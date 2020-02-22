@@ -73,6 +73,7 @@ public class MainMemoActivity extends AppCompatActivity {
             case R.id.write:
                 Intent intent = new Intent(this, EditMemoActivity.class);
                 intent.putExtra("mode", EditMemoActivity.CREATE_MODE);
+                intent.putExtra("memoId", EditMemoActivity.CREATE_MODE);
                 ActivityTransitionAnim.startActivityWithAnim(this
                         , ActivityTransitionAnim.SHOW_NEW_PAGE
                         , intent
