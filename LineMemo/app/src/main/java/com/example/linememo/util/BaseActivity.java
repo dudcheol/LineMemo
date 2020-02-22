@@ -4,14 +4,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 
 import com.example.linememo.R;
 import com.example.linememo.view.activity.EditMemoActivity;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity<T extends ViewDataBinding> extends AppCompatActivity {
     public static final int MAIN_ACTIVITY = 0;
     public static final int DETAIL_ACTIVITY = 1;
     public static final int EDIT_ACTIVITY = 2;
@@ -19,12 +22,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = "BaseActivity";
     private static final int ERROR = -1;
 
+    private T binding;
     private Toolbar toolbar;
-
     protected int editViewMode;
     protected Menu menu;
-
-    protected abstract int getLayoutResource();
 
     protected abstract int getActivityType();
 
@@ -33,9 +34,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResource());
+    }
 
+    protected void setBinding(@LayoutRes int layoutResId) {
+        if (binding == null) {
+            binding = DataBindingUtil.setContentView(this, layoutResId);
+        }
         setToolbar();
+    }
+
+    protected T getBinding() {
+        return binding;
     }
 
     private void setToolbar() {
