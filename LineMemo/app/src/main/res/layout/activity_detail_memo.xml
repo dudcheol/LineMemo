@@ -40,7 +40,7 @@
                     android:id="@+id/image_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{viewModel.hasImages(viewModel.findLiveMemo.imageUris)}">
+                    android:visibility="@{viewModel.hasAppear(viewModel.findLiveMemo.imageUris)}">
 
                     <RelativeLayout
                         android:id="@+id/divider1"
