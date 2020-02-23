@@ -249,6 +249,6 @@ public class EditMemoActivity extends BaseActivity {
                     mAdapter.addImage(mEditViewModel.getUri()); // 카메라 촬영 후 촬영한 사진 선택 -> 선택된 사진 어댑터 리스트에 추가
                     break;
             }
-        } else SnackbarPresenter.showCommonError(mBinding.memoEditActivityLayout);
+        }
     }
 }
