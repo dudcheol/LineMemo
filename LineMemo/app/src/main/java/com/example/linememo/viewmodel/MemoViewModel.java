@@ -17,6 +17,7 @@ public class MemoViewModel extends AndroidViewModel {
     private static final String TAG = "MemoViewModel";
     private MemoRepository mRepository;
     private LiveData<Memo> findLiveMemo;
+    private Memo findMemo;
     private LiveData<Integer> memoCnt;
     private ButtonClickCallback buttonClickCallback;
 
@@ -40,7 +41,8 @@ public class MemoViewModel extends AndroidViewModel {
     }
 
     public Memo find(int id) {
-        return mRepository.find(id);
+        setFindMemo(mRepository.find(id));
+        return findMemo;
     }
 
     public void insert(Memo memo) {
@@ -68,10 +70,16 @@ public class MemoViewModel extends AndroidViewModel {
         return ConvertUtil.longDateToLongString(date);
     }
 
-    public int hasImages(List<String> list) {
+    public int hasAppear(List<String> list) {
         Log.e(TAG, list == null ? "list null" : list.toString());
         if (list == null || list.isEmpty()) return View.GONE;
         else return View.VISIBLE;
+    }
+
+    public int hasDisappear(List<String> list){
+        Log.e(TAG, list == null ? "list null" : list.toString());
+        if (list == null || list.isEmpty()) return View.VISIBLE;
+        else return View.GONE;
     }
 
     // listener
@@ -100,11 +108,19 @@ public class MemoViewModel extends AndroidViewModel {
         return memoCnt;
     }
 
+    public Memo getFindMemo() {
+        return findMemo;
+    }
+
     public void setFindLiveMemo(LiveData<Memo> findLiveMemo) {
         this.findLiveMemo = findLiveMemo;
     }
 
     public void setMemoCnt(LiveData<Integer> memoCnt) {
         this.memoCnt = memoCnt;
+    }
+
+    public void setFindMemo(Memo findMemo) {
+        this.findMemo = findMemo;
     }
 }

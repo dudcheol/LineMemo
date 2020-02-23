@@ -20,7 +20,7 @@ import java.util.List;
 public class EditViewModel extends AndroidViewModel {
     private final static String TAG = "EditViewModel";
     private String uri;
-    public Application application;
+    private Application application;
 
     public EditViewModel(@NonNull Application application) {
         super(application);
