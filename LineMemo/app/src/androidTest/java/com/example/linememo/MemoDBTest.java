@@ -1,6 +1,5 @@
 package com.example.linememo;
 
-import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
@@ -14,7 +13,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.example.linememo.dao.MemoDao;
 import com.example.linememo.dao.MemoDatabase;
 import com.example.linememo.model.Memo;
-import com.example.linememo.repository.MemoRepository;
 
 import org.junit.After;
 import org.junit.Assert;

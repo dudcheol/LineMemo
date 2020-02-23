@@ -1,7 +1,6 @@
 package com.example.linememo;
 
 import android.app.Application;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
@@ -17,10 +16,8 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
