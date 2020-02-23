@@ -19,6 +19,10 @@ import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.github.chrisbanes.photoview.OnScaleChangedListener;
 import com.github.chrisbanes.photoview.OnViewTapListener;
 
+/**
+ *  PhotoView
+ *  출처 : https://github.com/chrisbanes/PhotoView
+ */
 public class PhotoViewActivity extends AppCompatActivity {
     private static final String TAG = "PhotoViewActivity";
     private ActivityPhotoViewBinding mBinding;

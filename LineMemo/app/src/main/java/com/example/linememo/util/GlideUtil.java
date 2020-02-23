@@ -10,6 +10,10 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.example.linememo.R;
 
+/**
+ * Glide
+ * 출처 : https://github.com/bumptech/glide
+ */
 public class GlideUtil {
     public static void show(Context context, String uri, int[] override, ImageView imageView) {
         Glide.with(context)
