@@ -87,8 +87,9 @@ public class ConvertUtil {
      * @return
      */
 
-    public static String getString(EditText editText) {
-        return editText.getText().toString().trim();
+    public static String getString(EditText editText, boolean trim) {
+        if (trim) return editText.getText().toString().trim();
+        else return editText.getText().toString();
     }
 
 
