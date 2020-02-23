@@ -22,4 +22,6 @@
     <color name="alphaWhite">#CCFFFFFF</color>
     <color name="alphaSemiBlack">#80000000</color>
     <color name="alphaSemiWhite">#B3FFFFFF</color>
+    <color name="alphaGreen">#CC00CB4E</color>
+    <color name="alphaSemiGreen">#8000CB4E</color>
 </resources>

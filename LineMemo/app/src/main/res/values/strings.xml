@@ -27,7 +27,8 @@
     <string name="add_image_title">첨부 방법을 선택하세요</string>
     <string-array name="add_image_methods_array">
         <item>사진첩</item>
-        <item>카메라 촬영</item>
+        <item>LINE MEMO 카메라로 촬영</item>
+        <item>다른 카메라 앱으로 촬영</item>
         <item>외부 이미지 주소(URL)</item>
     </string-array>
     <string name="uriEdit_hint">이미지 주소(URL) 입력</string>
@@ -45,6 +46,7 @@
     <string name="positiveBtn">확인</string>
     <string name="negativeBtn">취소</string>
     <string name="commonError">예상치 못한 오류가 발생했습니다. 다시 시도해주세요</string>
+    <string name="permissionError">권한이 없습니다. 권한 설정 후 시도해주세요</string>
 
     <!-- 포토뷰 -->
     <string name="photo_view_notice">손가락으로 확대해보세요</string>

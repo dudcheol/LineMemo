@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.linememo">
-    <!-- 내부 저장소 읽기/쓰기 권한 -->
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 인터넷 액세스 권한 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 카메라 기능 권한- 카메라 기능이 반드시 필요하지 않으므로 required=false -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -17,7 +19,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".util.BaseActivity"></activity>
+        <activity android:name=".view.activity.CameraResultActivity" />
+        <activity android:name=".view.activity.CameraPreviewActivity" />
+        <activity android:name=".util.BaseActivity" />
         <activity android:name=".view.activity.MainMemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -24,6 +24,7 @@ import com.example.linememo.util.ConvertUtil;
 import com.example.linememo.util.DialogUtil;
 import com.example.linememo.util.SnackbarPresenter;
 import com.example.linememo.view.adapter.ImageAdapter;
+import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.viewmodel.EditViewModel;
 import com.example.linememo.viewmodel.MemoViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -209,10 +210,14 @@ public class EditMemoActivity extends BaseActivity {
                 case 0: // 사진첩
                     openAlbum();
                     break;
-                case 1: // 카메라 촬영
+                case 1: // LINE MEMO 카메라로 촬영
+                    Intent intent = new Intent(EditMemoActivity.this, CameraPreviewActivity.class);
+                    ActivityTransitionAnim.startActivityWithAnim(EditMemoActivity.this, ActivityTransitionAnim.SHOW_NEW_PAGE, intent);
+                    break;
+                case 2: // 기본 카메라로 촬영
                     openCamera();
                     break;
-                case 2: // 외부 이미지 주소
+                case 3: // 외부 이미지 주소
                     createUriInputDialog();
                     break;
             }
@@ -234,6 +239,14 @@ public class EditMemoActivity extends BaseActivity {
         public void afterTextChanged(Editable editable) {
         }
     };
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null)
+            mAdapter.addImage(intent.getStringExtra("selected"));
+        else SnackbarPresenter.showCommonError(mBinding.memoEditActivityLayout);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

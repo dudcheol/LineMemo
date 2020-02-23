@@ -24,6 +24,13 @@ public class GlideUtil {
                 .into(imageView);
     }
 
+    public static void show(Context context, String uri, ImageView imageView) {
+        Glide.with(context)
+                .load(uri)
+                .error(R.drawable.ic_unknown_50dp)
+                .into(imageView);
+    }
+
     public static void showAddReqListener(Context context, String uri, int[] override, ImageView imageView, RequestListener<Drawable> listener, boolean cacheStrategy) {
         if (cacheStrategy)
             Glide.with(context)
