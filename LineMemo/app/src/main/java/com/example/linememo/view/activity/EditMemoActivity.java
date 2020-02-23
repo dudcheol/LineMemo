@@ -243,9 +243,10 @@ public class EditMemoActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent != null)
-            mAdapter.addImage(intent.getStringExtra("selected"));
-        else SnackbarPresenter.showCommonError(mBinding.memoEditActivityLayout);
+        if (intent != null) {
+            if (intent.hasExtra("selected"))
+                mAdapter.addImage(intent.getStringExtra("selected"));
+        } else SnackbarPresenter.showCommonError(mBinding.memoEditActivityLayout);
     }
 
     @Override
