@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 public class EditViewModel extends AndroidViewModel {
+    private final static String TAG = "EditViewModel";
     private String uri;
     public Application application;
 
@@ -49,13 +51,13 @@ public class EditViewModel extends AndroidViewModel {
     }
 
     public boolean getTextPassOrNot(String s) {
-        if (s.trim().length() == 0) return false;
+        if (TextUtils.isEmpty(s.trim())) return false;
         else return true;
     }
 
     public boolean isMemoStorable(String[] s, List<String> ls) {
         for (String _s : s) {
-            if (_s.length() != 0) return true;
+            if (!TextUtils.isEmpty(_s.trim())) return true;
         }
         if (!ls.isEmpty()) return true;
         return false;

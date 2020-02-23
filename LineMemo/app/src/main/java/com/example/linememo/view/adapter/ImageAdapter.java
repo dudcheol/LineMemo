@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +25,7 @@ import com.example.linememo.view.adapter.viewholder.ImageItemViewHolder;
 import com.example.linememo.view.adapter.viewholder.ImageLastItemViewHolder;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,7 +36,8 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public ImageAdapter(Context context, List<String> imageUri) {
         this.mContext = context;
-        this.mImageUris = imageUri;
+        if (imageUri != null) this.mImageUris = imageUri;
+        else this.mImageUris = new ArrayList<>();
     }
 
     /**
@@ -132,7 +132,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void setData(List<String> imageUris){
+    public void setData(List<String> imageUris) {
         this.mImageUris = imageUris;
         notifyDataSetChanged();
     }

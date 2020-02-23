@@ -37,7 +37,8 @@ public class Memo implements Serializable {
     }
 
     public List<String> getImageUris() {
-        return imageUris;
+        if (imageUris != null) return imageUris;
+        else return new ArrayList<>();
     }
 
     public long getDate() {

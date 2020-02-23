@@ -22,6 +22,7 @@ import com.example.linememo.view.activity.PhotoViewActivity;
 import com.example.linememo.view.adapter.viewholder.ImagePagerItemViewHolder;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImagePagerItemViewHolder> {
@@ -30,7 +31,8 @@ public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImagePagerItemVi
 
     public ImageViewPagerAdapter(Context mContext, List<String> mImageUris) {
         this.mContext = mContext;
-        this.mImageUris = mImageUris;
+        if (mImageUris != null) this.mImageUris = mImageUris;
+        else this.mImageUris = new ArrayList<>();
     }
 
     @NonNull
