@@ -19,7 +19,6 @@ public class MemoViewModel extends AndroidViewModel {
     private LiveData<Memo> findLiveMemo;
     private Memo findMemo;
     private LiveData<Integer> memoCnt;
-    private ButtonClickCallback buttonClickCallback;
 
     public MemoViewModel(Application application) {
         super(application);
@@ -80,23 +79,6 @@ public class MemoViewModel extends AndroidViewModel {
         Log.e(TAG, list == null ? "list null" : list.toString());
         if (list == null || list.isEmpty()) return View.VISIBLE;
         else return View.GONE;
-    }
-
-    // listener
-    public interface ButtonClickCallback {
-        void clicked();
-    }
-
-    public void doOnClick(ButtonClickCallback buttonClickCallback) {
-        buttonClickCallback.clicked();
-    }
-
-    public void setButtonClickCallback(ButtonClickCallback buttonClickCallback) {
-        this.buttonClickCallback = buttonClickCallback;
-    }
-
-    public ButtonClickCallback getButtonClickCallback() {
-        return this.buttonClickCallback;
     }
 
     // getter & setter

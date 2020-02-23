@@ -74,7 +74,7 @@ public class DetailMemoActivity extends BaseActivity {
         mMemoId = getIntent().getIntExtra("memoId", ERROR);
         if (mMemoId == ERROR) DialogUtil.showErrDialog(this);
 
-        mViewModel.setButtonClickCallback(mButtonClickCallback);
+        mBinding.memoArea.setOnClickListener(new startEditActivityButtonClick());
     }
 
     private void showMemo() {
@@ -111,12 +111,12 @@ public class DetailMemoActivity extends BaseActivity {
         mBinding.imageViewPager.setAdapter(mViewPagerAdapter);
     }
 
-    private MemoViewModel.ButtonClickCallback mButtonClickCallback = new MemoViewModel.ButtonClickCallback() {
+    private class startEditActivityButtonClick implements View.OnClickListener {
         @Override
-        public void clicked() {
+        public void onClick(View v) {
             changeEditMode();
         }
-    };
+    }
 
     private void changeEditMode() {
         Intent intent = new Intent(this, EditMemoActivity.class);

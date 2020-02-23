@@ -33,8 +33,7 @@
             <RelativeLayout
                 android:id="@+id/memo_area"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.doOnClick(viewModel.buttonClickCallback)}">
+                android:layout_height="wrap_content">
 
                 <RelativeLayout
                     android:id="@+id/image_area"
