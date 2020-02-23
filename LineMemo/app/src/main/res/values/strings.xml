@@ -44,6 +44,7 @@
     <!-- 공통 -->
     <string name="positiveBtn">확인</string>
     <string name="negativeBtn">취소</string>
+    <string name="commonError">예상치 못한 오류가 발생했습니다. 다시 시도해주세요</string>
 
     <!-- 포토뷰 -->
     <string name="photo_view_notice">손가락으로 확대해보세요</string>

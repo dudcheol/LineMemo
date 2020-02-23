@@ -1,7 +1,5 @@
 package com.example.linememo;
 
-import android.content.Context;
-
 import com.example.linememo.util.ConvertUtil;
 
 import org.junit.Test;
