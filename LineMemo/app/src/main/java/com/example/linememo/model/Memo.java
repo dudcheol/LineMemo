@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class Memo implements Serializable {
     public Memo(String title, String content, List<String> imageUris, long date) {
         this.title = title;
         this.content = content;
-        this.imageUris = imageUris;
+        this.imageUris = imageUris == null ? new ArrayList<String>() : imageUris;
         this.date = date;
     }
 
@@ -56,7 +57,8 @@ public class Memo implements Serializable {
     }
 
     public void setImageUri(List<String> imageUris) {
-        this.imageUris = imageUris;
+        if (imageUris != null) this.imageUris = imageUris;
+        else this.imageUris = new ArrayList<>();
     }
 
     public void setDate(long date) {
