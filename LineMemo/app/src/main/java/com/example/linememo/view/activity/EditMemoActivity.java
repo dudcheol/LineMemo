@@ -119,17 +119,42 @@ public class EditMemoActivity extends BaseActivity {
         mBinding.imageRecycler.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
-    private void openCamera() {
-        Intent intent = mEditViewModel.openCamera();
-        if (intent != null)
-            startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.memo_eidt_camera_select)), EditMemoActivity.CAMERA_REQUEST_CODE);
-        else DialogUtil.showErrDialog(this);
-    }
+    private DialogInterface.OnClickListener onClickAddImageListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case 0: // 사진첩
+                    openAlbum();
+                    break;
+                case 1: // LINE MEMO 카메라로 촬영
+                    openLineMemoCamera();
+                    break;
+                case 2: // 다른 앱 카메라로 촬영
+                    openAnotherCamera();
+                    break;
+                case 3: // 외부 이미지 주소
+                    createUriInputDialog();
+                    break;
+            }
+        }
+    };
 
     private void openAlbum() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.memo_eidt_gallery_select)), EditMemoActivity.GALLERY_REQUEST_CODE);
+    }
+
+    private void openLineMemoCamera() {
+        Intent intent = new Intent(EditMemoActivity.this, CameraPreviewActivity.class);
+        ActivityTransitionAnim.startActivityWithAnim(EditMemoActivity.this, ActivityTransitionAnim.SHOW_NEW_PAGE, intent);
+    }
+
+    private void openAnotherCamera() {
+        Intent intent = mEditViewModel.openCamera();
+        if (intent != null)
+            startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.memo_eidt_camera_select)), EditMemoActivity.CAMERA_REQUEST_CODE);
+        else DialogUtil.showErrDialog(this);
     }
 
     private void saveMemoData() {
@@ -202,27 +227,6 @@ public class EditMemoActivity extends BaseActivity {
             createUploadDialog();
         }
     }
-
-    private DialogInterface.OnClickListener onClickAddImageListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case 0: // 사진첩
-                    openAlbum();
-                    break;
-                case 1: // LINE MEMO 카메라로 촬영
-                    Intent intent = new Intent(EditMemoActivity.this, CameraPreviewActivity.class);
-                    ActivityTransitionAnim.startActivityWithAnim(EditMemoActivity.this, ActivityTransitionAnim.SHOW_NEW_PAGE, intent);
-                    break;
-                case 2: // 기본 카메라로 촬영
-                    openCamera();
-                    break;
-                case 3: // 외부 이미지 주소
-                    createUriInputDialog();
-                    break;
-            }
-        }
-    };
 
     private TextWatcher editTextChangeListener = new TextWatcher() {
         @Override

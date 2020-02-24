@@ -86,6 +86,69 @@ public class CameraPreviewActivity extends AppCompatActivity {
         });
     }
 
+    private void bindCameraUseCases() {
+        CameraX.unbindAll();
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        mBinding.viewFinder.getDisplay().getRealMetrics(metrics);
+        AspectRatio screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels);
+        Log.e(TAG, screenAspectRatio == AspectRatio.RATIO_4_3 ? "4:3" : "16:9");
+
+        setBackground();
+
+        int rotation = mBinding.viewFinder.getDisplay().getRotation();
+        PreviewConfig previewConfig = new PreviewConfig.Builder()
+                .setTargetAspectRatio(screenAspectRatio)
+                .setTargetRotation(rotation)
+                .setLensFacing(lensFacing)
+                .build();
+
+        Preview preview = new Preview(previewConfig);
+        preview.setOnPreviewOutputUpdateListener(
+                previewOutput -> {
+                    updateViewFinderWithPreview(previewOutput);
+                    correctPreviewOutputForDisplay(previewOutput.getTextureSize());
+                });
+
+        ImageCaptureConfig imageCaptureConfig = new ImageCaptureConfig.Builder() // 종횡비와 캡쳐모드를 기반으로 적절한 해상도를 유추함
+                .setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
+                .setTargetAspectRatio(screenAspectRatio)
+                .setTargetRotation(rotation)
+                .setLensFacing(lensFacing)
+                .build();
+
+        ImageCapture imageCapture = new ImageCapture(imageCaptureConfig);
+        mBinding.captureButton.setOnClickListener(v -> {
+            File file;
+            try {
+                file = mEditViewModel.createImageFile();
+            } catch (IOException e) {
+                SnackbarPresenter.showCommonError(mBinding.viewFinder);
+                return;
+            }
+            ImageCapture.Metadata metadata = new ImageCapture.Metadata();
+            metadata.isReversedHorizontal = lensFacing == CameraX.LensFacing.FRONT;
+            imageCapture.takePicture(file, metadata, ContextCompat.getMainExecutor(this), new ImageCapture.OnImageSavedListener() {
+                @Override
+                public void onImageSaved(@NonNull File file) {
+                    mBinding.viewFinder.post(() -> {
+                        Intent intent = new Intent(CameraPreviewActivity.this, CameraResultActivity.class);
+                        intent.putExtra("path", mEditViewModel.createImageUri(file).toString());
+                        ActivityTransitionAnim.startActivityWithAnim(CameraPreviewActivity.this, ActivityTransitionAnim.NO_TRANSITION, intent);
+                    });
+                }
+
+                @Override
+                public void onError(@NonNull ImageCapture.ImageCaptureError imageCaptureError, @NonNull String message, @Nullable Throwable cause) {
+                    Log.e(TAG, message);
+                    SnackbarPresenter.showCommonError(mBinding.viewFinder);
+                }
+            });
+        });
+
+        CameraX.bindToLifecycle(this, preview, imageCapture);
+    }
+
     private void updateViewFinderWithPreview(Preview.PreviewOutput previewOutput) {
         ViewGroup parent = (ViewGroup) mBinding.viewFinder.getParent();
         parent.removeView(mBinding.viewFinder);
@@ -150,69 +213,6 @@ public class CameraPreviewActivity extends AppCompatActivity {
         if (Math.abs(previewRatio - RATIO_4_3_VALUE) <= Math.abs(previewRatio - RATIO_16_9_VALUE))
             return AspectRatio.RATIO_4_3;
         return AspectRatio.RATIO_16_9;
-    }
-
-    private void bindCameraUseCases() {
-        CameraX.unbindAll();
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        mBinding.viewFinder.getDisplay().getRealMetrics(metrics);
-        AspectRatio screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels);
-        Log.e(TAG, screenAspectRatio == AspectRatio.RATIO_4_3 ? "4:3" : "16:9");
-
-        setBackground();
-
-        int rotation = mBinding.viewFinder.getDisplay().getRotation();
-        PreviewConfig previewConfig = new PreviewConfig.Builder()
-                .setTargetAspectRatio(screenAspectRatio)
-                .setTargetRotation(rotation)
-                .setLensFacing(lensFacing)
-                .build();
-
-        Preview preview = new Preview(previewConfig);
-        preview.setOnPreviewOutputUpdateListener(
-                previewOutput -> {
-                    updateViewFinderWithPreview(previewOutput);
-                    correctPreviewOutputForDisplay(previewOutput.getTextureSize());
-                });
-
-        ImageCaptureConfig imageCaptureConfig = new ImageCaptureConfig.Builder() // 종횡비와 캡쳐모드를 기반으로 적절한 해상도를 유추함
-                .setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
-                .setTargetAspectRatio(screenAspectRatio)
-                .setTargetRotation(rotation)
-                .setLensFacing(lensFacing)
-                .build();
-
-        ImageCapture imageCapture = new ImageCapture(imageCaptureConfig);
-        mBinding.captureButton.setOnClickListener(v -> {
-            File file;
-            try {
-                file = mEditViewModel.createImageFile();
-            } catch (IOException e) {
-                SnackbarPresenter.showCommonError(mBinding.viewFinder);
-                return;
-            }
-            ImageCapture.Metadata metadata = new ImageCapture.Metadata();
-            metadata.isReversedHorizontal = lensFacing == CameraX.LensFacing.FRONT;
-            imageCapture.takePicture(file, metadata, ContextCompat.getMainExecutor(this), new ImageCapture.OnImageSavedListener() {
-                @Override
-                public void onImageSaved(@NonNull File file) {
-                    mBinding.viewFinder.post(() -> {
-                        Intent intent = new Intent(CameraPreviewActivity.this, CameraResultActivity.class);
-                        intent.putExtra("path", mEditViewModel.createImageUri(file).toString());
-                        ActivityTransitionAnim.startActivityWithAnim(CameraPreviewActivity.this, ActivityTransitionAnim.NO_TRANSITION, intent);
-                    });
-                }
-
-                @Override
-                public void onError(@NonNull ImageCapture.ImageCaptureError imageCaptureError, @NonNull String message, @Nullable Throwable cause) {
-                    Log.e(TAG, message);
-                    SnackbarPresenter.showCommonError(mBinding.viewFinder);
-                }
-            });
-        });
-
-        CameraX.bindToLifecycle(this, preview, imageCapture);
     }
 
     private void setBackground() {
