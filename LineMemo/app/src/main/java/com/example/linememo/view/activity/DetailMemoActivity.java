@@ -1,6 +1,5 @@
 package com.example.linememo.view.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -8,13 +7,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.linememo.R;
 import com.example.linememo.databinding.ActivityDetailMemoBinding;
-import com.example.linememo.model.Memo;
 import com.example.linememo.util.BaseActivity;
 import com.example.linememo.util.ConvertUtil;
 import com.example.linememo.util.DialogUtil;
@@ -78,13 +75,10 @@ public class DetailMemoActivity extends BaseActivity {
     }
 
     private void showMemo() {
-        mViewModel.findLive(mMemoId).observe(this, new Observer<Memo>() {
-            @Override
-            public void onChanged(Memo memo) {
-                if (memo != null) {
-                    mViewPagerAdapter.setData(memo.getImageUris());
-                    mBinding.imageViewPager.setAdapter(mViewPagerAdapter);
-                }
+        mViewModel.findLive(mMemoId).observe(this, memo -> {
+            if (memo != null) {
+                mViewPagerAdapter.setData(memo.getImageUris());
+                mBinding.imageViewPager.setAdapter(mViewPagerAdapter);
             }
         });
         mBinding.setViewModel(mViewModel);
@@ -97,16 +91,13 @@ public class DetailMemoActivity extends BaseActivity {
         mBinding.imageViewPager.setClipToPadding(false);
         mBinding.imageViewPager.setClipChildren(false);
         mBinding.imageViewPager.setOffscreenPageLimit(3);
-        mBinding.imageViewPager.setPageTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                float offset = position * -(2 * offsetPx);
-                if (mBinding.imageViewPager.getOrientation() == ViewPager2.ORIENTATION_HORIZONTAL) {
-                    if (ViewCompat.getLayoutDirection(mBinding.imageViewPager) == ViewCompat.LAYOUT_DIRECTION_RTL)
-                        page.setTranslationX(-offset);
-                    else page.setTranslationX(offset);
-                } else page.setTranslationY(offset);
-            }
+        mBinding.imageViewPager.setPageTransformer((page, position) -> {
+            float offset = position * -(2 * offsetPx);
+            if (mBinding.imageViewPager.getOrientation() == ViewPager2.ORIENTATION_HORIZONTAL) {
+                if (ViewCompat.getLayoutDirection(mBinding.imageViewPager) == ViewCompat.LAYOUT_DIRECTION_RTL)
+                    page.setTranslationX(-offset);
+                else page.setTranslationX(offset);
+            } else page.setTranslationY(offset);
         });
         mBinding.imageViewPager.setAdapter(mViewPagerAdapter);
     }
@@ -132,13 +123,10 @@ public class DetailMemoActivity extends BaseActivity {
                 , null
                 , getResources().getString(R.string.positiveBtn)
                 , getResources().getString(R.string.negativeBtn)
-                , new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mViewModel.delete(mViewModel.find(mMemoId));
-                        setResult(RESULT_OK);
-                        onBackPressed();
-                    }
+                , (dialog, which) -> {
+                    mViewModel.delete(mViewModel.find(mMemoId));
+                    setResult(RESULT_OK);
+                    onBackPressed();
                 }
                 , DialogUtil.onClickCancelListener);
     }

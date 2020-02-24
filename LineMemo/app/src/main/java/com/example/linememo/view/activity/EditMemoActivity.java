@@ -119,23 +119,20 @@ public class EditMemoActivity extends BaseActivity {
         mBinding.imageRecycler.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
-    private DialogInterface.OnClickListener onClickAddImageListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case 0: // 사진첩
-                    openAlbum();
-                    break;
-                case 1: // LINE MEMO 카메라로 촬영
-                    openLineMemoCamera();
-                    break;
-                case 2: // 다른 앱 카메라로 촬영
-                    openAnotherCamera();
-                    break;
-                case 3: // 외부 이미지 주소
-                    createUriInputDialog();
-                    break;
-            }
+    private DialogInterface.OnClickListener onClickAddImageListener = (dialog, which) -> {
+        switch (which) {
+            case 0: // 사진첩
+                openAlbum();
+                break;
+            case 1: // LINE MEMO 카메라로 촬영
+                openLineMemoCamera();
+                break;
+            case 2: // 다른 앱 카메라로 촬영
+                openAnotherCamera();
+                break;
+            case 3: // 외부 이미지 주소
+                createUriInputDialog();
+                break;
         }
     };
 
@@ -184,12 +181,7 @@ public class EditMemoActivity extends BaseActivity {
         final View v = getLayoutInflater().inflate(R.layout.dialog_uri_input, null);
         MaterialAlertDialogBuilder materialAlertDialogBuilder = DialogUtil.makeDialogWithView(this
                 , R.drawable.ic_web_24dp, getResources().getString(R.string.add_image_uri_dialog_content1), null, v, false, getResources().getString(R.string.positiveBtn), getResources().getString(R.string.negativeBtn)
-                , new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mAdapter.addImage(ConvertUtil.getString((EditText) v.findViewById(R.id.uri_input), true));
-                    }
-                }, DialogUtil.onClickCancelListener);
+                , (dialog, which) -> mAdapter.addImage(ConvertUtil.getString((EditText) v.findViewById(R.id.uri_input), true)), DialogUtil.onClickCancelListener);
 
         final AlertDialog alertDialog = materialAlertDialogBuilder.show();
         final Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);

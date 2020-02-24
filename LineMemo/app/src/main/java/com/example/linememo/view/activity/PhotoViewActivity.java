@@ -16,8 +16,6 @@ import com.example.linememo.R;
 import com.example.linememo.databinding.ActivityPhotoViewBinding;
 import com.example.linememo.util.GlideUtil;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
-import com.github.chrisbanes.photoview.OnScaleChangedListener;
-import com.github.chrisbanes.photoview.OnViewTapListener;
 
 /**
  *  PhotoView
@@ -51,33 +49,20 @@ public class PhotoViewActivity extends AppCompatActivity {
     }
 
     private void setListener() {
-        mBinding.photoViewCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        mBinding.photoViewCloseButton.setOnClickListener(v -> onBackPressed());
 
-        mBinding.photoView.setOnScaleChangeListener(new OnScaleChangedListener() {
-            @Override
-            public void onScaleChange(float scaleFactor, float focusX, float focusY) {
+        mBinding.photoView.setOnScaleChangeListener((scaleFactor, focusX, focusY) -> {
 //                Log.e(TAG, "getcale=" + photoView.getScale());
-                if (mBinding.photoView.getScale() >= 1.1) {
-                    mBinding.photoViewCloseButton.setVisibility(View.GONE);
-                    mBinding.photoViewText.setVisibility(View.GONE);
-                } else {
-                    mBinding.photoViewCloseButton.setVisibility(View.VISIBLE);
-                    mBinding.photoViewText.setVisibility(View.VISIBLE);
-                }
+            if (mBinding.photoView.getScale() >= 1.1) {
+                mBinding.photoViewCloseButton.setVisibility(View.GONE);
+                mBinding.photoViewText.setVisibility(View.GONE);
+            } else {
+                mBinding.photoViewCloseButton.setVisibility(View.VISIBLE);
+                mBinding.photoViewText.setVisibility(View.VISIBLE);
             }
         });
 
-        mBinding.photoView.setOnViewTapListener(new OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float x, float y) {
-                mBinding.photoView.setScale(1f, true);
-            }
-        });
+        mBinding.photoView.setOnViewTapListener((view, x, y) -> mBinding.photoView.setScale(1f, true));
     }
 
     private void showPhoto() {

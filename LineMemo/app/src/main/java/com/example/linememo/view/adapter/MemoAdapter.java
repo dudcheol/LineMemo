@@ -22,7 +22,6 @@ import com.example.linememo.view.animation.ActivityTransitionAnim;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class MemoAdapter extends RecyclerView.Adapter<MemoItemViewholder> {
@@ -73,14 +72,11 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoItemViewholder> {
 
         holder.date.setText(ConvertUtil.longDateToShortString(date));
 
-        holder.card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, DetailMemoActivity.class);
-                intent.putExtra("memoId", mDataset.get(position).getId());
-                ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SHOW_DETAIL_PAGE, intent, MainMemoActivity.DETAIL_DELETE_REQUEST_CODE);
-                Log.e(TAG, mDataset.get(position).toString());
-            }
+        holder.card.setOnClickListener(view -> {
+            Intent intent = new Intent(mContext, DetailMemoActivity.class);
+            intent.putExtra("memoId", mDataset.get(position).getId());
+            ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SHOW_DETAIL_PAGE, intent, MainMemoActivity.DETAIL_DELETE_REQUEST_CODE);
+            Log.e(TAG, mDataset.get(position).toString());
         });
     }
 
@@ -90,12 +86,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoItemViewholder> {
     }
 
     public void setData(List<Memo> newData) {
-        Collections.sort(newData, new Comparator<Memo>() {
-            @Override
-            public int compare(Memo memo, Memo t1) {
-                return -Long.compare(memo.getDate(), t1.getDate());
-            }
-        });
+        Collections.sort(newData, (memo, t1) -> -Long.compare(memo.getDate(), t1.getDate()));
         this.mDataset = newData;
         notifyDataSetChanged();
     }

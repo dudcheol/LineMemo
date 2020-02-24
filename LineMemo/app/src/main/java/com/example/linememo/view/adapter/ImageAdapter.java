@@ -73,12 +73,9 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 else
                     lastItemViewHolder.addPhotoButton.setVisibility(View.GONE);
 
-                lastItemViewHolder.addPhotoButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mContext instanceof EditMemoActivity)
-                            ((EditMemoActivity) mContext).createUploadDialog();
-                    }
+                lastItemViewHolder.addPhotoButton.setOnClickListener(v -> {
+                    if (mContext instanceof EditMemoActivity)
+                        ((EditMemoActivity) mContext).createUploadDialog();
                 });
                 break;
             case 1:
@@ -93,20 +90,12 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         , setRequestListener(itemViewHolder, uri, isAlreadyNotice)
                         , false);
 
-                itemViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mContext, PhotoViewActivity.class);
-                        intent.putExtra("uri", mImageUris.get(position));
-                        ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SCALE_UP_FADE_IN, intent);
-                    }
+                itemViewHolder.imageView.setOnClickListener(v -> {
+                    Intent intent = new Intent(mContext, PhotoViewActivity.class);
+                    intent.putExtra("uri", mImageUris.get(position));
+                    ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SCALE_UP_FADE_IN, intent);
                 });
-                itemViewHolder.itemDeleteBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        removeImage(position);
-                    }
-                });
+                itemViewHolder.itemDeleteBtn.setOnClickListener(view -> removeImage(position));
                 break;
         }
     }

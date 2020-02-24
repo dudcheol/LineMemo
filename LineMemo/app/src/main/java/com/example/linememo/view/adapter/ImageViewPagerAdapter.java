@@ -51,13 +51,10 @@ public class ImageViewPagerAdapter extends RecyclerView.Adapter<ImagePagerItemVi
                 , setRequestListener(holder)
                 , false);
 
-        holder.viewPagerCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, PhotoViewActivity.class);
-                intent.putExtra("uri", mImageUris.get(position));
-                ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SCALE_UP_FADE_IN, intent);
-            }
+        holder.viewPagerCard.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, PhotoViewActivity.class);
+            intent.putExtra("uri", mImageUris.get(position));
+            ActivityTransitionAnim.startActivityWithAnim((Activity) mContext, ActivityTransitionAnim.SCALE_UP_FADE_IN, intent);
         });
     }
 

@@ -8,21 +8,17 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.linememo.R;
 import com.example.linememo.databinding.ActivityMainMemoBinding;
-import com.example.linememo.model.Memo;
 import com.example.linememo.util.BaseActivity;
 import com.example.linememo.util.ConvertUtil;
 import com.example.linememo.util.SnackbarPresenter;
 import com.example.linememo.view.adapter.MemoAdapter;
 import com.example.linememo.view.animation.ActivityTransitionAnim;
 import com.example.linememo.viewmodel.MemoViewModel;
-
-import java.util.List;
 
 public class MainMemoActivity extends BaseActivity {
     public static final int CREATE_MEMO_REQUEST_CODE = 8000;
@@ -81,13 +77,10 @@ public class MainMemoActivity extends BaseActivity {
     }
 
     private void showMemoList() {
-        mViewModel.getAll().observe(this, new Observer<List<Memo>>() {
-            @Override
-            public void onChanged(List<Memo> memos) {
-                if (memos.isEmpty()) mBinding.memoEmptyMessage.setVisibility(View.VISIBLE);
-                else mBinding.memoEmptyMessage.setVisibility(View.GONE);
-                mAdapter.setData(memos);
-            }
+        mViewModel.getAll().observe(this, memos -> {
+            if (memos.isEmpty()) mBinding.memoEmptyMessage.setVisibility(View.VISIBLE);
+            else mBinding.memoEmptyMessage.setVisibility(View.GONE);
+            mAdapter.setData(memos);
         });
         mViewModel.getCount();
     }
