@@ -158,8 +158,10 @@ public class EditMemoActivity extends BaseActivity {
         if (viewMode == CREATE_MODE)  // '새 메모 쓰기' - 새로운 메모 추가
             mMemoViewModel.insert(new Memo(ConvertUtil.getString(mBinding.titleEdit, false)
                     , ConvertUtil.getString(mBinding.contentEdit, false), mImageUris, System.currentTimeMillis()));
-        else if (viewMode == MODIFY_MODE)  // '메모 수정하기' - 기존 메모 데이터 업데이트
+        else if (viewMode == MODIFY_MODE) { // '메모 수정하기' - 기존 메모 데이터 업데이트
+            mMemoData.setDate(System.currentTimeMillis());
             mMemoViewModel.update(mMemoData);
+        }
     }
 
     private void changeSaveButtonState(boolean clickable) {
