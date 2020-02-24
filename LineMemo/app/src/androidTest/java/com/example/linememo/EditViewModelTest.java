@@ -31,7 +31,7 @@ public class EditViewModelTest {
     }
 
     @Test
-    public void createImageFineTest() throws IOException {
+    public void fileTest() throws IOException {
         File file = mEditViewModel.createImageFile();
         Uri uri = mEditViewModel.createImageUri(file);
         Log.e(TAG, file.toString());
@@ -39,6 +39,10 @@ public class EditViewModelTest {
 
         // 뷰모델에 정상적으로 uri가 저장되는지 확인
         Assert.assertEquals(uri.toString(), mEditViewModel.getUri());
+
+        // 삭제 확인
+        mEditViewModel.deleteFile(new File(uri.toString()));
+        Assert.assertFalse(new File(uri.toString()).exists());
     }
 
     @Test

@@ -50,6 +50,10 @@ public class EditViewModel extends AndroidViewModel {
         return imageUri;
     }
 
+    public void deleteFile(File file) {
+        if (file.exists()) file.delete();
+    }
+
     public boolean getTextPassOrNot(String s) {
         if (TextUtils.isEmpty(s.trim())) return false;
         else return true;
