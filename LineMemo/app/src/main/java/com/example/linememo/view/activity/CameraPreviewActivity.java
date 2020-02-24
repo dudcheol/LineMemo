@@ -9,9 +9,11 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Size;
 import android.view.Surface;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +27,7 @@ import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -67,17 +70,13 @@ public class CameraPreviewActivity extends AppCompatActivity {
             mBinding.viewFinder.post(this::startCamera);
         else
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
-
-        mBinding.viewFinder.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> updateTransform());
     }
 
     @SuppressLint("RestrictedApi")
     private void startCamera() {
         bindCameraUseCases();
-
         mBinding.cameraSelector.setOnClickListener(v -> {
             lensFacing = lensFacing == CameraX.LensFacing.FRONT ? CameraX.LensFacing.BACK : CameraX.LensFacing.FRONT;
-
             try {
                 CameraX.getCameraWithLensFacing(lensFacing);
                 bindCameraUseCases();
@@ -87,12 +86,29 @@ public class CameraPreviewActivity extends AppCompatActivity {
         });
     }
 
-    private void updateTransform() {
+    private void updateViewFinderWithPreview(Preview.PreviewOutput previewOutput) {
+        ViewGroup parent = (ViewGroup) mBinding.viewFinder.getParent();
+        parent.removeView(mBinding.viewFinder);
+        parent.addView(mBinding.viewFinder, 0);
+        mBinding.viewFinder.setSurfaceTexture(previewOutput.getSurfaceTexture());
+    }
+
+    private void correctPreviewOutputForDisplay(Size textureSize) {
         Matrix matrix = new Matrix();
 
         float centerX = mBinding.viewFinder.getWidth() / 2f;
         float centerY = mBinding.viewFinder.getHeight() / 2f;
 
+        float displayRotation = getDisplayRotation();
+
+        Pair scaleSize = getDisplayScalingFactors(textureSize);
+        matrix.postRotate(displayRotation, centerX, centerY);
+        matrix.preScale((float) scaleSize.first, (float) scaleSize.second, centerX, centerY);
+
+        mBinding.viewFinder.setTransform(matrix);
+    }
+
+    private float getDisplayRotation() {
         int rotationDegrees;
         switch (mBinding.viewFinder.getDisplay().getRotation()) {
             case Surface.ROTATION_0:
@@ -110,7 +126,23 @@ public class CameraPreviewActivity extends AppCompatActivity {
             default:
                 throw new IllegalStateException("Unexpected value: " + mBinding.viewFinder.getDisplay().getRotation());
         }
-        matrix.postRotate((float) -rotationDegrees, centerX, centerY);
+        return (float) -rotationDegrees;
+    }
+
+    private Pair getDisplayScalingFactors(Size textureSize) {
+        float cameraPreviewRation = textureSize.getHeight() / (float) textureSize.getWidth();
+        int scaleWidth;
+        int scaleHeight;
+        if (mBinding.viewFinder.getWidth() > mBinding.viewFinder.getHeight()) {
+            scaleHeight = mBinding.viewFinder.getWidth();
+            scaleWidth = (int) (mBinding.viewFinder.getWidth() * cameraPreviewRation);
+        } else {
+            scaleHeight = mBinding.viewFinder.getHeight();
+            scaleWidth = (int) (mBinding.viewFinder.getHeight() * cameraPreviewRation);
+        }
+        float dx = scaleWidth / (float) mBinding.viewFinder.getWidth();
+        float dy = scaleHeight / (float) mBinding.viewFinder.getHeight();
+        return new Pair(dx, dy);
     }
 
     private AspectRatio aspectRatio(int width, int height) {
@@ -126,8 +158,11 @@ public class CameraPreviewActivity extends AppCompatActivity {
         DisplayMetrics metrics = new DisplayMetrics();
         mBinding.viewFinder.getDisplay().getRealMetrics(metrics);
         AspectRatio screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels);
-        int rotation = mBinding.viewFinder.getDisplay().getRotation();
+        Log.e(TAG, screenAspectRatio == AspectRatio.RATIO_4_3 ? "4:3" : "16:9");
 
+        setBackground();
+
+        int rotation = mBinding.viewFinder.getDisplay().getRotation();
         PreviewConfig previewConfig = new PreviewConfig.Builder()
                 .setTargetAspectRatio(screenAspectRatio)
                 .setTargetRotation(rotation)
@@ -137,12 +172,8 @@ public class CameraPreviewActivity extends AppCompatActivity {
         Preview preview = new Preview(previewConfig);
         preview.setOnPreviewOutputUpdateListener(
                 previewOutput -> {
-                    ViewGroup parent = (ViewGroup) mBinding.viewFinder.getParent();
-                    parent.removeView(mBinding.viewFinder);
-                    parent.addView(mBinding.viewFinder, 0);
-
-                    mBinding.viewFinder.setSurfaceTexture(previewOutput.getSurfaceTexture());
-                    updateTransform();
+                    updateViewFinderWithPreview(previewOutput);
+                    correctPreviewOutputForDisplay(previewOutput.getTextureSize());
                 });
 
         ImageCaptureConfig imageCaptureConfig = new ImageCaptureConfig.Builder() // 종횡비와 캡쳐모드를 기반으로 적절한 해상도를 유추함
@@ -154,16 +185,15 @@ public class CameraPreviewActivity extends AppCompatActivity {
 
         ImageCapture imageCapture = new ImageCapture(imageCaptureConfig);
         mBinding.captureButton.setOnClickListener(v -> {
-            File file = null;
+            File file;
             try {
                 file = mEditViewModel.createImageFile();
             } catch (IOException e) {
                 SnackbarPresenter.showCommonError(mBinding.viewFinder);
+                return;
             }
-            if (file == null) return;
             ImageCapture.Metadata metadata = new ImageCapture.Metadata();
             metadata.isReversedHorizontal = lensFacing == CameraX.LensFacing.FRONT;
-
             imageCapture.takePicture(file, metadata, ContextCompat.getMainExecutor(this), new ImageCapture.OnImageSavedListener() {
                 @Override
                 public void onImageSaved(@NonNull File file) {
@@ -183,6 +213,20 @@ public class CameraPreviewActivity extends AppCompatActivity {
         });
 
         CameraX.bindToLifecycle(this, preview, imageCapture);
+    }
+
+    private void setBackground() {
+        int totalHeight = mBinding.viewFinder.getHeight();
+        int totalWidth = mBinding.viewFinder.getWidth();
+        int targetHeight = (int) (totalWidth * 4 / 3.0);
+        int backgroundHeight = (totalHeight - targetHeight) / 2;
+
+        RelativeLayout.LayoutParams upperLayoutParams = (RelativeLayout.LayoutParams) mBinding.upperBackground.getLayoutParams();
+        RelativeLayout.LayoutParams lowerLayoutParams = (RelativeLayout.LayoutParams) mBinding.lowerBackground.getLayoutParams();
+        upperLayoutParams.height = backgroundHeight;
+        lowerLayoutParams.height = backgroundHeight;
+        mBinding.upperBackground.setLayoutParams(upperLayoutParams);
+        mBinding.lowerBackground.setLayoutParams(lowerLayoutParams);
     }
 
     @Override
