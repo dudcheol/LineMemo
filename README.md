@@ -18,9 +18,9 @@ LiveData를 활용한 Model - View - ViewModel (이하 MVVM) 패턴을 사용
 ## 스크린샷
 ![main](https://user-images.githubusercontent.com/40655666/76815438-fa9cd800-6840-11ea-82a6-05814ad75ef0.png)
 ![create](https://user-images.githubusercontent.com/40655666/76816925-da6f1800-6844-11ea-8318-51463a38a7dd.png)  
-![image](https://user-images.githubusercontent.com/40655666/76815579-58c9bb00-6841-11ea-9cf1-020927492dc6.png)
-![view](https://user-images.githubusercontent.com/40655666/76815656-9af2fc80-6841-11ea-8660-efd8b8f1326e.png)  
-![detail](https://user-images.githubusercontent.com/40655666/76816071-9f6be500-6842-11ea-89eb-a9b7e0dedeef.png)
+![view](https://user-images.githubusercontent.com/40655666/76815656-9af2fc80-6841-11ea-8660-efd8b8f1326e.png)
+![detail](https://user-images.githubusercontent.com/40655666/76816071-9f6be500-6842-11ea-89eb-a9b7e0dedeef.png)  
+![edit](https://user-images.githubusercontent.com/40655666/76817297-c677e600-6845-11ea-8a36-0ef15dfbf8d8.png)
 ![cameraPick](https://user-images.githubusercontent.com/40655666/76815724-beb64280-6841-11ea-98c5-83756312394f.png)  
 ![externalImage](https://user-images.githubusercontent.com/40655666/76816122-c6c2b200-6842-11ea-9ec9-851a9241553c.png)
 ![loadFail](https://user-images.githubusercontent.com/40655666/76816833-9a0f9a00-6844-11ea-8a08-6d259661436d.png)  
